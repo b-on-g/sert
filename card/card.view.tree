@@ -1,0 +1,65 @@
+$bog_sert_card $mol_list
+	uri \
+	rows <= card_rows /
+		<= Empty $mol_status
+			message \Ссылка не похожа на сертификат
+		<= Sheet $mol_view
+			sub <= sheet /
+				<= Head $mol_view
+					sub /
+						<= Shop $mol_view
+							sub /
+								<= shop \
+						<= Kind $mol_view
+							sub /
+								<= kind \Подарочный сертификат
+				<= Gift $mol_view
+					sub /
+						<= gift \
+				<= Names $mol_view
+					sub /
+						<= Whom $mol_view
+							sub /
+								<= whom \
+						<= From $mol_view
+							sub /
+								<= from \
+				<= Wish $mol_paragraph
+					title <= wish \
+				<= Foot $mol_view
+					sub /
+						<= Legend $mol_view
+							sub /
+								<= legend \
+						<= Note $mol_view
+							sub /
+								<= note \
+				<= Stamp $mol_view
+					sub /
+						<= stamp \
+		<= Aside $mol_view
+			sub /
+				<= Code $bog_qr
+					uri <= page_uri \
+					error_correction \M
+				<= Ident $mol_view
+					sub /
+						<= Ident_label $mol_view
+							sub /
+								\Номер сертификата
+						<= Ident_value $mol_view
+							sub /
+								<= ident \
+		<= Tools $mol_view
+			sub <= tools /
+				<= Mail $mol_link
+					uri <= mail_uri \
+					title <= mail_title \Отправить почтой
+					hint \Откроется почтовая программа с готовым письмом
+				<= Copy $mol_button_minor
+					title <= copy_title \Скопировать ссылку
+					click? <=> copy? null
+				<= Redeem $mol_button_major
+					title <= redeem_title \Погасить
+					hint \Отметить сертификат использованным
+					click? <=> redeem? null

@@ -1,0 +1,5 @@
+$bog_sert_area $mol_string
+	dom_name \textarea
+	enter \enter
+	submit_with_ctrl true
+	minimal_height 72

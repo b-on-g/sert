@@ -1,0 +1,36 @@
+$bog_sert_key $mol_list
+	rows /
+		<= Intro $mol_text
+			text \
+				\## Ключ доступа
+				\
+				\Аккаунта и пароля тут нет. Всё, что у вас есть — ключ, который
+				\браузер завёл сам при первом открытии и держит только на этом
+				\устройстве. Кабинет салона и право гасить сертификаты привязаны
+				\именно к нему.
+				\
+				\Чтобы зайти в тот же кабинет с телефона на ресепшене, скопируйте
+				\ключ отсюда и вставьте его там. Кто держит ключ — тот и салон,
+				\так что пересылать его через общий чат не стоит.
+				\
+				\Ключ живёт в хранилище браузера. Очистите данные сайта — и кабинет
+				\вместе со всеми сертификатами станет недоступен. Держите копию.
+		<= Mine_field $mol_form_field
+			name \Ваш ключ
+			control <= Mine $bog_sert_area
+				enabled false
+				value <= mine \
+		<= Copy $mol_button_minor
+			title \Скопировать ключ
+			click? <=> copy? null
+		<= Other_field $mol_form_field
+			name \Войти чужим ключом
+			control <= Other $bog_sert_area
+				hint \Вставьте сюда ключ, скопированный на другом устройстве
+				value? <=> other? \
+		<= Enter $mol_button_major
+			title \Войти этим ключом
+			enabled <= enter_allowed true
+			click? <=> enter? null
+		<= Result $mol_status
+			message <= result \

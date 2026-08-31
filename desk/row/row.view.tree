@@ -1,0 +1,15 @@
+$bog_sert_desk_row $mol_link
+	cert_uri \
+	arg *
+		screen null
+		cert <= cert_uri
+	sub /
+		<= Gift $mol_view
+			sub /
+				<= gift \
+		<= Whom $mol_view
+			sub /
+				<= whom \
+		<= State $mol_view
+			sub /
+				<= state \

@@ -1,0 +1,28 @@
+$bog_sert_app $mol_page
+	title <= page_title \Сертификаты
+	tools <= page_tools /
+		<= Nav $mol_switch
+			value? <=> screen? \desk
+			options <= nav_options *
+				desk \Кабинет
+				key \Ключ
+		<= Home $mol_link
+			title \Сертификаты
+			arg *
+				cert null
+				screen null
+		<= Status $giper_baza_status
+		<= Theme_toggle $bog_theme_toggle
+			theme_auto <= Theme
+	plugins /
+		<= Theme $bog_theme_auto
+			theme_light \$mol_theme_calm_light
+			theme_dark \$mol_theme_calm_dark
+			themes /
+				\$mol_theme_calm_light
+				\$mol_theme_calm_dark
+	body <= page_body /
+		<= Desk $bog_sert_desk
+		<= Key $bog_sert_key
+		<= Card $bog_sert_card
+			uri <= cert_uri \
