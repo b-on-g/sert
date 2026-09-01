@@ -4347,261 +4347,45 @@ var $;
 })($ || ($ = {}));
 
 ;
-"use strict";
-
-;
-	($.$mol_page) = class $mol_page extends ($.$mol_view) {
-		tabindex(){
-			return -1;
-		}
-		Logo(){
-			return null;
-		}
-		title_content(){
-			return [(this.Logo()), (this.title())];
-		}
-		Title(){
-			const obj = new this.$.$mol_view();
-			(obj.dom_name) = () => ("h1");
-			(obj.sub) = () => ((this.title_content()));
-			return obj;
-		}
-		tools(){
+	($.$mol_book2) = class $mol_book2 extends ($.$mol_scroll) {
+		pages_deep(){
 			return [];
 		}
-		Tools(){
+		pages(){
+			return (this.pages_deep());
+		}
+		Placeholder(){
 			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ((this.tools()));
 			return obj;
 		}
-		head(){
-			return [(this.Title()), (this.Tools())];
+		placeholders(){
+			return [(this.Placeholder())];
 		}
-		Head(){
-			const obj = new this.$.$mol_view();
-			(obj.minimal_height) = () => (64);
-			(obj.dom_name) = () => ("header");
-			(obj.sub) = () => ((this.head()));
-			return obj;
-		}
-		body_scroll_top(next){
-			return (this.Body().scroll_top(next));
-		}
-		body(){
-			return [];
-		}
-		Body_content(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ((this.body()));
-			return obj;
-		}
-		body_content(){
-			return [(this.Body_content())];
-		}
-		Body(){
-			const obj = new this.$.$mol_scroll();
-			(obj.sub) = () => ((this.body_content()));
-			return obj;
-		}
-		foot(){
-			return [];
-		}
-		Foot(){
-			const obj = new this.$.$mol_view();
-			(obj.dom_name) = () => ("footer");
-			(obj.sub) = () => ((this.foot()));
-			return obj;
-		}
-		dom_name(){
-			return "article";
-		}
-		attr(){
-			return {...(super.attr()), "tabIndex": (this.tabindex())};
+		menu_title(){
+			return "";
 		}
 		sub(){
-			return [
-				(this.Head()), 
-				(this.Body()), 
-				(this.Foot())
-			];
+			return [...(this.pages()), ...(this.placeholders())];
+		}
+		minimal_width(){
+			return 0;
+		}
+		Gap(id){
+			const obj = new this.$.$mol_view();
+			(obj.title) = () => ("");
+			return obj;
 		}
 	};
-	($mol_mem(($.$mol_page.prototype), "Title"));
-	($mol_mem(($.$mol_page.prototype), "Tools"));
-	($mol_mem(($.$mol_page.prototype), "Head"));
-	($mol_mem(($.$mol_page.prototype), "Body_content"));
-	($mol_mem(($.$mol_page.prototype), "Body"));
-	($mol_mem(($.$mol_page.prototype), "Foot"));
+	($mol_mem(($.$mol_book2.prototype), "Placeholder"));
+	($mol_mem_key(($.$mol_book2.prototype), "Gap"));
 
 
 ;
 "use strict";
 var $;
 (function ($) {
-    /** Plugin is component without its own DOM element, but instead uses the owner DOM element */
-    class $mol_plugin extends $mol_view {
-        dom_node_external(next) {
-            return next ?? $mol_owning_get(this).host.dom_node();
-        }
-        render() {
-            this.dom_node_actual();
-        }
-    }
-    $.$mol_plugin = $mol_plugin;
+    $.$mol_mem_cached = $mol_wire_probe;
 })($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        const { per, rem } = $mol_style_unit;
-        const { hsla, blur } = $mol_style_func;
-        $mol_style_define($mol_page, {
-            display: 'flex',
-            flex: {
-                basis: 'auto',
-                direction: 'column',
-            },
-            position: 'relative',
-            alignSelf: 'stretch',
-            maxWidth: per(100),
-            maxHeight: per(100),
-            boxSizing: 'border-box',
-            color: $mol_theme.text,
-            // backdropFilter: blur( `3px` ), enforces layering
-            // zIndex: 0 ,
-            ':focus': {
-                outline: 'none',
-            },
-            Head: {
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'flex-end',
-                flex: 'none',
-                position: 'relative',
-                margin: 0,
-                minHeight: rem(4),
-                padding: $mol_gap.block,
-                background: {
-                    color: $mol_theme.card,
-                },
-                border: {
-                    radius: $mol_gap.round,
-                },
-                box: {
-                    shadow: [
-                        [0, `-0.5rem`, `0.5rem`, `-0.5rem`, hsla(0, 0, 0, .25)],
-                        [0, `0.5rem`, `0.5rem`, `-0.5rem`, hsla(0, 0, 0, .25)],
-                    ],
-                },
-                zIndex: 2,
-                '@media': {
-                    'print': {
-                        box: {
-                            shadow: [[0, `1px`, 0, 0, hsla(0, 0, 0, .25)]],
-                        },
-                    },
-                },
-            },
-            Title: {
-                minHeight: rem(2),
-                margin: 0,
-                padding: $mol_gap.text,
-                gap: $mol_gap.text,
-                wordBreak: 'normal',
-                textShadow: '0 0',
-                font: {
-                    size: 'inherit',
-                    weight: 'normal',
-                },
-                flex: {
-                    grow: 1,
-                    shrink: 1,
-                    basis: 'auto',
-                },
-            },
-            Tools: {
-                flex: {
-                    basis: 'auto',
-                    grow: 0,
-                    shrink: 1,
-                },
-                display: 'flex',
-                justifyContent: 'flex-end',
-                alignItems: 'flex-start',
-                flexWrap: 'wrap',
-                '@media': {
-                    'print': {
-                        display: 'none',
-                    },
-                },
-            },
-            Body: {
-                flex: {
-                    grow: 1000,
-                    shrink: 1,
-                    basis: per(100),
-                },
-            },
-            Body_content: {
-                padding: $mol_gap.block,
-                minHeight: 0,
-                minWidth: 0,
-                flex: {
-                    direction: 'column',
-                    shrink: 1,
-                    grow: 1,
-                },
-                justify: {
-                    self: 'stretch',
-                },
-            },
-            Foot: {
-                display: 'flex',
-                justifyContent: 'space-between',
-                flex: 'none',
-                margin: 0,
-                background: {
-                    color: $mol_theme.card,
-                },
-                border: {
-                    radius: $mol_gap.round,
-                },
-                box: {
-                    shadow: [
-                        [0, `-0.5rem`, `0.5rem`, `-0.5rem`, hsla(0, 0, 0, .25)],
-                        [0, `0.5rem`, `0.5rem`, `-0.5rem`, hsla(0, 0, 0, .25)],
-                    ],
-                },
-                zIndex: 1,
-                padding: $mol_gap.block,
-                ':empty': {
-                    display: 'none',
-                },
-            },
-        });
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-	($.$mol_speck) = class $mol_speck extends ($.$mol_view) {
-		value(){
-			return null;
-		}
-		theme(){
-			return "$mol_theme_accent";
-		}
-		sub(){
-			return [(this.value())];
-		}
-	};
-
 
 ;
 "use strict";
@@ -4629,212 +4413,6 @@ var $;
 
 ;
 "use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/speck/speck.view.css", "[mol_speck] {\n\tfont-size: .75rem;\n\tborder-radius: 1rem;\n\tmargin: -0.5rem -0.2rem;\n\talign-self: flex-start;\n\tmin-height: 1em;\n\tmin-width: .75rem;\n\tvertical-align: sub;\n\tpadding: 0 .2rem;\n\tposition: absolute;\n\tz-index: var(--mol_layer_speck);\n\ttext-align: center;\n\tline-height: .9;\n\tdisplay: inline-block;\n\twhite-space: nowrap;\n\ttext-overflow: ellipsis;\n\tuser-select: none;\n\tbox-shadow: 0 0 3px rgba(0,0,0,.5);\n}\n");
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-	($.$mol_button) = class $mol_button extends ($.$mol_view) {
-		event_activate(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		activate(next){
-			return (this.event_activate(next));
-		}
-		clicks(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		event_key_press(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		key_press(next){
-			return (this.event_key_press(next));
-		}
-		disabled(){
-			return false;
-		}
-		tab_index(){
-			return 0;
-		}
-		hint(){
-			return "";
-		}
-		hint_safe(){
-			return (this.hint());
-		}
-		error(){
-			return "";
-		}
-		enabled(){
-			return true;
-		}
-		click(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		event_click(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		status(next){
-			if(next !== undefined) return next;
-			return [];
-		}
-		event(){
-			return {
-				...(super.event()), 
-				"click": (next) => (this.activate(next)), 
-				"dblclick": (next) => (this.clicks(next)), 
-				"keydown": (next) => (this.key_press(next))
-			};
-		}
-		attr(){
-			return {
-				...(super.attr()), 
-				"disabled": (this.disabled()), 
-				"role": "button", 
-				"tabindex": (this.tab_index()), 
-				"title": (this.hint_safe())
-			};
-		}
-		sub(){
-			return [(this.title())];
-		}
-		Speck(){
-			const obj = new this.$.$mol_speck();
-			(obj.value) = () => ((this.error()));
-			return obj;
-		}
-	};
-	($mol_mem(($.$mol_button.prototype), "event_activate"));
-	($mol_mem(($.$mol_button.prototype), "clicks"));
-	($mol_mem(($.$mol_button.prototype), "event_key_press"));
-	($mol_mem(($.$mol_button.prototype), "click"));
-	($mol_mem(($.$mol_button.prototype), "event_click"));
-	($mol_mem(($.$mol_button.prototype), "status"));
-	($mol_mem(($.$mol_button.prototype), "Speck"));
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    /**
-    * Key names code for hotkey
-    * @see [mol_hotkey](../../hotkey/hotkey.view.ts)
-    */
-    let $mol_keyboard_code;
-    (function ($mol_keyboard_code) {
-        $mol_keyboard_code[$mol_keyboard_code["backspace"] = 8] = "backspace";
-        $mol_keyboard_code[$mol_keyboard_code["tab"] = 9] = "tab";
-        $mol_keyboard_code[$mol_keyboard_code["enter"] = 13] = "enter";
-        $mol_keyboard_code[$mol_keyboard_code["shift"] = 16] = "shift";
-        $mol_keyboard_code[$mol_keyboard_code["ctrl"] = 17] = "ctrl";
-        $mol_keyboard_code[$mol_keyboard_code["alt"] = 18] = "alt";
-        $mol_keyboard_code[$mol_keyboard_code["pause"] = 19] = "pause";
-        $mol_keyboard_code[$mol_keyboard_code["capsLock"] = 20] = "capsLock";
-        $mol_keyboard_code[$mol_keyboard_code["escape"] = 27] = "escape";
-        $mol_keyboard_code[$mol_keyboard_code["space"] = 32] = "space";
-        $mol_keyboard_code[$mol_keyboard_code["pageUp"] = 33] = "pageUp";
-        $mol_keyboard_code[$mol_keyboard_code["pageDown"] = 34] = "pageDown";
-        $mol_keyboard_code[$mol_keyboard_code["end"] = 35] = "end";
-        $mol_keyboard_code[$mol_keyboard_code["home"] = 36] = "home";
-        $mol_keyboard_code[$mol_keyboard_code["left"] = 37] = "left";
-        $mol_keyboard_code[$mol_keyboard_code["up"] = 38] = "up";
-        $mol_keyboard_code[$mol_keyboard_code["right"] = 39] = "right";
-        $mol_keyboard_code[$mol_keyboard_code["down"] = 40] = "down";
-        $mol_keyboard_code[$mol_keyboard_code["insert"] = 45] = "insert";
-        $mol_keyboard_code[$mol_keyboard_code["delete"] = 46] = "delete";
-        $mol_keyboard_code[$mol_keyboard_code["key0"] = 48] = "key0";
-        $mol_keyboard_code[$mol_keyboard_code["key1"] = 49] = "key1";
-        $mol_keyboard_code[$mol_keyboard_code["key2"] = 50] = "key2";
-        $mol_keyboard_code[$mol_keyboard_code["key3"] = 51] = "key3";
-        $mol_keyboard_code[$mol_keyboard_code["key4"] = 52] = "key4";
-        $mol_keyboard_code[$mol_keyboard_code["key5"] = 53] = "key5";
-        $mol_keyboard_code[$mol_keyboard_code["key6"] = 54] = "key6";
-        $mol_keyboard_code[$mol_keyboard_code["key7"] = 55] = "key7";
-        $mol_keyboard_code[$mol_keyboard_code["key8"] = 56] = "key8";
-        $mol_keyboard_code[$mol_keyboard_code["key9"] = 57] = "key9";
-        $mol_keyboard_code[$mol_keyboard_code["A"] = 65] = "A";
-        $mol_keyboard_code[$mol_keyboard_code["B"] = 66] = "B";
-        $mol_keyboard_code[$mol_keyboard_code["C"] = 67] = "C";
-        $mol_keyboard_code[$mol_keyboard_code["D"] = 68] = "D";
-        $mol_keyboard_code[$mol_keyboard_code["E"] = 69] = "E";
-        $mol_keyboard_code[$mol_keyboard_code["F"] = 70] = "F";
-        $mol_keyboard_code[$mol_keyboard_code["G"] = 71] = "G";
-        $mol_keyboard_code[$mol_keyboard_code["H"] = 72] = "H";
-        $mol_keyboard_code[$mol_keyboard_code["I"] = 73] = "I";
-        $mol_keyboard_code[$mol_keyboard_code["J"] = 74] = "J";
-        $mol_keyboard_code[$mol_keyboard_code["K"] = 75] = "K";
-        $mol_keyboard_code[$mol_keyboard_code["L"] = 76] = "L";
-        $mol_keyboard_code[$mol_keyboard_code["M"] = 77] = "M";
-        $mol_keyboard_code[$mol_keyboard_code["N"] = 78] = "N";
-        $mol_keyboard_code[$mol_keyboard_code["O"] = 79] = "O";
-        $mol_keyboard_code[$mol_keyboard_code["P"] = 80] = "P";
-        $mol_keyboard_code[$mol_keyboard_code["Q"] = 81] = "Q";
-        $mol_keyboard_code[$mol_keyboard_code["R"] = 82] = "R";
-        $mol_keyboard_code[$mol_keyboard_code["S"] = 83] = "S";
-        $mol_keyboard_code[$mol_keyboard_code["T"] = 84] = "T";
-        $mol_keyboard_code[$mol_keyboard_code["U"] = 85] = "U";
-        $mol_keyboard_code[$mol_keyboard_code["V"] = 86] = "V";
-        $mol_keyboard_code[$mol_keyboard_code["W"] = 87] = "W";
-        $mol_keyboard_code[$mol_keyboard_code["X"] = 88] = "X";
-        $mol_keyboard_code[$mol_keyboard_code["Y"] = 89] = "Y";
-        $mol_keyboard_code[$mol_keyboard_code["Z"] = 90] = "Z";
-        $mol_keyboard_code[$mol_keyboard_code["metaLeft"] = 91] = "metaLeft";
-        $mol_keyboard_code[$mol_keyboard_code["metaRight"] = 92] = "metaRight";
-        $mol_keyboard_code[$mol_keyboard_code["select"] = 93] = "select";
-        $mol_keyboard_code[$mol_keyboard_code["numpad0"] = 96] = "numpad0";
-        $mol_keyboard_code[$mol_keyboard_code["numpad1"] = 97] = "numpad1";
-        $mol_keyboard_code[$mol_keyboard_code["numpad2"] = 98] = "numpad2";
-        $mol_keyboard_code[$mol_keyboard_code["numpad3"] = 99] = "numpad3";
-        $mol_keyboard_code[$mol_keyboard_code["numpad4"] = 100] = "numpad4";
-        $mol_keyboard_code[$mol_keyboard_code["numpad5"] = 101] = "numpad5";
-        $mol_keyboard_code[$mol_keyboard_code["numpad6"] = 102] = "numpad6";
-        $mol_keyboard_code[$mol_keyboard_code["numpad7"] = 103] = "numpad7";
-        $mol_keyboard_code[$mol_keyboard_code["numpad8"] = 104] = "numpad8";
-        $mol_keyboard_code[$mol_keyboard_code["numpad9"] = 105] = "numpad9";
-        $mol_keyboard_code[$mol_keyboard_code["multiply"] = 106] = "multiply";
-        $mol_keyboard_code[$mol_keyboard_code["add"] = 107] = "add";
-        $mol_keyboard_code[$mol_keyboard_code["subtract"] = 109] = "subtract";
-        $mol_keyboard_code[$mol_keyboard_code["decimal"] = 110] = "decimal";
-        $mol_keyboard_code[$mol_keyboard_code["divide"] = 111] = "divide";
-        $mol_keyboard_code[$mol_keyboard_code["F1"] = 112] = "F1";
-        $mol_keyboard_code[$mol_keyboard_code["F2"] = 113] = "F2";
-        $mol_keyboard_code[$mol_keyboard_code["F3"] = 114] = "F3";
-        $mol_keyboard_code[$mol_keyboard_code["F4"] = 115] = "F4";
-        $mol_keyboard_code[$mol_keyboard_code["F5"] = 116] = "F5";
-        $mol_keyboard_code[$mol_keyboard_code["F6"] = 117] = "F6";
-        $mol_keyboard_code[$mol_keyboard_code["F7"] = 118] = "F7";
-        $mol_keyboard_code[$mol_keyboard_code["F8"] = 119] = "F8";
-        $mol_keyboard_code[$mol_keyboard_code["F9"] = 120] = "F9";
-        $mol_keyboard_code[$mol_keyboard_code["F10"] = 121] = "F10";
-        $mol_keyboard_code[$mol_keyboard_code["F11"] = 122] = "F11";
-        $mol_keyboard_code[$mol_keyboard_code["F12"] = 123] = "F12";
-        $mol_keyboard_code[$mol_keyboard_code["numLock"] = 144] = "numLock";
-        $mol_keyboard_code[$mol_keyboard_code["scrollLock"] = 145] = "scrollLock";
-        $mol_keyboard_code[$mol_keyboard_code["semicolon"] = 186] = "semicolon";
-        $mol_keyboard_code[$mol_keyboard_code["equals"] = 187] = "equals";
-        $mol_keyboard_code[$mol_keyboard_code["comma"] = 188] = "comma";
-        $mol_keyboard_code[$mol_keyboard_code["dash"] = 189] = "dash";
-        $mol_keyboard_code[$mol_keyboard_code["period"] = 190] = "period";
-        $mol_keyboard_code[$mol_keyboard_code["forwardSlash"] = 191] = "forwardSlash";
-        $mol_keyboard_code[$mol_keyboard_code["graveAccent"] = 192] = "graveAccent";
-        $mol_keyboard_code[$mol_keyboard_code["bracketOpen"] = 219] = "bracketOpen";
-        $mol_keyboard_code[$mol_keyboard_code["slashBack"] = 220] = "slashBack";
-        $mol_keyboard_code[$mol_keyboard_code["slashBackLeft"] = 226] = "slashBackLeft";
-        $mol_keyboard_code[$mol_keyboard_code["bracketClose"] = 221] = "bracketClose";
-        $mol_keyboard_code[$mol_keyboard_code["quoteSingle"] = 222] = "quoteSingle";
-    })($mol_keyboard_code = $.$mol_keyboard_code || ($.$mol_keyboard_code = {}));
-})($ || ($ = {}));
 
 ;
 "use strict";
@@ -4847,334 +4425,72 @@ var $;
     var $$;
     (function ($$) {
         /**
-         * Simple button.
-         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_button_demo
+         * Root component for adaptivity to various screen sizes. Implements booklet UX.
+         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_book2_demo
          */
-        class $mol_button extends $.$mol_button {
-            disabled() {
-                return !this.enabled();
-            }
-            event_activate(next) {
-                if (!next)
-                    return;
-                if (!this.enabled())
-                    return;
-                try {
-                    this.event_click(next);
-                    this.click(next);
-                    this.status([null]);
+        class $mol_book2 extends $.$mol_book2 {
+            pages_deep() {
+                let result = [];
+                for (const subpage of this.pages()) {
+                    if (subpage instanceof $mol_book2)
+                        result = [...result, ...subpage.pages_deep()];
+                    else
+                        result.push(subpage);
                 }
-                catch (error) {
-                    // Calling actions from catch section, if throwing promise breaks idempotency
-                    Promise.resolve().then(() => this.status([error]));
-                    $mol_fail_hidden(error);
-                }
+                return result;
             }
-            event_key_press(event) {
-                if (event.keyCode === $mol_keyboard_code.enter) {
-                    return this.activate(event);
-                }
+            title() {
+                return this.pages_deep().map(page => {
+                    try {
+                        return page?.title();
+                    }
+                    catch (error) {
+                        $mol_fail_log(error);
+                    }
+                }).reverse().filter(Boolean).join(' | ');
             }
-            tab_index() {
-                return this.enabled() ? super.tab_index() : -1;
-            }
-            error() {
-                const error = this.status()?.[0];
-                if (!error)
-                    return '';
-                if ($mol_promise_like(error)) {
-                    return $mol_fail_hidden(error);
-                }
-                return this.$.$mol_error_message(error);
-            }
-            hint_safe() {
-                try {
-                    return this.hint();
-                }
-                catch (error) {
-                    $mol_fail_log(error);
-                    return '';
-                }
-            }
-            sub_visible() {
-                return [
-                    ...this.error() ? [this.Speck()] : [],
-                    ...this.sub(),
-                ];
-            }
-        }
-        $$.$mol_button = $mol_button;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/button/button.view.css", "[mol_button] {\n\tborder: none;\n\tfont: inherit;\n\tdisplay: inline-flex;\n\tflex-shrink: 0;\n\ttext-decoration: inherit;\n\tcursor: inherit;\n\tposition: relative;\n\tbox-sizing: border-box;\n\tword-break: normal;\n\tcursor: default;\n\tuser-select: none;\n\t-webkit-user-select: none;\n\tborder-radius: var(--mol_gap_round);\n\tbackground: transparent;\n\tcolor: inherit;\n}\n\n[mol_button]:where(:not(:disabled)):hover {\n\tz-index: var(--mol_layer_hover);\n}\n\n[mol_button]:focus {\n\toutline: none;\n\tz-index: var(--mol_layer_focus);\n}\n");
-})($ || ($ = {}));
-
-;
-	($.$mol_button_typed) = class $mol_button_typed extends ($.$mol_button) {
-		minimal_height(){
-			return 40;
-		}
-		minimal_width(){
-			return 40;
-		}
-	};
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/button/typed/typed.view.css", "[mol_button_typed] {\n\talign-content: center;\n\talign-items: center;\n\tpadding: var(--mol_gap_text);\n\tborder-radius: var(--mol_gap_round);\n\tgap: var(--mol_gap_space);\n\tuser-select: none;\n\tcursor: pointer;\n\tmin-width: 2.5rem;\n\tmin-height: 2.5rem;\n}\n\n[mol_button_typed][disabled] {\n\tpointer-events: none;\n}\n\n[mol_button_typed]:hover ,\n[mol_button_typed]:focus-visible {\n\tbox-shadow: inset 0 0 0 100vmax var(--mol_theme_hover);\n}\n\n[mol_button_typed]:active {\n\tcolor: var(--mol_theme_focus);\n}\n");
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-	($.$mol_button_minor) = class $mol_button_minor extends ($.$mol_button_typed) {};
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/button/minor/minor.view.css", "[mol_button_minor]:where(:not([disabled])) {\n\tcolor: var(--mol_theme_control);\n}\n");
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-	($.$mol_check) = class $mol_check extends ($.$mol_button_minor) {
-		checked(next){
-			if(next !== undefined) return next;
-			return false;
-		}
-		aria_checked(){
-			return "false";
-		}
-		aria_role(){
-			return "checkbox";
-		}
-		Icon(){
-			return null;
-		}
-		title(){
-			return "";
-		}
-		Title(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.title())]);
-			return obj;
-		}
-		label(){
-			return [(this.Title())];
-		}
-		attr(){
-			return {
-				...(super.attr()), 
-				"mol_check_checked": (this.checked()), 
-				"aria-checked": (this.aria_checked()), 
-				"role": (this.aria_role())
-			};
-		}
-		sub(){
-			return [(this.Icon()), (this.label())];
-		}
-	};
-	($mol_mem(($.$mol_check.prototype), "checked"));
-	($mol_mem(($.$mol_check.prototype), "Title"));
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    /**
-     * Decorates method to fiber to ensure it is executed only once inside other fiber from [mol_wire](../wire/README.md)
-     * @see https://mol.hyoo.ru/#!section=docs/=1fcpsq_1wh0h2
-     */
-    $.$mol_action = $mol_wire_method;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_dom_event extends $mol_object {
-        native;
-        constructor(native) {
-            super();
-            this.native = native;
-        }
-        prevented(next) {
-            if (next)
-                this.native.preventDefault();
-            return this.native.defaultPrevented;
-        }
-        static wrap(event) {
-            return new this.$.$mol_dom_event(event);
-        }
-    }
-    __decorate([
-        $mol_action
-    ], $mol_dom_event.prototype, "prevented", null);
-    __decorate([
-        $mol_action
-    ], $mol_dom_event, "wrap", null);
-    $.$mol_dom_event = $mol_dom_event;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/check/check.css", "[mol_check] {\n\tflex: 0 0 auto;\n\tjustify-content: flex-start;\n\talign-content: center;\n\t/* align-items: flex-start; */\n\tborder: none;\n\tfont-weight: inherit;\n\tbox-shadow: none;\n\ttext-align: start;\n\tdisplay: inline-flex;\n\tflex-wrap: nowrap;\n}\n\n[mol_check_title] {\n\tflex-shrink: 1;\n}\n");
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        /**
-         * Checkbox UI component. See Variants for more concrete implementations.
-         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_check_box_demo
-         */
-        class $mol_check extends $.$mol_check {
-            click(next) {
-                const event = next ? $mol_dom_event.wrap(next) : null;
-                if (event?.prevented())
-                    return;
-                event?.prevented(true);
-                this.checked(!this.checked());
+            menu_title() {
+                return this.pages_deep()[0]?.title() || this.title();
             }
             sub() {
-                return [
-                    ...$mol_maybe(this.Icon()),
-                    ...this.label(),
-                ];
+                const placeholders = this.placeholders();
+                const next = this.pages_deep().filter(Boolean);
+                const prev = $mol_mem_cached(() => this.sub())?.filter(page => !placeholders.includes(page)) ?? [];
+                for (let i = 1; i; ++i) {
+                    const p = prev[prev.length - i];
+                    const n = next[next.length - i];
+                    if (!n)
+                        break;
+                    if (p === n)
+                        continue;
+                    new this.$.$mol_after_tick(() => {
+                        const b = this.dom_node();
+                        const p = n.dom_node();
+                        b.scroll({
+                            left: p.offsetLeft + p.offsetWidth - b.offsetWidth,
+                            behavior: 'smooth',
+                        });
+                        // new this.$.$mol_after_timeout( 1000, ()=> n.bring() )
+                    });
+                    break;
+                }
+                return [...next, ...placeholders];
             }
-            label() {
-                return this.title() ? super.label() : [];
-            }
-            aria_checked() {
-                return String(this.checked());
-            }
-        }
-        $$.$mol_check = $mol_check;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-	($.$mol_check_list) = class $mol_check_list extends ($.$mol_view) {
-		option_checked(id, next){
-			if(next !== undefined) return next;
-			return false;
-		}
-		option_title(id){
-			return "";
-		}
-		option_label(id){
-			return [(this.option_title(id))];
-		}
-		enabled(){
-			return true;
-		}
-		option_enabled(id){
-			return (this.enabled());
-		}
-		option_hint(id){
-			return "";
-		}
-		items(){
-			return [];
-		}
-		dictionary(){
-			return {};
-		}
-		Option(id){
-			const obj = new this.$.$mol_check();
-			(obj.checked) = (next) => ((this.option_checked(id, next)));
-			(obj.label) = () => ((this.option_label(id)));
-			(obj.enabled) = () => ((this.option_enabled(id)));
-			(obj.hint) = () => ((this.option_hint(id)));
-			(obj.minimal_height) = () => (24);
-			return obj;
-		}
-		options(){
-			return {};
-		}
-		keys(){
-			return [];
-		}
-		sub(){
-			return (this.items());
-		}
-	};
-	($mol_mem_key(($.$mol_check_list.prototype), "option_checked"));
-	($mol_mem_key(($.$mol_check_list.prototype), "Option"));
-
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        /**
-         * List of checkboxes
-         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_check_list_demo
-         */
-        class $mol_check_list extends $.$mol_check_list {
-            options() {
-                return {};
-            }
-            dictionary(next) {
-                return next ?? {};
-            }
-            option_checked(id, next) {
-                const prev = this.dictionary();
-                if (next === undefined)
-                    return prev[id] ?? null;
-                const next_rec = { ...prev, [id]: next };
-                if (next === null)
-                    delete next_rec[id];
-                return this.dictionary(next_rec)[id] ?? null;
-            }
-            keys() {
-                return Object.keys(this.options());
-            }
-            items() {
-                return this.keys().map(key => this.Option(key));
-            }
-            option_title(key) {
-                return this.options()[key] || key;
+            bring() {
+                const pages = this.pages_deep();
+                if (pages.length)
+                    pages[pages.length - 1].bring();
+                else
+                    super.bring();
             }
         }
         __decorate([
             $mol_mem
-        ], $mol_check_list.prototype, "keys", null);
+        ], $mol_book2.prototype, "pages_deep", null);
         __decorate([
             $mol_mem
-        ], $mol_check_list.prototype, "items", null);
-        $$.$mol_check_list = $mol_check_list;
+        ], $mol_book2.prototype, "sub", null);
+        $$.$mol_book2 = $mol_book2;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
 
@@ -5182,487 +4498,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    $mol_style_attach("mol/check/list/list.view.css", "[mol_check_list] {\n\tdisplay: flex;\n\tflex-wrap: wrap;\n\tflex: 1 1 auto;\n\tborder-radius: var(--mol_gap_round);\n\tgap: 1px;\n}\n\n[mol_check_list_option] {\n\tflex: 0 1 auto;\n}\n\n[mol_check_list_option]:where([mol_check_checked=\"true\"]) {\n\ttext-shadow: 0 0;\n\tcolor: var(--mol_theme_current);\n}\n\n[mol_check_list_option]:where([mol_check_checked=\"true\"][disabled]) {\n\tcolor: var(--mol_theme_text);\n}\n");
-})($ || ($ = {}));
-
-;
-	($.$mol_switch) = class $mol_switch extends ($.$mol_check_list) {
-		value(next){
-			if(next !== undefined) return next;
-			return "";
-		}
-	};
-	($mol_mem(($.$mol_switch.prototype), "value"));
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_state_session extends $mol_object {
-        static 'native()';
-        static native() {
-            if (this['native()'])
-                return this['native()'];
-            check: try {
-                const native = $mol_dom_context.sessionStorage;
-                if (!native)
-                    break check;
-                native.setItem('', '');
-                native.removeItem('');
-                return this['native()'] = native;
-            }
-            catch (error) {
-                console.warn(error);
-            }
-            return this['native()'] = {
-                getItem(key) {
-                    return this[':' + key];
-                },
-                setItem(key, value) {
-                    this[':' + key] = value;
-                },
-                removeItem(key) {
-                    this[':' + key] = void 0;
-                }
-            };
-        }
-        static value(key, next) {
-            if (next === void 0)
-                return JSON.parse(this.native().getItem(key) || 'null');
-            if (next === null)
-                this.native().removeItem(key);
-            else
-                this.native().setItem(key, JSON.stringify(next));
-            return next;
-        }
-        prefix() { return ''; }
-        value(key, next) {
-            return $mol_state_session.value(this.prefix() + '.' + key, next);
-        }
-    }
-    __decorate([
-        $mol_mem_key
-    ], $mol_state_session, "value", null);
-    $.$mol_state_session = $mol_state_session;
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        /**
-         * Buttons which switching the state
-         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_switch_demo
-         */
-        class $mol_switch extends $.$mol_switch {
-            value(next) {
-                return $mol_state_session.value(`${this}.value()`, next) ?? '';
-            }
-            option_checked(key, next) {
-                if (next === undefined)
-                    return this.value() == key;
-                this.value(next ? key : '');
-                return next;
-            }
-        }
-        $$.$mol_switch = $mol_switch;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-	($.$mol_link) = class $mol_link extends ($.$mol_view) {
-		uri_toggle(){
-			return "";
-		}
-		uri_unsafe(){
-			return (this.uri_toggle());
-		}
-		hint(){
-			return "";
-		}
-		hint_safe(){
-			return (this.hint());
-		}
-		target(){
-			return "_self";
-		}
-		file_name(){
-			return "";
-		}
-		current(){
-			return false;
-		}
-		relation(){
-			return "";
-		}
-		event_click(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		click(next){
-			return (this.event_click(next));
-		}
-		uri(){
-			return "";
-		}
-		dom_name(){
-			return "a";
-		}
-		uri_off(){
-			return "";
-		}
-		uri_native(){
-			return null;
-		}
-		external(){
-			return false;
-		}
-		attr(){
-			return {
-				...(super.attr()), 
-				"href": (this.uri_unsafe()), 
-				"title": (this.hint_safe()), 
-				"target": (this.target()), 
-				"download": (this.file_name()), 
-				"mol_link_current": (this.current()), 
-				"rel": (this.relation())
-			};
-		}
-		sub(){
-			return [(this.title())];
-		}
-		arg(){
-			return {};
-		}
-		event(){
-			return {...(super.event()), "click": (next) => (this.click(next))};
-		}
-	};
-	($mol_mem(($.$mol_link.prototype), "event_click"));
-
-
-;
-"use strict";
-
-;
-"use strict";
-var $;
-(function ($) {
-    /** State of arguments like `foo=bar xxx` */
-    class $mol_state_arg extends $mol_object {
-        prefix;
-        static prolog = '';
-        static separator = ' ';
-        static href(next) {
-            return next || process.argv.slice(2).join(' ');
-        }
-        static href_normal() {
-            return this.link({});
-        }
-        static dict(next) {
-            if (next !== void 0)
-                this.href(this.make_link(next));
-            var href = this.href();
-            var chunks = href.split(' ');
-            var params = {};
-            chunks.forEach(chunk => {
-                if (!chunk)
-                    return;
-                var vals = chunk.split('=').map(decodeURIComponent);
-                params[vals.shift()] = vals.join('=');
-            });
-            return params;
-        }
-        static value(key, next) {
-            if (next === void 0)
-                return this.dict()[key] ?? null;
-            this.href(this.link({ [key]: next }));
-            return next;
-        }
-        static link(next) {
-            const params = {};
-            var prev = this.dict();
-            for (var key in prev) {
-                params[key] = prev[key];
-            }
-            for (var key in next) {
-                params[key] = next[key];
-            }
-            return this.make_link(params);
-        }
-        static make_link(next) {
-            const chunks = [];
-            for (const key in next) {
-                if (next[key] !== null) {
-                    chunks.push([key, next[key]].map(encodeURIComponent).join('='));
-                }
-            }
-            return chunks.join(' ');
-        }
-        static go(next) {
-            this.href(this.link(next));
-        }
-        static commit() { }
-        constructor(prefix = '') {
-            super();
-            this.prefix = prefix;
-        }
-        value(key, next) {
-            return this.constructor.value(this.prefix + key, next);
-        }
-        sub(postfix) {
-            return new this.constructor(this.prefix + postfix + '.');
-        }
-        link(next) {
-            const prefix = this.prefix;
-            const dict = {};
-            for (var key in next) {
-                dict[prefix + key] = next[key];
-            }
-            return this.constructor.link(dict);
-        }
-    }
-    __decorate([
-        $mol_mem
-    ], $mol_state_arg, "href", null);
-    __decorate([
-        $mol_mem
-    ], $mol_state_arg, "href_normal", null);
-    __decorate([
-        $mol_mem
-    ], $mol_state_arg, "dict", null);
-    __decorate([
-        $mol_mem_key
-    ], $mol_state_arg, "value", null);
-    __decorate([
-        $mol_action
-    ], $mol_state_arg, "go", null);
-    $.$mol_state_arg = $mol_state_arg;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    function $mol_dom_safe_uri(uri) {
-        return uri.replace(/^(?=\w+script+:)/, 'about:blank#');
-    }
-    $.$mol_dom_safe_uri = $mol_dom_safe_uri;
-    function $mol_dom_safe_attr(val) {
-        return val;
-    }
-    $.$mol_dom_safe_attr = $mol_dom_safe_attr;
-    $.$mol_dom_safe_rules = {
-        // defaults
-        '': { id: $mol_dom_safe_attr },
-        // special
-        a: { href: $mol_dom_safe_uri },
-        img: { src: $mol_dom_safe_uri },
-        object: { src: $mol_dom_safe_uri },
-        // blocks
-        div: {},
-        p: {},
-        h1: {},
-        h2: {},
-        h3: {},
-        h4: {},
-        h5: {},
-        h6: {},
-        blockquote: {},
-        pre: {},
-        ul: {},
-        ol: {},
-        li: {},
-        details: {},
-        summary: {},
-        hr: {},
-        table: {},
-        tr: {},
-        td: {},
-        // inlines
-        span: {},
-        strong: {},
-        em: {},
-        br: {},
-        ins: {},
-        del: {},
-        code: {},
-    };
-    function $mol_dom_safe(nodes) {
-        const res = [];
-        for (const node of nodes) {
-            if (node.nodeType === node.TEXT_NODE) {
-                res.push(node);
-                continue;
-            }
-            if (node.nodeType === node.ELEMENT_NODE) {
-                const kids = this.$mol_dom_safe([...node.childNodes]);
-                const allowed = this.$mol_dom_safe_rules[node.localName];
-                if (!allowed) {
-                    res.push(...kids);
-                    continue;
-                }
-                for (const attr of [...node.attributes]) {
-                    const proc = allowed[attr.localName] ?? this.$mol_dom_safe_rules[''][attr.localName];
-                    if (proc)
-                        attr.nodeValue = proc(attr.nodeValue);
-                    else
-                        node.removeAttribute(attr.nodeName);
-                }
-                $mol_dom_render_children(node, kids);
-                res.push(node);
-                continue;
-            }
-        }
-        return res;
-    }
-    $.$mol_dom_safe = $mol_dom_safe;
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        /**
-         * Dynamic hyperlink. It can add, change or remove parameters. A link that leads to the current page has [mol_link_current] attribute set to true.
-         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_link_demo
-         */
-        class $mol_link extends $.$mol_link {
-            uri_toggle() {
-                return this.current() ? this.uri_off() : this.uri();
-            }
-            uri() {
-                return new this.$.$mol_state_arg(this.state_key()).link(this.arg());
-            }
-            uri_off() {
-                const arg2 = {};
-                for (let i in this.arg())
-                    arg2[i] = null;
-                return new this.$.$mol_state_arg(this.state_key()).link(arg2);
-            }
-            uri_native() {
-                const base = this.$.$mol_state_arg.href();
-                return new URL(this.uri(), base);
-            }
-            current() {
-                const base = this.$.$mol_state_arg.href_normal();
-                const target = this.uri_native().toString();
-                if (base === target)
-                    return true;
-                const args = this.arg();
-                const keys = Object.keys(args).filter(key => args[key] != null);
-                if (keys.length === 0)
-                    return false;
-                for (const key of keys) {
-                    if (this.$.$mol_state_arg.value(key) != args[key])
-                        return false;
-                }
-                return true;
-            }
-            file_name() {
-                return null;
-            }
-            minimal_height() {
-                return Math.max(super.minimal_height(), 24);
-            }
-            external() {
-                return this.uri_native().origin !== $mol_dom_context.location.origin;
-            }
-            target() {
-                return this.external() ? '_blank' : '_self';
-            }
-            hint_safe() {
-                try {
-                    return this.hint();
-                }
-                catch (error) {
-                    $mol_fail_log(error);
-                    if (error instanceof Error)
-                        return '💥' + error.message;
-                    return '';
-                }
-            }
-            uri_unsafe() {
-                return $mol_dom_safe_uri(super.uri_unsafe());
-            }
-        }
-        __decorate([
-            $mol_mem
-        ], $mol_link.prototype, "uri_toggle", null);
-        __decorate([
-            $mol_mem
-        ], $mol_link.prototype, "uri", null);
-        __decorate([
-            $mol_mem
-        ], $mol_link.prototype, "uri_off", null);
-        __decorate([
-            $mol_mem
-        ], $mol_link.prototype, "uri_native", null);
-        __decorate([
-            $mol_mem
-        ], $mol_link.prototype, "current", null);
-        $$.$mol_link = $mol_link;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    const { rem } = $mol_style_unit;
-    $mol_style_define($mol_link, {
-        textDecoration: 'none',
-        color: $mol_theme.control,
-        stroke: 'currentcolor',
-        cursor: 'pointer',
-        padding: $mol_gap.text,
-        boxSizing: 'border-box',
-        position: 'relative',
-        minWidth: rem(2.5),
-        minHeight: rem(2.5),
-        gap: $mol_gap.space,
-        border: {
-            radius: $mol_gap.round,
-        },
-        ':hover': {
-            background: {
-                color: $mol_theme.hover,
-            },
-        },
-        ':focus': {
-            outline: 'none',
-        },
-        ':focus-visible': {
-            outline: 'none',
-            background: {
-                color: $mol_theme.hover,
-            }
-        },
-        ':active': {
-            color: $mol_theme.focus,
-        },
-        '@': {
-            mol_link_current: {
-                'true': {
-                    color: $mol_theme.current,
-                    textShadow: '0 0',
-                }
-            }
-        },
-    });
+    $mol_style_attach("mol/book2/book2.view.css", "[mol_book2] {\n\tdisplay: flex;\n\tflex-flow: row nowrap;\n\talign-items: stretch;\n\tflex: 1 1 auto;\n\talign-self: stretch;\n\tmargin: 0;\n\t/* box-shadow: 0 0 0 1px var(--mol_theme_line); */\n\t/* transform: translateZ(0); */\n\ttransition: none;\n\tscroll-snap-type: x mandatory;\n\t/* padding: 0 1px;\n\tscroll-padding: 0 1px;\n\tgap: 1px; */\n}\n\n[mol_book2] > * {\n/* \tflex: none; */\n\tscroll-snap-stop: always;\n\tscroll-snap-align: end;\n\tposition: relative;\n\tmin-height: 100%;\n\tmax-height: 100%;\n\tmax-width: 100%;\n\tflex-shrink: 0;\n\tbox-shadow: inset 0 0 0 1px var(--mol_theme_field);\n}\n\n[mol_book2] > *:not(:first-of-type):before,\n[mol_book2] > *:not(:last-of-type)::after {\n\tcontent: '';\n\tposition: absolute;\n\ttop: 1.5rem;\n\twidth: 3px;\n\theight: 1rem;\n\tbackground: linear-gradient(\n\t\tto bottom,\n\t\tvar(--mol_theme_special) 0%,\n\t\tvar(--mol_theme_special) 14%,\n\t\ttransparent 15%,\n\t\ttransparent 42%,\n\t\tvar(--mol_theme_special) 43%,\n\t\tvar(--mol_theme_special) 57%,\n\t\ttransparent 58%,\n\t\ttransparent 85%,\n\t\tvar(--mol_theme_special) 86%,\n\t\tvar(--mol_theme_special) 100%\n\t);\n\topacity: .5;\n\tz-index: var(--mol_layer_speck);\n}\n[mol_book2] > *:not(:first-of-type):before {\n\tleft: -3px;\n}\n[mol_book2] > *:not(:last-of-type)::after {\n\tright: -3px;\n}\n\n:where([mol_book2]) > * {\n\tbackground-color: var(--mol_theme_card);\n\t/* box-shadow: 0 0 0 1px var(--mol_theme_back); */\n}\n\n[mol_book2] > [mol_book2] {\n\tdisplay: contents;\n}\n\n[mol_book2] > *:first-child {\n\tscroll-snap-align: start;\n}\n\n[mol_book2] > [mol_view] {\n\ttransform: none; /* prevent content clipping */\n}\n\n[mol_book2_placeholder] {\n\tflex: 1 1 0;\n\tbackground: none;\n}\n\n[mol_book2_gap] {\n\tbackground: none;\n\tflex-grow: 1;\n\tscroll-snap-align: none;\n\tmargin-inline-end: -1px;\n\tbox-shadow: none;\n}\n\n[mol_book2_gap]::before,\n[mol_book2_gap]::after {\n\tdisplay: none;\n}\n");
 })($ || ($ = {}));
 
 ;
@@ -6030,46 +4866,158 @@ var $;
 })($ || ($ = {}));
 
 ;
-	($.$mol_pick) = class $mol_pick extends ($.$mol_pop) {
+"use strict";
+var $;
+(function ($) {
+    /** Plugin is component without its own DOM element, but instead uses the owner DOM element */
+    class $mol_plugin extends $mol_view {
+        dom_node_external(next) {
+            return next ?? $mol_owning_get(this).host.dom_node();
+        }
+        render() {
+            this.dom_node_actual();
+        }
+    }
+    $.$mol_plugin = $mol_plugin;
+})($ || ($ = {}));
+
+;
+	($.$mol_hotkey) = class $mol_hotkey extends ($.$mol_plugin) {
 		keydown(next){
 			if(next !== undefined) return next;
 			return null;
 		}
-		trigger_enabled(){
-			return true;
-		}
-		clicks(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		trigger_content(){
-			return [(this.title())];
-		}
-		hint(){
-			return "";
-		}
-		Trigger(){
-			const obj = new this.$.$mol_check();
-			(obj.minimal_width) = () => (40);
-			(obj.minimal_height) = () => (40);
-			(obj.enabled) = () => ((this.trigger_enabled()));
-			(obj.checked) = (next) => ((this.showed(next)));
-			(obj.clicks) = (next) => ((this.clicks(next)));
-			(obj.sub) = () => ((this.trigger_content()));
-			(obj.hint) = () => ((this.hint()));
-			return obj;
-		}
 		event(){
 			return {...(super.event()), "keydown": (next) => (this.keydown(next))};
 		}
-		Anchor(){
-			return (this.Trigger());
+		key(){
+			return {};
+		}
+		mod_ctrl(){
+			return false;
+		}
+		mod_alt(){
+			return false;
+		}
+		mod_shift(){
+			return false;
 		}
 	};
-	($mol_mem(($.$mol_pick.prototype), "keydown"));
-	($mol_mem(($.$mol_pick.prototype), "clicks"));
-	($mol_mem(($.$mol_pick.prototype), "Trigger"));
+	($mol_mem(($.$mol_hotkey.prototype), "keydown"));
 
+
+;
+"use strict";
+var $;
+(function ($) {
+    /**
+    * Key names code for hotkey
+    * @see [mol_hotkey](../../hotkey/hotkey.view.ts)
+    */
+    let $mol_keyboard_code;
+    (function ($mol_keyboard_code) {
+        $mol_keyboard_code[$mol_keyboard_code["backspace"] = 8] = "backspace";
+        $mol_keyboard_code[$mol_keyboard_code["tab"] = 9] = "tab";
+        $mol_keyboard_code[$mol_keyboard_code["enter"] = 13] = "enter";
+        $mol_keyboard_code[$mol_keyboard_code["shift"] = 16] = "shift";
+        $mol_keyboard_code[$mol_keyboard_code["ctrl"] = 17] = "ctrl";
+        $mol_keyboard_code[$mol_keyboard_code["alt"] = 18] = "alt";
+        $mol_keyboard_code[$mol_keyboard_code["pause"] = 19] = "pause";
+        $mol_keyboard_code[$mol_keyboard_code["capsLock"] = 20] = "capsLock";
+        $mol_keyboard_code[$mol_keyboard_code["escape"] = 27] = "escape";
+        $mol_keyboard_code[$mol_keyboard_code["space"] = 32] = "space";
+        $mol_keyboard_code[$mol_keyboard_code["pageUp"] = 33] = "pageUp";
+        $mol_keyboard_code[$mol_keyboard_code["pageDown"] = 34] = "pageDown";
+        $mol_keyboard_code[$mol_keyboard_code["end"] = 35] = "end";
+        $mol_keyboard_code[$mol_keyboard_code["home"] = 36] = "home";
+        $mol_keyboard_code[$mol_keyboard_code["left"] = 37] = "left";
+        $mol_keyboard_code[$mol_keyboard_code["up"] = 38] = "up";
+        $mol_keyboard_code[$mol_keyboard_code["right"] = 39] = "right";
+        $mol_keyboard_code[$mol_keyboard_code["down"] = 40] = "down";
+        $mol_keyboard_code[$mol_keyboard_code["insert"] = 45] = "insert";
+        $mol_keyboard_code[$mol_keyboard_code["delete"] = 46] = "delete";
+        $mol_keyboard_code[$mol_keyboard_code["key0"] = 48] = "key0";
+        $mol_keyboard_code[$mol_keyboard_code["key1"] = 49] = "key1";
+        $mol_keyboard_code[$mol_keyboard_code["key2"] = 50] = "key2";
+        $mol_keyboard_code[$mol_keyboard_code["key3"] = 51] = "key3";
+        $mol_keyboard_code[$mol_keyboard_code["key4"] = 52] = "key4";
+        $mol_keyboard_code[$mol_keyboard_code["key5"] = 53] = "key5";
+        $mol_keyboard_code[$mol_keyboard_code["key6"] = 54] = "key6";
+        $mol_keyboard_code[$mol_keyboard_code["key7"] = 55] = "key7";
+        $mol_keyboard_code[$mol_keyboard_code["key8"] = 56] = "key8";
+        $mol_keyboard_code[$mol_keyboard_code["key9"] = 57] = "key9";
+        $mol_keyboard_code[$mol_keyboard_code["A"] = 65] = "A";
+        $mol_keyboard_code[$mol_keyboard_code["B"] = 66] = "B";
+        $mol_keyboard_code[$mol_keyboard_code["C"] = 67] = "C";
+        $mol_keyboard_code[$mol_keyboard_code["D"] = 68] = "D";
+        $mol_keyboard_code[$mol_keyboard_code["E"] = 69] = "E";
+        $mol_keyboard_code[$mol_keyboard_code["F"] = 70] = "F";
+        $mol_keyboard_code[$mol_keyboard_code["G"] = 71] = "G";
+        $mol_keyboard_code[$mol_keyboard_code["H"] = 72] = "H";
+        $mol_keyboard_code[$mol_keyboard_code["I"] = 73] = "I";
+        $mol_keyboard_code[$mol_keyboard_code["J"] = 74] = "J";
+        $mol_keyboard_code[$mol_keyboard_code["K"] = 75] = "K";
+        $mol_keyboard_code[$mol_keyboard_code["L"] = 76] = "L";
+        $mol_keyboard_code[$mol_keyboard_code["M"] = 77] = "M";
+        $mol_keyboard_code[$mol_keyboard_code["N"] = 78] = "N";
+        $mol_keyboard_code[$mol_keyboard_code["O"] = 79] = "O";
+        $mol_keyboard_code[$mol_keyboard_code["P"] = 80] = "P";
+        $mol_keyboard_code[$mol_keyboard_code["Q"] = 81] = "Q";
+        $mol_keyboard_code[$mol_keyboard_code["R"] = 82] = "R";
+        $mol_keyboard_code[$mol_keyboard_code["S"] = 83] = "S";
+        $mol_keyboard_code[$mol_keyboard_code["T"] = 84] = "T";
+        $mol_keyboard_code[$mol_keyboard_code["U"] = 85] = "U";
+        $mol_keyboard_code[$mol_keyboard_code["V"] = 86] = "V";
+        $mol_keyboard_code[$mol_keyboard_code["W"] = 87] = "W";
+        $mol_keyboard_code[$mol_keyboard_code["X"] = 88] = "X";
+        $mol_keyboard_code[$mol_keyboard_code["Y"] = 89] = "Y";
+        $mol_keyboard_code[$mol_keyboard_code["Z"] = 90] = "Z";
+        $mol_keyboard_code[$mol_keyboard_code["metaLeft"] = 91] = "metaLeft";
+        $mol_keyboard_code[$mol_keyboard_code["metaRight"] = 92] = "metaRight";
+        $mol_keyboard_code[$mol_keyboard_code["select"] = 93] = "select";
+        $mol_keyboard_code[$mol_keyboard_code["numpad0"] = 96] = "numpad0";
+        $mol_keyboard_code[$mol_keyboard_code["numpad1"] = 97] = "numpad1";
+        $mol_keyboard_code[$mol_keyboard_code["numpad2"] = 98] = "numpad2";
+        $mol_keyboard_code[$mol_keyboard_code["numpad3"] = 99] = "numpad3";
+        $mol_keyboard_code[$mol_keyboard_code["numpad4"] = 100] = "numpad4";
+        $mol_keyboard_code[$mol_keyboard_code["numpad5"] = 101] = "numpad5";
+        $mol_keyboard_code[$mol_keyboard_code["numpad6"] = 102] = "numpad6";
+        $mol_keyboard_code[$mol_keyboard_code["numpad7"] = 103] = "numpad7";
+        $mol_keyboard_code[$mol_keyboard_code["numpad8"] = 104] = "numpad8";
+        $mol_keyboard_code[$mol_keyboard_code["numpad9"] = 105] = "numpad9";
+        $mol_keyboard_code[$mol_keyboard_code["multiply"] = 106] = "multiply";
+        $mol_keyboard_code[$mol_keyboard_code["add"] = 107] = "add";
+        $mol_keyboard_code[$mol_keyboard_code["subtract"] = 109] = "subtract";
+        $mol_keyboard_code[$mol_keyboard_code["decimal"] = 110] = "decimal";
+        $mol_keyboard_code[$mol_keyboard_code["divide"] = 111] = "divide";
+        $mol_keyboard_code[$mol_keyboard_code["F1"] = 112] = "F1";
+        $mol_keyboard_code[$mol_keyboard_code["F2"] = 113] = "F2";
+        $mol_keyboard_code[$mol_keyboard_code["F3"] = 114] = "F3";
+        $mol_keyboard_code[$mol_keyboard_code["F4"] = 115] = "F4";
+        $mol_keyboard_code[$mol_keyboard_code["F5"] = 116] = "F5";
+        $mol_keyboard_code[$mol_keyboard_code["F6"] = 117] = "F6";
+        $mol_keyboard_code[$mol_keyboard_code["F7"] = 118] = "F7";
+        $mol_keyboard_code[$mol_keyboard_code["F8"] = 119] = "F8";
+        $mol_keyboard_code[$mol_keyboard_code["F9"] = 120] = "F9";
+        $mol_keyboard_code[$mol_keyboard_code["F10"] = 121] = "F10";
+        $mol_keyboard_code[$mol_keyboard_code["F11"] = 122] = "F11";
+        $mol_keyboard_code[$mol_keyboard_code["F12"] = 123] = "F12";
+        $mol_keyboard_code[$mol_keyboard_code["numLock"] = 144] = "numLock";
+        $mol_keyboard_code[$mol_keyboard_code["scrollLock"] = 145] = "scrollLock";
+        $mol_keyboard_code[$mol_keyboard_code["semicolon"] = 186] = "semicolon";
+        $mol_keyboard_code[$mol_keyboard_code["equals"] = 187] = "equals";
+        $mol_keyboard_code[$mol_keyboard_code["comma"] = 188] = "comma";
+        $mol_keyboard_code[$mol_keyboard_code["dash"] = 189] = "dash";
+        $mol_keyboard_code[$mol_keyboard_code["period"] = 190] = "period";
+        $mol_keyboard_code[$mol_keyboard_code["forwardSlash"] = 191] = "forwardSlash";
+        $mol_keyboard_code[$mol_keyboard_code["graveAccent"] = 192] = "graveAccent";
+        $mol_keyboard_code[$mol_keyboard_code["bracketOpen"] = 219] = "bracketOpen";
+        $mol_keyboard_code[$mol_keyboard_code["slashBack"] = 220] = "slashBack";
+        $mol_keyboard_code[$mol_keyboard_code["slashBackLeft"] = 226] = "slashBackLeft";
+        $mol_keyboard_code[$mol_keyboard_code["bracketClose"] = 221] = "bracketClose";
+        $mol_keyboard_code[$mol_keyboard_code["quoteSingle"] = 222] = "quoteSingle";
+    })($mol_keyboard_code = $.$mol_keyboard_code || ($.$mol_keyboard_code = {}));
+})($ || ($ = {}));
 
 ;
 "use strict";
@@ -6082,453 +5030,100 @@ var $;
     var $$;
     (function ($$) {
         /**
-         * Pop-up display and hide by mouse click, also hide by unfocus.
-         * Based on [mol_pop](https://mol.hyoo.ru/#!section=demos/demo=mol_pop_demo) component.
-         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_pick_demo
+         * Plugin which adds handlers for keyboard keys.
+         * @see [mol_keyboard_code](../keyboard/code/code.ts)
          */
-        class $mol_pick extends $.$mol_pick {
+        class $mol_hotkey extends $.$mol_hotkey {
+            key() {
+                return super.key();
+            }
             keydown(event) {
-                if (!this.trigger_enabled())
+                if (!event)
                     return;
                 if (event.defaultPrevented)
                     return;
-                if (event.keyCode === $mol_keyboard_code.escape) {
-                    if (!this.showed())
-                        return;
-                    event.preventDefault();
-                    this.showed(false);
-                }
+                let name = $mol_keyboard_code[event.keyCode];
+                if (this.mod_ctrl() !== (event.ctrlKey || event.metaKey))
+                    return;
+                if (this.mod_alt() !== event.altKey)
+                    return;
+                if (this.mod_shift() !== event.shiftKey)
+                    return;
+                const handle = this.key()[name];
+                if (handle)
+                    handle(event);
             }
         }
-        $$.$mol_pick = $mol_pick;
+        $$.$mol_hotkey = $mol_hotkey;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
 
 ;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/pick/pick.view.css", "[mol_pick_trigger] {\n\talign-items: center;\n\tflex-grow: 1;\n}\n");
-})($ || ($ = {}));
-
-;
-	($.$mol_paragraph) = class $mol_paragraph extends ($.$mol_view) {
-		line_height(){
-			return 24;
+	($.$mol_nav) = class $mol_nav extends ($.$mol_plugin) {
+		event_key(next){
+			if(next !== undefined) return next;
+			return null;
 		}
-		letter_width(){
-			return 7;
+		cycle(next){
+			if(next !== undefined) return next;
+			return false;
 		}
-		width_limit(){
-			return +Infinity;
+		mod_ctrl(){
+			return false;
 		}
-		row_width(){
-			return 0;
+		mod_shift(){
+			return false;
 		}
-		sub(){
-			return [(this.title())];
+		mod_alt(){
+			return false;
 		}
-	};
-
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        class $mol_paragraph extends $.$mol_paragraph {
-            maximal_width() {
-                let width = 0;
-                const letter = this.letter_width();
-                for (const kid of this.sub()) {
-                    if (!kid)
-                        continue;
-                    if (kid instanceof $mol_view) {
-                        width += kid.maximal_width();
-                    }
-                    else if (typeof kid !== 'object') {
-                        width += String(kid).length * letter;
-                    }
-                }
-                return width;
-            }
-            width_limit() {
-                return this.$.$mol_window.size().width;
-            }
-            minimal_width() {
-                return this.letter_width();
-            }
-            row_width() {
-                return Math.max(Math.min(this.width_limit(), this.maximal_width()), this.letter_width());
-            }
-            minimal_height() {
-                return Math.max(1, Math.ceil(this.maximal_width() / this.row_width())) * this.line_height();
-            }
-        }
-        __decorate([
-            $mol_mem
-        ], $mol_paragraph.prototype, "maximal_width", null);
-        __decorate([
-            $mol_mem
-        ], $mol_paragraph.prototype, "row_width", null);
-        __decorate([
-            $mol_mem
-        ], $mol_paragraph.prototype, "minimal_height", null);
-        $$.$mol_paragraph = $mol_paragraph;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/paragraph/paragraph.view.css", ":where([mol_paragraph]) {\n\tmargin: 0;\n\tmax-width: 100%;\n}\n");
-})($ || ($ = {}));
-
-;
-	($.$mol_dimmer) = class $mol_dimmer extends ($.$mol_paragraph) {
-		parts(){
+		keys_x(next){
+			if(next !== undefined) return next;
 			return [];
 		}
-		string(id){
-			return "";
+		keys_y(next){
+			if(next !== undefined) return next;
+			return [];
 		}
-		haystack(){
-			return "";
+		current_x(next){
+			if(next !== undefined) return next;
+			return null;
 		}
-		needle(){
-			return "";
+		current_y(next){
+			if(next !== undefined) return next;
+			return null;
 		}
-		sub(){
-			return (this.parts());
+		event_up(next){
+			if(next !== undefined) return next;
+			return null;
 		}
-		Low(id){
-			const obj = new this.$.$mol_paragraph();
-			(obj.sub) = () => ([(this.string(id))]);
-			return obj;
+		event_down(next){
+			if(next !== undefined) return next;
+			return null;
 		}
-		High(id){
-			const obj = new this.$.$mol_paragraph();
-			(obj.sub) = () => ([(this.string(id))]);
-			return obj;
+		event_left(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		event_right(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		event(){
+			return {...(super.event()), "keydown": (next) => (this.event_key(next))};
 		}
 	};
-	($mol_mem_key(($.$mol_dimmer.prototype), "Low"));
-	($mol_mem_key(($.$mol_dimmer.prototype), "High"));
+	($mol_mem(($.$mol_nav.prototype), "event_key"));
+	($mol_mem(($.$mol_nav.prototype), "cycle"));
+	($mol_mem(($.$mol_nav.prototype), "keys_x"));
+	($mol_mem(($.$mol_nav.prototype), "keys_y"));
+	($mol_mem(($.$mol_nav.prototype), "current_x"));
+	($mol_mem(($.$mol_nav.prototype), "current_y"));
+	($mol_mem(($.$mol_nav.prototype), "event_up"));
+	($mol_mem(($.$mol_nav.prototype), "event_down"));
+	($mol_mem(($.$mol_nav.prototype), "event_left"));
+	($mol_mem(($.$mol_nav.prototype), "event_right"));
 
-
-;
-"use strict";
-
-;
-"use strict";
-
-;
-"use strict";
-
-;
-"use strict";
-
-;
-"use strict";
-var $;
-(function ($) {
-    let x = /x/[Symbol.matchAll];
-    /** Type safe reguar expression builder */
-    class $mol_regexp extends RegExp {
-        groups;
-        /** Prefer to use $mol_regexp.from */
-        constructor(source, flags = 'gsu', groups = []) {
-            super(source, flags);
-            this.groups = groups;
-        }
-        *[Symbol.matchAll](str) {
-            const index = this.lastIndex;
-            this.lastIndex = 0;
-            try {
-                while (this.lastIndex < str.length) {
-                    const found = this.exec(str);
-                    if (!found)
-                        break;
-                    yield found;
-                }
-            }
-            finally {
-                this.lastIndex = index;
-            }
-        }
-        /** Parses input and returns found capture groups or null */
-        [Symbol.match](str) {
-            const res = [...this[Symbol.matchAll](str)].filter(r => r.groups).map(r => r[0]);
-            if (!res.length)
-                return null;
-            return res;
-        }
-        /** Splits string by regexp edges */
-        [Symbol.split](str) {
-            const res = [];
-            let token_last = null;
-            for (let token of this[Symbol.matchAll](str)) {
-                if (token.groups && (token_last ? token_last.groups : true))
-                    res.push('');
-                res.push(token[0]);
-                token_last = token;
-            }
-            if (!res.length)
-                res.push('');
-            return res;
-        }
-        test(str) {
-            return Boolean(str.match(this));
-        }
-        exec(str) {
-            const from = this.lastIndex;
-            if (from >= str.length)
-                return null;
-            const res = super.exec(str);
-            if (res === null) {
-                this.lastIndex = str.length;
-                if (!str)
-                    return null;
-                return Object.assign([str.slice(from)], {
-                    index: from,
-                    input: str,
-                });
-            }
-            if (from === this.lastIndex) {
-                $mol_fail(new Error('Captured empty substring'));
-            }
-            const groups = {};
-            const skipped = str.slice(from, this.lastIndex - res[0].length);
-            if (skipped) {
-                this.lastIndex = this.lastIndex - res[0].length;
-                return Object.assign([skipped], {
-                    index: from,
-                    input: res.input,
-                });
-            }
-            for (let i = 0; i < this.groups.length; ++i) {
-                const group = this.groups[i];
-                groups[group] = groups[group] || res[i + 1] || '';
-            }
-            return Object.assign(res, { groups });
-        }
-        generate(params) {
-            return null;
-        }
-        get native() {
-            return new RegExp(this.source, this.flags);
-        }
-        /** Makes regexp that greedy repeats this pattern with delimiter */
-        static separated(chunk, sep) {
-            return $mol_regexp.from([
-                $mol_regexp.repeat_greedy([[chunk], sep], 0),
-                chunk,
-            ]);
-        }
-        /** Makes regexp that non-greedy repeats this pattern from min to max count */
-        static repeat(source, min = 0, max = Number.POSITIVE_INFINITY) {
-            const regexp = $mol_regexp.from(source);
-            const upper = Number.isFinite(max) ? max : '';
-            const str = `(?:${regexp.source}){${min},${upper}}?`;
-            const regexp2 = new $mol_regexp(str, regexp.flags, regexp.groups);
-            regexp2.generate = params => {
-                const res = regexp.generate(params);
-                if (res)
-                    return res;
-                if (min > 0)
-                    return res;
-                return '';
-            };
-            return regexp2;
-        }
-        /** Makes regexp that greedy repeats this pattern from min to max count */
-        static repeat_greedy(source, min = 0, max = Number.POSITIVE_INFINITY) {
-            const regexp = $mol_regexp.from(source);
-            const upper = Number.isFinite(max) ? max : '';
-            const str = `(?:${regexp.source}){${min},${upper}}`;
-            const regexp2 = new $mol_regexp(str, regexp.flags, regexp.groups);
-            regexp2.generate = params => {
-                const res = regexp.generate(params);
-                if (res)
-                    return res;
-                if (min > 0)
-                    return res;
-                return '';
-            };
-            return regexp2;
-        }
-        /** Makes regexp that match any of options */
-        static vary(sources, flags = 'gsu') {
-            const groups = [];
-            const chunks = sources.map(source => {
-                const regexp = $mol_regexp.from(source);
-                groups.push(...regexp.groups);
-                return regexp.source;
-            });
-            return new $mol_regexp(`(?:${chunks.join('|')})`, flags, groups);
-        }
-        /** Makes regexp that allow absent of this pattern */
-        static optional(source) {
-            return $mol_regexp.repeat_greedy(source, 0, 1);
-        }
-        /** Makes regexp that look ahead for pattern */
-        static force_after(source) {
-            const regexp = $mol_regexp.from(source);
-            return new $mol_regexp(`(?=${regexp.source})`, regexp.flags, regexp.groups);
-        }
-        /** Makes regexp that look ahead for pattern */
-        static forbid_after(source) {
-            const regexp = $mol_regexp.from(source);
-            return new $mol_regexp(`(?!${regexp.source})`, regexp.flags, regexp.groups);
-        }
-        /** Converts some js values to regexp */
-        static from(source, { ignoreCase, multiline } = {
-            ignoreCase: false,
-            multiline: false,
-        }) {
-            let flags = 'gsu';
-            if (multiline)
-                flags += 'm';
-            if (ignoreCase)
-                flags += 'i';
-            if (typeof source === 'number') {
-                const src = `\\u{${source.toString(16)}}`;
-                const regexp = new $mol_regexp(src, flags);
-                regexp.generate = () => src;
-                return regexp;
-            }
-            if (typeof source === 'string') {
-                const src = source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                const regexp = new $mol_regexp(src, flags);
-                regexp.generate = () => source;
-                return regexp;
-            }
-            else if (source instanceof $mol_regexp) {
-                const regexp = new $mol_regexp(source.source, flags, source.groups);
-                regexp.generate = params => source.generate(params);
-                return regexp;
-            }
-            if (source instanceof RegExp) {
-                const test = new RegExp('|' + source.source);
-                const groups = Array.from({ length: test.exec('').length - 1 }, (_, i) => String(i + 1));
-                const regexp = new $mol_regexp(source.source, source.flags, groups);
-                regexp.generate = () => '';
-                return regexp;
-            }
-            if (Array.isArray(source)) {
-                const patterns = source.map(src => Array.isArray(src)
-                    ? $mol_regexp.optional(src)
-                    : $mol_regexp.from(src));
-                const chunks = patterns.map(pattern => pattern.source);
-                const groups = [];
-                let index = 0;
-                for (const pattern of patterns) {
-                    for (let group of pattern.groups) {
-                        if (Number(group) >= 0) {
-                            groups.push(String(index++));
-                        }
-                        else {
-                            groups.push(group);
-                        }
-                    }
-                }
-                const regexp = new $mol_regexp(chunks.join(''), flags, groups);
-                regexp.generate = params => {
-                    let res = '';
-                    for (const pattern of patterns) {
-                        let sub = pattern.generate(params);
-                        if (sub === null)
-                            return '';
-                        res += sub;
-                    }
-                    return res;
-                };
-                return regexp;
-            }
-            else {
-                const groups = [];
-                const chunks = Object.keys(source).map(name => {
-                    groups.push(name);
-                    const regexp = $mol_regexp.from(source[name]);
-                    groups.push(...regexp.groups);
-                    return `(${regexp.source})`;
-                });
-                const regexp = new $mol_regexp(`(?:${chunks.join('|')})`, flags, groups);
-                const validator = new RegExp('^' + regexp.source + '$', flags);
-                regexp.generate = (params) => {
-                    for (let option in source) {
-                        if (option in params) {
-                            if (typeof params[option] === 'boolean') {
-                                if (!params[option])
-                                    continue;
-                            }
-                            else {
-                                const str = String(params[option]);
-                                if (str.match(validator))
-                                    return str;
-                                $mol_fail(new Error(`Wrong param: ${option}=${str}`));
-                            }
-                        }
-                        else {
-                            if (typeof source[option] !== 'object')
-                                continue;
-                        }
-                        const res = $mol_regexp.from(source[option]).generate(params);
-                        if (res)
-                            return res;
-                    }
-                    return null;
-                };
-                return regexp;
-            }
-        }
-        /** Makes regexp which includes only unicode category */
-        static unicode_only(...category) {
-            return new $mol_regexp(`\\p{${category.join('=')}}`);
-        }
-        /** Makes regexp which excludes unicode category */
-        static unicode_except(...category) {
-            return new $mol_regexp(`\\P{${category.join('=')}}`);
-        }
-        static char_range(from, to) {
-            return new $mol_regexp(`${$mol_regexp.from(from).source}-${$mol_regexp.from(to).source}`);
-        }
-        static char_only(...allowed) {
-            const regexp = allowed.map(f => $mol_regexp.from(f).source).join('');
-            return new $mol_regexp(`[${regexp}]`);
-        }
-        static char_except(...forbidden) {
-            const regexp = forbidden.map(f => $mol_regexp.from(f).source).join('');
-            return new $mol_regexp(`[^${regexp}]`);
-        }
-        static decimal_only = $mol_regexp.from(/\d/gsu);
-        static decimal_except = $mol_regexp.from(/\D/gsu);
-        static latin_only = $mol_regexp.from(/\w/gsu);
-        static latin_except = $mol_regexp.from(/\W/gsu);
-        static space_only = $mol_regexp.from(/\s/gsu);
-        static space_except = $mol_regexp.from(/\S/gsu);
-        static word_break_only = $mol_regexp.from(/\b/gsu);
-        static word_break_except = $mol_regexp.from(/\B/gsu);
-        static tab = $mol_regexp.from(/\t/gsu);
-        static slash_back = $mol_regexp.from(/\\/gsu);
-        static nul = $mol_regexp.from(/\0/gsu);
-        static char_any = $mol_regexp.from(/./gsu);
-        static begin = $mol_regexp.from(/^/gsu);
-        static end = $mol_regexp.from(/$/gsu);
-        static or = $mol_regexp.from(/|/gsu);
-        static line_end = $mol_regexp.from({
-            win_end: [['\r'], '\n'],
-            mac_end: '\r',
-        });
-    }
-    $.$mol_regexp = $mol_regexp;
-})($ || ($ = {}));
 
 ;
 "use strict";
@@ -6541,52 +5136,101 @@ var $;
     var $$;
     (function ($$) {
         /**
-         * Output text with dimmed mismatched substrings.
-         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_dimmer_demo
+         * Plugin which can navigate in list of items
+         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_nav_demo
          */
-        class $mol_dimmer extends $.$mol_dimmer {
-            parts() {
-                const needle = this.needle();
-                if (needle.length < 2)
-                    return [this.haystack()];
-                let chunks = [];
-                let strings = this.strings();
-                for (let index = 0; index < strings.length; index++) {
-                    if (strings[index] === '')
-                        continue;
-                    chunks.push((index % 2) ? this.High(index) : this.Low(index));
+        class $mol_nav extends $.$mol_nav {
+            event_key(event) {
+                if (!event)
+                    return event;
+                if (event.defaultPrevented)
+                    return;
+                if (this.mod_ctrl() && !event.ctrlKey)
+                    return;
+                if (this.mod_shift() && !event.shiftKey)
+                    return;
+                if (this.mod_alt() && !event.altKey)
+                    return;
+                switch (event.keyCode) {
+                    case $mol_keyboard_code.up: return this.event_up(event);
+                    case $mol_keyboard_code.down: return this.event_down(event);
+                    case $mol_keyboard_code.left: return this.event_left(event);
+                    case $mol_keyboard_code.right: return this.event_right(event);
+                    case $mol_keyboard_code.pageUp: return this.event_up(event);
+                    case $mol_keyboard_code.pageDown: return this.event_down(event);
                 }
-                return chunks;
             }
-            strings() {
-                const options = this.needle().split(/\s+/g).filter(Boolean);
-                if (!options.length)
-                    return [this.haystack()];
-                const variants = { ...options };
-                const regexp = $mol_regexp.from({ needle: variants }, { ignoreCase: true });
-                return this.haystack().split(regexp);
+            event_up(event) {
+                if (!event)
+                    return event;
+                const keys = this.keys_y();
+                if (keys.length < 1)
+                    return;
+                const index_y = this.index_y();
+                const index_old = index_y === null ? 0 : index_y;
+                const index_new = (index_old + keys.length - 1) % keys.length;
+                event.preventDefault();
+                if (index_old === 0 && !this.cycle())
+                    return;
+                this.current_y(this.keys_y()[index_new]);
             }
-            string(index) {
-                return this.strings()[index];
+            event_down(event) {
+                if (!event)
+                    return event;
+                const keys = this.keys_y();
+                if (keys.length < 1)
+                    return;
+                const index_y = this.index_y();
+                const index_old = index_y === null ? keys.length - 1 : index_y;
+                const index_new = (index_old + 1) % keys.length;
+                event.preventDefault();
+                if (index_new === 0 && !this.cycle())
+                    return;
+                this.current_y(this.keys_y()[index_new]);
             }
-            *view_find(check, path = []) {
-                if (check(this, this.haystack())) {
-                    yield [...path, this];
-                }
+            event_left(event) {
+                if (!event)
+                    return event;
+                const keys = this.keys_x();
+                if (keys.length < 1)
+                    return;
+                const index_x = this.index_x();
+                const index_old = index_x === null ? 0 : index_x;
+                const index_new = (index_old + keys.length - 1) % keys.length;
+                event.preventDefault();
+                if (index_old === 0 && !this.cycle())
+                    return;
+                this.current_x(this.keys_x()[index_new]);
+            }
+            event_right(event) {
+                if (!event)
+                    return event;
+                const keys = this.keys_x();
+                if (keys.length < 1)
+                    return;
+                const index_x = this.index_x();
+                const index_old = index_x === null ? keys.length - 1 : index_x;
+                const index_new = (index_old + 1) % keys.length;
+                event.preventDefault();
+                if (index_new === 0 && !this.cycle())
+                    return;
+                this.current_x(this.keys_x()[index_new]);
+            }
+            index_y() {
+                let index = this.keys_y().indexOf(this.current_y());
+                if (index < 0)
+                    return null;
+                return index;
+            }
+            index_x() {
+                let index = this.keys_x().indexOf(this.current_x());
+                if (index < 0)
+                    return null;
+                return index;
             }
         }
-        __decorate([
-            $mol_mem
-        ], $mol_dimmer.prototype, "strings", null);
-        $$.$mol_dimmer = $mol_dimmer;
+        $$.$mol_nav = $mol_nav;
     })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/dimmer/dimmer.view.css", "[mol_dimmer] {\n\tdisplay: block;\n\tmax-width: 100%;\n}\n\n[mol_dimmer_low] {\n\tdisplay: inline;\n\topacity: 0.8;\n}\n\n[mol_dimmer_high] {\n\tdisplay: inline;\n\tcolor: var(--mol_theme_focus);\n\ttext-shadow: 0 0;\n}\n");
 })($ || ($ = {}));
 
 ;
@@ -6761,6 +5405,17 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    /**
+     * Decorates method to fiber to ensure it is executed only once inside other fiber from [mol_wire](../wire/README.md)
+     * @see https://mol.hyoo.ru/#!section=docs/=1fcpsq_1wh0h2
+     */
+    $.$mol_action = $mol_wire_method;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
     class $mol_lock extends $mol_object {
         promise = null;
         async wait() {
@@ -6788,13 +5443,6 @@ var $;
         grab() { return $mol_wire_sync(this).wait(); }
     }
     $.$mol_lock = $mol_lock;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_mem_cached = $mol_wire_probe;
 })($ || ($ = {}));
 
 ;
@@ -7722,512 +6370,6 @@ var $;
 })($ || ($ = {}));
 
 ;
-	($.$mol_nav) = class $mol_nav extends ($.$mol_plugin) {
-		event_key(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		cycle(next){
-			if(next !== undefined) return next;
-			return false;
-		}
-		mod_ctrl(){
-			return false;
-		}
-		mod_shift(){
-			return false;
-		}
-		mod_alt(){
-			return false;
-		}
-		keys_x(next){
-			if(next !== undefined) return next;
-			return [];
-		}
-		keys_y(next){
-			if(next !== undefined) return next;
-			return [];
-		}
-		current_x(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		current_y(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		event_up(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		event_down(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		event_left(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		event_right(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		event(){
-			return {...(super.event()), "keydown": (next) => (this.event_key(next))};
-		}
-	};
-	($mol_mem(($.$mol_nav.prototype), "event_key"));
-	($mol_mem(($.$mol_nav.prototype), "cycle"));
-	($mol_mem(($.$mol_nav.prototype), "keys_x"));
-	($mol_mem(($.$mol_nav.prototype), "keys_y"));
-	($mol_mem(($.$mol_nav.prototype), "current_x"));
-	($mol_mem(($.$mol_nav.prototype), "current_y"));
-	($mol_mem(($.$mol_nav.prototype), "event_up"));
-	($mol_mem(($.$mol_nav.prototype), "event_down"));
-	($mol_mem(($.$mol_nav.prototype), "event_left"));
-	($mol_mem(($.$mol_nav.prototype), "event_right"));
-
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        /**
-         * Plugin which can navigate in list of items
-         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_nav_demo
-         */
-        class $mol_nav extends $.$mol_nav {
-            event_key(event) {
-                if (!event)
-                    return event;
-                if (event.defaultPrevented)
-                    return;
-                if (this.mod_ctrl() && !event.ctrlKey)
-                    return;
-                if (this.mod_shift() && !event.shiftKey)
-                    return;
-                if (this.mod_alt() && !event.altKey)
-                    return;
-                switch (event.keyCode) {
-                    case $mol_keyboard_code.up: return this.event_up(event);
-                    case $mol_keyboard_code.down: return this.event_down(event);
-                    case $mol_keyboard_code.left: return this.event_left(event);
-                    case $mol_keyboard_code.right: return this.event_right(event);
-                    case $mol_keyboard_code.pageUp: return this.event_up(event);
-                    case $mol_keyboard_code.pageDown: return this.event_down(event);
-                }
-            }
-            event_up(event) {
-                if (!event)
-                    return event;
-                const keys = this.keys_y();
-                if (keys.length < 1)
-                    return;
-                const index_y = this.index_y();
-                const index_old = index_y === null ? 0 : index_y;
-                const index_new = (index_old + keys.length - 1) % keys.length;
-                event.preventDefault();
-                if (index_old === 0 && !this.cycle())
-                    return;
-                this.current_y(this.keys_y()[index_new]);
-            }
-            event_down(event) {
-                if (!event)
-                    return event;
-                const keys = this.keys_y();
-                if (keys.length < 1)
-                    return;
-                const index_y = this.index_y();
-                const index_old = index_y === null ? keys.length - 1 : index_y;
-                const index_new = (index_old + 1) % keys.length;
-                event.preventDefault();
-                if (index_new === 0 && !this.cycle())
-                    return;
-                this.current_y(this.keys_y()[index_new]);
-            }
-            event_left(event) {
-                if (!event)
-                    return event;
-                const keys = this.keys_x();
-                if (keys.length < 1)
-                    return;
-                const index_x = this.index_x();
-                const index_old = index_x === null ? 0 : index_x;
-                const index_new = (index_old + keys.length - 1) % keys.length;
-                event.preventDefault();
-                if (index_old === 0 && !this.cycle())
-                    return;
-                this.current_x(this.keys_x()[index_new]);
-            }
-            event_right(event) {
-                if (!event)
-                    return event;
-                const keys = this.keys_x();
-                if (keys.length < 1)
-                    return;
-                const index_x = this.index_x();
-                const index_old = index_x === null ? keys.length - 1 : index_x;
-                const index_new = (index_old + 1) % keys.length;
-                event.preventDefault();
-                if (index_new === 0 && !this.cycle())
-                    return;
-                this.current_x(this.keys_x()[index_new]);
-            }
-            index_y() {
-                let index = this.keys_y().indexOf(this.current_y());
-                if (index < 0)
-                    return null;
-                return index;
-            }
-            index_x() {
-                let index = this.keys_x().indexOf(this.current_x());
-                if (index < 0)
-                    return null;
-                return index;
-            }
-        }
-        $$.$mol_nav = $mol_nav;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-	($.$mol_list) = class $mol_list extends ($.$mol_view) {
-		gap_before(){
-			return 0;
-		}
-		Gap_before(){
-			const obj = new this.$.$mol_view();
-			(obj.style) = () => ({"paddingTop": (this.gap_before())});
-			return obj;
-		}
-		Empty(){
-			const obj = new this.$.$mol_view();
-			return obj;
-		}
-		gap_after(){
-			return 0;
-		}
-		Gap_after(){
-			const obj = new this.$.$mol_view();
-			(obj.style) = () => ({"paddingTop": (this.gap_after())});
-			return obj;
-		}
-		rows(){
-			return [
-				(this.Gap_before()), 
-				(this.Empty()), 
-				(this.Gap_after())
-			];
-		}
-		render_visible_only(){
-			return true;
-		}
-		render_over(){
-			return 0.1;
-		}
-		sub(){
-			return (this.rows());
-		}
-		item_height_min(id){
-			return 1;
-		}
-		item_width_min(id){
-			return 1;
-		}
-		view_window_shift(next){
-			if(next !== undefined) return next;
-			return 0;
-		}
-		view_window(){
-			return [0, 0];
-		}
-	};
-	($mol_mem(($.$mol_list.prototype), "Gap_before"));
-	($mol_mem(($.$mol_list.prototype), "Empty"));
-	($mol_mem(($.$mol_list.prototype), "Gap_after"));
-	($mol_mem(($.$mol_list.prototype), "view_window_shift"));
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    let cache = null;
-    function $mol_support_css_overflow_anchor() {
-        return cache ?? (cache = this.$mol_dom_context.CSS?.supports('overflow-anchor:auto') ?? false);
-    }
-    $.$mol_support_css_overflow_anchor = $mol_support_css_overflow_anchor;
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        /**
-         * The list of rows with lazy/virtual rendering support based on `minimal_height` of rows.
-         * `mol_list` should contain only components that inherits `mol_view`. You should not place raw strings or numbers in list.
-         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_list_demo
-         */
-        class $mol_list extends $.$mol_list {
-            sub() {
-                const rows = this.rows();
-                const next = (rows.length === 0) ? [this.Empty()] : rows;
-                const prev = $mol_mem_cached(() => this.sub());
-                const [start, end] = $mol_mem_cached(() => this.view_window()) ?? [0, 0];
-                if (prev && $mol_mem_cached(() => prev[start] !== next[start])) {
-                    const index = $mol_mem_cached(() => next.indexOf(prev[start])) ?? -1;
-                    if (index >= 0)
-                        this.view_window_shift(index - start);
-                }
-                return next;
-            }
-            render_visible_only() {
-                return this.$.$mol_support_css_overflow_anchor();
-            }
-            _view_window_last = [0, 0];
-            view_window(next) {
-                const kids = this.sub();
-                if (kids.length < 3)
-                    return [0, kids.length];
-                if (this.$.$mol_print.active())
-                    return [0, kids.length];
-                const rect = this.view_rect();
-                if (next)
-                    return next;
-                let [min, max] = $mol_mem_cached(() => this.view_window()) ?? this._view_window_last;
-                const shift = this.view_window_shift();
-                this.view_window_shift(0);
-                min += shift;
-                max += shift;
-                let max2 = max = Math.min(max, kids.length);
-                let min2 = min = Math.max(0, Math.min(min, max - 1));
-                const anchoring = this.render_visible_only();
-                const window_height = this.$.$mol_window.size().height + 40;
-                const over = Math.ceil(window_height * this.render_over());
-                const limit_top = -over;
-                const limit_bottom = window_height + over;
-                const gap_before = $mol_mem_cached(() => this.gap_before()) ?? 0;
-                const gap_after = $mol_mem_cached(() => this.gap_after()) ?? 0;
-                let top = Math.ceil(rect?.top ?? 0) + gap_before;
-                let bottom = Math.ceil(rect?.bottom ?? 0) - gap_after;
-                // change nothing when already covers all limits
-                if (top <= limit_top && bottom >= limit_bottom) {
-                    return [min2, max2];
-                }
-                // jumps when fully over limits
-                if (anchoring && ((bottom < limit_top) || (top > limit_bottom))) {
-                    min = 0;
-                    top = Math.ceil(rect?.top ?? 0);
-                    while (min < (kids.length - 1)) {
-                        const height = this.item_height_min(min);
-                        if (top + height >= limit_top)
-                            break;
-                        top += height;
-                        ++min;
-                    }
-                    min2 = min;
-                    max2 = max = min;
-                    bottom = top;
-                }
-                let top2 = top;
-                let bottom2 = bottom;
-                // force recalc min when overlapse top limit
-                if (anchoring && (top < limit_top) && (bottom < limit_bottom) && (max < kids.length)) {
-                    min2 = max;
-                    top2 = bottom;
-                }
-                // force recalc max when overlapse bottom limit
-                if ((bottom > limit_bottom) && (top > limit_top) && (min > 0)) {
-                    max2 = min;
-                    bottom2 = top;
-                }
-                // extend min to cover top limit
-                while (anchoring && ((top2 > limit_top) && (min2 > 0))) {
-                    --min2;
-                    top2 -= this.item_height_min(min2);
-                }
-                // extend max to cover bottom limit
-                while (bottom2 < limit_bottom && max2 < kids.length) {
-                    bottom2 += this.item_height_min(max2);
-                    ++max2;
-                }
-                return [min2, max2];
-            }
-            item_height_min(index) {
-                try {
-                    return this.sub()[index]?.minimal_height() ?? 0;
-                }
-                catch (error) {
-                    $mol_fail_log(error);
-                    return 0;
-                }
-            }
-            row_width_min(index) {
-                try {
-                    return this.sub()[index]?.minimal_width() ?? 0;
-                }
-                catch (error) {
-                    $mol_fail_log(error);
-                    return 0;
-                }
-            }
-            gap_before() {
-                let gap = 0;
-                const skipped = this.view_window()[0];
-                for (let i = 0; i < skipped; ++i)
-                    gap += this.item_height_min(i);
-                return gap;
-            }
-            gap_after() {
-                let gap = 0;
-                const from = this.view_window()[1];
-                const to = this.sub().length;
-                for (let i = from; i < to; ++i)
-                    gap += this.item_height_min(i);
-                return gap;
-            }
-            sub_visible() {
-                return [
-                    ...this.gap_before() ? [this.Gap_before()] : [],
-                    ...this.sub().slice(...this._view_window_last = this.view_window()),
-                    ...this.gap_after() ? [this.Gap_after()] : [],
-                ];
-            }
-            minimal_height() {
-                let height = 0;
-                const len = this.sub().length;
-                for (let i = 0; i < len; ++i)
-                    height += this.item_height_min(i);
-                return height;
-            }
-            minimal_width() {
-                let width = 0;
-                const len = this.sub().length;
-                for (let i = 0; i < len; ++i)
-                    width = Math.max(width, this.item_width_min(i));
-                return width;
-            }
-            force_render(path) {
-                const kids = this.rows();
-                const index = kids.findIndex(item => path.has(item));
-                if (index >= 0) {
-                    const win = this.view_window();
-                    if (index < win[0] || index >= win[1]) {
-                        this.view_window([this.render_visible_only() ? index : 0, index + 1]);
-                    }
-                    kids[index].force_render(path);
-                }
-            }
-        }
-        __decorate([
-            $mol_mem
-        ], $mol_list.prototype, "sub", null);
-        __decorate([
-            $mol_mem
-        ], $mol_list.prototype, "view_window", null);
-        __decorate([
-            $mol_mem
-        ], $mol_list.prototype, "gap_before", null);
-        __decorate([
-            $mol_mem
-        ], $mol_list.prototype, "gap_after", null);
-        __decorate([
-            $mol_mem
-        ], $mol_list.prototype, "sub_visible", null);
-        __decorate([
-            $mol_mem
-        ], $mol_list.prototype, "minimal_height", null);
-        __decorate([
-            $mol_mem
-        ], $mol_list.prototype, "minimal_width", null);
-        $$.$mol_list = $mol_list;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/list/list.view.css", "[mol_list] {\n\twill-change: contents;\n\tdisplay: flex;\n\tflex-direction: column;\n\tflex-shrink: 0;\n\tmax-width: 100%;\n\t/* display: flex;\n\talign-items: stretch;\n\talign-content: stretch; */\n\ttransition: none;\n\t/* will-change: contents; */\n}\n\n[mol_list]:where([mol_view_error]) {\n\tmin-height: 1.5rem;\n}\n\n[mol_list_gap_before] ,\n[mol_list_gap_after] {\n\tdisplay: block !important;\n\tflex: none;\n\ttransition: none;\n\toverflow-anchor: none;\n}\n");
-})($ || ($ = {}));
-
-;
-	($.$mol_hotkey) = class $mol_hotkey extends ($.$mol_plugin) {
-		keydown(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		event(){
-			return {...(super.event()), "keydown": (next) => (this.keydown(next))};
-		}
-		key(){
-			return {};
-		}
-		mod_ctrl(){
-			return false;
-		}
-		mod_alt(){
-			return false;
-		}
-		mod_shift(){
-			return false;
-		}
-	};
-	($mol_mem(($.$mol_hotkey.prototype), "keydown"));
-
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        /**
-         * Plugin which adds handlers for keyboard keys.
-         * @see [mol_keyboard_code](../keyboard/code/code.ts)
-         */
-        class $mol_hotkey extends $.$mol_hotkey {
-            key() {
-                return super.key();
-            }
-            keydown(event) {
-                if (!event)
-                    return;
-                if (event.defaultPrevented)
-                    return;
-                let name = $mol_keyboard_code[event.keyCode];
-                if (this.mod_ctrl() !== (event.ctrlKey || event.metaKey))
-                    return;
-                if (this.mod_alt() !== event.altKey)
-                    return;
-                if (this.mod_shift() !== event.shiftKey)
-                    return;
-                const handle = this.key()[name];
-                if (handle)
-                    handle(event);
-            }
-        }
-        $$.$mol_hotkey = $mol_hotkey;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
 	($.$mol_string) = class $mol_string extends ($.$mol_view) {
 		selection_watcher(){
 			return null;
@@ -8621,6 +6763,976 @@ var $;
 
 
 ;
+	($.$mol_speck) = class $mol_speck extends ($.$mol_view) {
+		value(){
+			return null;
+		}
+		theme(){
+			return "$mol_theme_accent";
+		}
+		sub(){
+			return [(this.value())];
+		}
+	};
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/speck/speck.view.css", "[mol_speck] {\n\tfont-size: .75rem;\n\tborder-radius: 1rem;\n\tmargin: -0.5rem -0.2rem;\n\talign-self: flex-start;\n\tmin-height: 1em;\n\tmin-width: .75rem;\n\tvertical-align: sub;\n\tpadding: 0 .2rem;\n\tposition: absolute;\n\tz-index: var(--mol_layer_speck);\n\ttext-align: center;\n\tline-height: .9;\n\tdisplay: inline-block;\n\twhite-space: nowrap;\n\ttext-overflow: ellipsis;\n\tuser-select: none;\n\tbox-shadow: 0 0 3px rgba(0,0,0,.5);\n}\n");
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+	($.$mol_button) = class $mol_button extends ($.$mol_view) {
+		event_activate(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		activate(next){
+			return (this.event_activate(next));
+		}
+		clicks(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		event_key_press(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		key_press(next){
+			return (this.event_key_press(next));
+		}
+		disabled(){
+			return false;
+		}
+		tab_index(){
+			return 0;
+		}
+		hint(){
+			return "";
+		}
+		hint_safe(){
+			return (this.hint());
+		}
+		error(){
+			return "";
+		}
+		enabled(){
+			return true;
+		}
+		click(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		event_click(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		status(next){
+			if(next !== undefined) return next;
+			return [];
+		}
+		event(){
+			return {
+				...(super.event()), 
+				"click": (next) => (this.activate(next)), 
+				"dblclick": (next) => (this.clicks(next)), 
+				"keydown": (next) => (this.key_press(next))
+			};
+		}
+		attr(){
+			return {
+				...(super.attr()), 
+				"disabled": (this.disabled()), 
+				"role": "button", 
+				"tabindex": (this.tab_index()), 
+				"title": (this.hint_safe())
+			};
+		}
+		sub(){
+			return [(this.title())];
+		}
+		Speck(){
+			const obj = new this.$.$mol_speck();
+			(obj.value) = () => ((this.error()));
+			return obj;
+		}
+	};
+	($mol_mem(($.$mol_button.prototype), "event_activate"));
+	($mol_mem(($.$mol_button.prototype), "clicks"));
+	($mol_mem(($.$mol_button.prototype), "event_key_press"));
+	($mol_mem(($.$mol_button.prototype), "click"));
+	($mol_mem(($.$mol_button.prototype), "event_click"));
+	($mol_mem(($.$mol_button.prototype), "status"));
+	($mol_mem(($.$mol_button.prototype), "Speck"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Simple button.
+         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_button_demo
+         */
+        class $mol_button extends $.$mol_button {
+            disabled() {
+                return !this.enabled();
+            }
+            event_activate(next) {
+                if (!next)
+                    return;
+                if (!this.enabled())
+                    return;
+                try {
+                    this.event_click(next);
+                    this.click(next);
+                    this.status([null]);
+                }
+                catch (error) {
+                    // Calling actions from catch section, if throwing promise breaks idempotency
+                    Promise.resolve().then(() => this.status([error]));
+                    $mol_fail_hidden(error);
+                }
+            }
+            event_key_press(event) {
+                if (event.keyCode === $mol_keyboard_code.enter) {
+                    return this.activate(event);
+                }
+            }
+            tab_index() {
+                return this.enabled() ? super.tab_index() : -1;
+            }
+            error() {
+                const error = this.status()?.[0];
+                if (!error)
+                    return '';
+                if ($mol_promise_like(error)) {
+                    return $mol_fail_hidden(error);
+                }
+                return this.$.$mol_error_message(error);
+            }
+            hint_safe() {
+                try {
+                    return this.hint();
+                }
+                catch (error) {
+                    $mol_fail_log(error);
+                    return '';
+                }
+            }
+            sub_visible() {
+                return [
+                    ...this.error() ? [this.Speck()] : [],
+                    ...this.sub(),
+                ];
+            }
+        }
+        $$.$mol_button = $mol_button;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/button/button.view.css", "[mol_button] {\n\tborder: none;\n\tfont: inherit;\n\tdisplay: inline-flex;\n\tflex-shrink: 0;\n\ttext-decoration: inherit;\n\tcursor: inherit;\n\tposition: relative;\n\tbox-sizing: border-box;\n\tword-break: normal;\n\tcursor: default;\n\tuser-select: none;\n\t-webkit-user-select: none;\n\tborder-radius: var(--mol_gap_round);\n\tbackground: transparent;\n\tcolor: inherit;\n}\n\n[mol_button]:where(:not(:disabled)):hover {\n\tz-index: var(--mol_layer_hover);\n}\n\n[mol_button]:focus {\n\toutline: none;\n\tz-index: var(--mol_layer_focus);\n}\n");
+})($ || ($ = {}));
+
+;
+	($.$mol_button_typed) = class $mol_button_typed extends ($.$mol_button) {
+		minimal_height(){
+			return 40;
+		}
+		minimal_width(){
+			return 40;
+		}
+	};
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/button/typed/typed.view.css", "[mol_button_typed] {\n\talign-content: center;\n\talign-items: center;\n\tpadding: var(--mol_gap_text);\n\tborder-radius: var(--mol_gap_round);\n\tgap: var(--mol_gap_space);\n\tuser-select: none;\n\tcursor: pointer;\n\tmin-width: 2.5rem;\n\tmin-height: 2.5rem;\n}\n\n[mol_button_typed][disabled] {\n\tpointer-events: none;\n}\n\n[mol_button_typed]:hover ,\n[mol_button_typed]:focus-visible {\n\tbox-shadow: inset 0 0 0 100vmax var(--mol_theme_hover);\n}\n\n[mol_button_typed]:active {\n\tcolor: var(--mol_theme_focus);\n}\n");
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+	($.$mol_button_minor) = class $mol_button_minor extends ($.$mol_button_typed) {};
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/button/minor/minor.view.css", "[mol_button_minor]:where(:not([disabled])) {\n\tcolor: var(--mol_theme_control);\n}\n");
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+	($.$mol_list) = class $mol_list extends ($.$mol_view) {
+		gap_before(){
+			return 0;
+		}
+		Gap_before(){
+			const obj = new this.$.$mol_view();
+			(obj.style) = () => ({"paddingTop": (this.gap_before())});
+			return obj;
+		}
+		Empty(){
+			const obj = new this.$.$mol_view();
+			return obj;
+		}
+		gap_after(){
+			return 0;
+		}
+		Gap_after(){
+			const obj = new this.$.$mol_view();
+			(obj.style) = () => ({"paddingTop": (this.gap_after())});
+			return obj;
+		}
+		rows(){
+			return [
+				(this.Gap_before()), 
+				(this.Empty()), 
+				(this.Gap_after())
+			];
+		}
+		render_visible_only(){
+			return true;
+		}
+		render_over(){
+			return 0.1;
+		}
+		sub(){
+			return (this.rows());
+		}
+		item_height_min(id){
+			return 1;
+		}
+		item_width_min(id){
+			return 1;
+		}
+		view_window_shift(next){
+			if(next !== undefined) return next;
+			return 0;
+		}
+		view_window(){
+			return [0, 0];
+		}
+	};
+	($mol_mem(($.$mol_list.prototype), "Gap_before"));
+	($mol_mem(($.$mol_list.prototype), "Empty"));
+	($mol_mem(($.$mol_list.prototype), "Gap_after"));
+	($mol_mem(($.$mol_list.prototype), "view_window_shift"));
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    let cache = null;
+    function $mol_support_css_overflow_anchor() {
+        return cache ?? (cache = this.$mol_dom_context.CSS?.supports('overflow-anchor:auto') ?? false);
+    }
+    $.$mol_support_css_overflow_anchor = $mol_support_css_overflow_anchor;
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * The list of rows with lazy/virtual rendering support based on `minimal_height` of rows.
+         * `mol_list` should contain only components that inherits `mol_view`. You should not place raw strings or numbers in list.
+         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_list_demo
+         */
+        class $mol_list extends $.$mol_list {
+            sub() {
+                const rows = this.rows();
+                const next = (rows.length === 0) ? [this.Empty()] : rows;
+                const prev = $mol_mem_cached(() => this.sub());
+                const [start, end] = $mol_mem_cached(() => this.view_window()) ?? [0, 0];
+                if (prev && $mol_mem_cached(() => prev[start] !== next[start])) {
+                    const index = $mol_mem_cached(() => next.indexOf(prev[start])) ?? -1;
+                    if (index >= 0)
+                        this.view_window_shift(index - start);
+                }
+                return next;
+            }
+            render_visible_only() {
+                return this.$.$mol_support_css_overflow_anchor();
+            }
+            _view_window_last = [0, 0];
+            view_window(next) {
+                const kids = this.sub();
+                if (kids.length < 3)
+                    return [0, kids.length];
+                if (this.$.$mol_print.active())
+                    return [0, kids.length];
+                const rect = this.view_rect();
+                if (next)
+                    return next;
+                let [min, max] = $mol_mem_cached(() => this.view_window()) ?? this._view_window_last;
+                const shift = this.view_window_shift();
+                this.view_window_shift(0);
+                min += shift;
+                max += shift;
+                let max2 = max = Math.min(max, kids.length);
+                let min2 = min = Math.max(0, Math.min(min, max - 1));
+                const anchoring = this.render_visible_only();
+                const window_height = this.$.$mol_window.size().height + 40;
+                const over = Math.ceil(window_height * this.render_over());
+                const limit_top = -over;
+                const limit_bottom = window_height + over;
+                const gap_before = $mol_mem_cached(() => this.gap_before()) ?? 0;
+                const gap_after = $mol_mem_cached(() => this.gap_after()) ?? 0;
+                let top = Math.ceil(rect?.top ?? 0) + gap_before;
+                let bottom = Math.ceil(rect?.bottom ?? 0) - gap_after;
+                // change nothing when already covers all limits
+                if (top <= limit_top && bottom >= limit_bottom) {
+                    return [min2, max2];
+                }
+                // jumps when fully over limits
+                if (anchoring && ((bottom < limit_top) || (top > limit_bottom))) {
+                    min = 0;
+                    top = Math.ceil(rect?.top ?? 0);
+                    while (min < (kids.length - 1)) {
+                        const height = this.item_height_min(min);
+                        if (top + height >= limit_top)
+                            break;
+                        top += height;
+                        ++min;
+                    }
+                    min2 = min;
+                    max2 = max = min;
+                    bottom = top;
+                }
+                let top2 = top;
+                let bottom2 = bottom;
+                // force recalc min when overlapse top limit
+                if (anchoring && (top < limit_top) && (bottom < limit_bottom) && (max < kids.length)) {
+                    min2 = max;
+                    top2 = bottom;
+                }
+                // force recalc max when overlapse bottom limit
+                if ((bottom > limit_bottom) && (top > limit_top) && (min > 0)) {
+                    max2 = min;
+                    bottom2 = top;
+                }
+                // extend min to cover top limit
+                while (anchoring && ((top2 > limit_top) && (min2 > 0))) {
+                    --min2;
+                    top2 -= this.item_height_min(min2);
+                }
+                // extend max to cover bottom limit
+                while (bottom2 < limit_bottom && max2 < kids.length) {
+                    bottom2 += this.item_height_min(max2);
+                    ++max2;
+                }
+                return [min2, max2];
+            }
+            item_height_min(index) {
+                try {
+                    return this.sub()[index]?.minimal_height() ?? 0;
+                }
+                catch (error) {
+                    $mol_fail_log(error);
+                    return 0;
+                }
+            }
+            row_width_min(index) {
+                try {
+                    return this.sub()[index]?.minimal_width() ?? 0;
+                }
+                catch (error) {
+                    $mol_fail_log(error);
+                    return 0;
+                }
+            }
+            gap_before() {
+                let gap = 0;
+                const skipped = this.view_window()[0];
+                for (let i = 0; i < skipped; ++i)
+                    gap += this.item_height_min(i);
+                return gap;
+            }
+            gap_after() {
+                let gap = 0;
+                const from = this.view_window()[1];
+                const to = this.sub().length;
+                for (let i = from; i < to; ++i)
+                    gap += this.item_height_min(i);
+                return gap;
+            }
+            sub_visible() {
+                return [
+                    ...this.gap_before() ? [this.Gap_before()] : [],
+                    ...this.sub().slice(...this._view_window_last = this.view_window()),
+                    ...this.gap_after() ? [this.Gap_after()] : [],
+                ];
+            }
+            minimal_height() {
+                let height = 0;
+                const len = this.sub().length;
+                for (let i = 0; i < len; ++i)
+                    height += this.item_height_min(i);
+                return height;
+            }
+            minimal_width() {
+                let width = 0;
+                const len = this.sub().length;
+                for (let i = 0; i < len; ++i)
+                    width = Math.max(width, this.item_width_min(i));
+                return width;
+            }
+            force_render(path) {
+                const kids = this.rows();
+                const index = kids.findIndex(item => path.has(item));
+                if (index >= 0) {
+                    const win = this.view_window();
+                    if (index < win[0] || index >= win[1]) {
+                        this.view_window([this.render_visible_only() ? index : 0, index + 1]);
+                    }
+                    kids[index].force_render(path);
+                }
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $mol_list.prototype, "sub", null);
+        __decorate([
+            $mol_mem
+        ], $mol_list.prototype, "view_window", null);
+        __decorate([
+            $mol_mem
+        ], $mol_list.prototype, "gap_before", null);
+        __decorate([
+            $mol_mem
+        ], $mol_list.prototype, "gap_after", null);
+        __decorate([
+            $mol_mem
+        ], $mol_list.prototype, "sub_visible", null);
+        __decorate([
+            $mol_mem
+        ], $mol_list.prototype, "minimal_height", null);
+        __decorate([
+            $mol_mem
+        ], $mol_list.prototype, "minimal_width", null);
+        $$.$mol_list = $mol_list;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/list/list.view.css", "[mol_list] {\n\twill-change: contents;\n\tdisplay: flex;\n\tflex-direction: column;\n\tflex-shrink: 0;\n\tmax-width: 100%;\n\t/* display: flex;\n\talign-items: stretch;\n\talign-content: stretch; */\n\ttransition: none;\n\t/* will-change: contents; */\n}\n\n[mol_list]:where([mol_view_error]) {\n\tmin-height: 1.5rem;\n}\n\n[mol_list_gap_before] ,\n[mol_list_gap_after] {\n\tdisplay: block !important;\n\tflex: none;\n\ttransition: none;\n\toverflow-anchor: none;\n}\n");
+})($ || ($ = {}));
+
+;
+	($.$mol_paragraph) = class $mol_paragraph extends ($.$mol_view) {
+		line_height(){
+			return 24;
+		}
+		letter_width(){
+			return 7;
+		}
+		width_limit(){
+			return +Infinity;
+		}
+		row_width(){
+			return 0;
+		}
+		sub(){
+			return [(this.title())];
+		}
+	};
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $mol_paragraph extends $.$mol_paragraph {
+            maximal_width() {
+                let width = 0;
+                const letter = this.letter_width();
+                for (const kid of this.sub()) {
+                    if (!kid)
+                        continue;
+                    if (kid instanceof $mol_view) {
+                        width += kid.maximal_width();
+                    }
+                    else if (typeof kid !== 'object') {
+                        width += String(kid).length * letter;
+                    }
+                }
+                return width;
+            }
+            width_limit() {
+                return this.$.$mol_window.size().width;
+            }
+            minimal_width() {
+                return this.letter_width();
+            }
+            row_width() {
+                return Math.max(Math.min(this.width_limit(), this.maximal_width()), this.letter_width());
+            }
+            minimal_height() {
+                return Math.max(1, Math.ceil(this.maximal_width() / this.row_width())) * this.line_height();
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $mol_paragraph.prototype, "maximal_width", null);
+        __decorate([
+            $mol_mem
+        ], $mol_paragraph.prototype, "row_width", null);
+        __decorate([
+            $mol_mem
+        ], $mol_paragraph.prototype, "minimal_height", null);
+        $$.$mol_paragraph = $mol_paragraph;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/paragraph/paragraph.view.css", ":where([mol_paragraph]) {\n\tmargin: 0;\n\tmax-width: 100%;\n}\n");
+})($ || ($ = {}));
+
+;
+	($.$mol_dimmer) = class $mol_dimmer extends ($.$mol_paragraph) {
+		parts(){
+			return [];
+		}
+		string(id){
+			return "";
+		}
+		haystack(){
+			return "";
+		}
+		needle(){
+			return "";
+		}
+		sub(){
+			return (this.parts());
+		}
+		Low(id){
+			const obj = new this.$.$mol_paragraph();
+			(obj.sub) = () => ([(this.string(id))]);
+			return obj;
+		}
+		High(id){
+			const obj = new this.$.$mol_paragraph();
+			(obj.sub) = () => ([(this.string(id))]);
+			return obj;
+		}
+	};
+	($mol_mem_key(($.$mol_dimmer.prototype), "Low"));
+	($mol_mem_key(($.$mol_dimmer.prototype), "High"));
+
+
+;
+"use strict";
+
+;
+"use strict";
+
+;
+"use strict";
+
+;
+"use strict";
+
+;
+"use strict";
+var $;
+(function ($) {
+    let x = /x/[Symbol.matchAll];
+    /** Type safe reguar expression builder */
+    class $mol_regexp extends RegExp {
+        groups;
+        /** Prefer to use $mol_regexp.from */
+        constructor(source, flags = 'gsu', groups = []) {
+            super(source, flags);
+            this.groups = groups;
+        }
+        *[Symbol.matchAll](str) {
+            const index = this.lastIndex;
+            this.lastIndex = 0;
+            try {
+                while (this.lastIndex < str.length) {
+                    const found = this.exec(str);
+                    if (!found)
+                        break;
+                    yield found;
+                }
+            }
+            finally {
+                this.lastIndex = index;
+            }
+        }
+        /** Parses input and returns found capture groups or null */
+        [Symbol.match](str) {
+            const res = [...this[Symbol.matchAll](str)].filter(r => r.groups).map(r => r[0]);
+            if (!res.length)
+                return null;
+            return res;
+        }
+        /** Splits string by regexp edges */
+        [Symbol.split](str) {
+            const res = [];
+            let token_last = null;
+            for (let token of this[Symbol.matchAll](str)) {
+                if (token.groups && (token_last ? token_last.groups : true))
+                    res.push('');
+                res.push(token[0]);
+                token_last = token;
+            }
+            if (!res.length)
+                res.push('');
+            return res;
+        }
+        test(str) {
+            return Boolean(str.match(this));
+        }
+        exec(str) {
+            const from = this.lastIndex;
+            if (from >= str.length)
+                return null;
+            const res = super.exec(str);
+            if (res === null) {
+                this.lastIndex = str.length;
+                if (!str)
+                    return null;
+                return Object.assign([str.slice(from)], {
+                    index: from,
+                    input: str,
+                });
+            }
+            if (from === this.lastIndex) {
+                $mol_fail(new Error('Captured empty substring'));
+            }
+            const groups = {};
+            const skipped = str.slice(from, this.lastIndex - res[0].length);
+            if (skipped) {
+                this.lastIndex = this.lastIndex - res[0].length;
+                return Object.assign([skipped], {
+                    index: from,
+                    input: res.input,
+                });
+            }
+            for (let i = 0; i < this.groups.length; ++i) {
+                const group = this.groups[i];
+                groups[group] = groups[group] || res[i + 1] || '';
+            }
+            return Object.assign(res, { groups });
+        }
+        generate(params) {
+            return null;
+        }
+        get native() {
+            return new RegExp(this.source, this.flags);
+        }
+        /** Makes regexp that greedy repeats this pattern with delimiter */
+        static separated(chunk, sep) {
+            return $mol_regexp.from([
+                $mol_regexp.repeat_greedy([[chunk], sep], 0),
+                chunk,
+            ]);
+        }
+        /** Makes regexp that non-greedy repeats this pattern from min to max count */
+        static repeat(source, min = 0, max = Number.POSITIVE_INFINITY) {
+            const regexp = $mol_regexp.from(source);
+            const upper = Number.isFinite(max) ? max : '';
+            const str = `(?:${regexp.source}){${min},${upper}}?`;
+            const regexp2 = new $mol_regexp(str, regexp.flags, regexp.groups);
+            regexp2.generate = params => {
+                const res = regexp.generate(params);
+                if (res)
+                    return res;
+                if (min > 0)
+                    return res;
+                return '';
+            };
+            return regexp2;
+        }
+        /** Makes regexp that greedy repeats this pattern from min to max count */
+        static repeat_greedy(source, min = 0, max = Number.POSITIVE_INFINITY) {
+            const regexp = $mol_regexp.from(source);
+            const upper = Number.isFinite(max) ? max : '';
+            const str = `(?:${regexp.source}){${min},${upper}}`;
+            const regexp2 = new $mol_regexp(str, regexp.flags, regexp.groups);
+            regexp2.generate = params => {
+                const res = regexp.generate(params);
+                if (res)
+                    return res;
+                if (min > 0)
+                    return res;
+                return '';
+            };
+            return regexp2;
+        }
+        /** Makes regexp that match any of options */
+        static vary(sources, flags = 'gsu') {
+            const groups = [];
+            const chunks = sources.map(source => {
+                const regexp = $mol_regexp.from(source);
+                groups.push(...regexp.groups);
+                return regexp.source;
+            });
+            return new $mol_regexp(`(?:${chunks.join('|')})`, flags, groups);
+        }
+        /** Makes regexp that allow absent of this pattern */
+        static optional(source) {
+            return $mol_regexp.repeat_greedy(source, 0, 1);
+        }
+        /** Makes regexp that look ahead for pattern */
+        static force_after(source) {
+            const regexp = $mol_regexp.from(source);
+            return new $mol_regexp(`(?=${regexp.source})`, regexp.flags, regexp.groups);
+        }
+        /** Makes regexp that look ahead for pattern */
+        static forbid_after(source) {
+            const regexp = $mol_regexp.from(source);
+            return new $mol_regexp(`(?!${regexp.source})`, regexp.flags, regexp.groups);
+        }
+        /** Converts some js values to regexp */
+        static from(source, { ignoreCase, multiline } = {
+            ignoreCase: false,
+            multiline: false,
+        }) {
+            let flags = 'gsu';
+            if (multiline)
+                flags += 'm';
+            if (ignoreCase)
+                flags += 'i';
+            if (typeof source === 'number') {
+                const src = `\\u{${source.toString(16)}}`;
+                const regexp = new $mol_regexp(src, flags);
+                regexp.generate = () => src;
+                return regexp;
+            }
+            if (typeof source === 'string') {
+                const src = source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regexp = new $mol_regexp(src, flags);
+                regexp.generate = () => source;
+                return regexp;
+            }
+            else if (source instanceof $mol_regexp) {
+                const regexp = new $mol_regexp(source.source, flags, source.groups);
+                regexp.generate = params => source.generate(params);
+                return regexp;
+            }
+            if (source instanceof RegExp) {
+                const test = new RegExp('|' + source.source);
+                const groups = Array.from({ length: test.exec('').length - 1 }, (_, i) => String(i + 1));
+                const regexp = new $mol_regexp(source.source, source.flags, groups);
+                regexp.generate = () => '';
+                return regexp;
+            }
+            if (Array.isArray(source)) {
+                const patterns = source.map(src => Array.isArray(src)
+                    ? $mol_regexp.optional(src)
+                    : $mol_regexp.from(src));
+                const chunks = patterns.map(pattern => pattern.source);
+                const groups = [];
+                let index = 0;
+                for (const pattern of patterns) {
+                    for (let group of pattern.groups) {
+                        if (Number(group) >= 0) {
+                            groups.push(String(index++));
+                        }
+                        else {
+                            groups.push(group);
+                        }
+                    }
+                }
+                const regexp = new $mol_regexp(chunks.join(''), flags, groups);
+                regexp.generate = params => {
+                    let res = '';
+                    for (const pattern of patterns) {
+                        let sub = pattern.generate(params);
+                        if (sub === null)
+                            return '';
+                        res += sub;
+                    }
+                    return res;
+                };
+                return regexp;
+            }
+            else {
+                const groups = [];
+                const chunks = Object.keys(source).map(name => {
+                    groups.push(name);
+                    const regexp = $mol_regexp.from(source[name]);
+                    groups.push(...regexp.groups);
+                    return `(${regexp.source})`;
+                });
+                const regexp = new $mol_regexp(`(?:${chunks.join('|')})`, flags, groups);
+                const validator = new RegExp('^' + regexp.source + '$', flags);
+                regexp.generate = (params) => {
+                    for (let option in source) {
+                        if (option in params) {
+                            if (typeof params[option] === 'boolean') {
+                                if (!params[option])
+                                    continue;
+                            }
+                            else {
+                                const str = String(params[option]);
+                                if (str.match(validator))
+                                    return str;
+                                $mol_fail(new Error(`Wrong param: ${option}=${str}`));
+                            }
+                        }
+                        else {
+                            if (typeof source[option] !== 'object')
+                                continue;
+                        }
+                        const res = $mol_regexp.from(source[option]).generate(params);
+                        if (res)
+                            return res;
+                    }
+                    return null;
+                };
+                return regexp;
+            }
+        }
+        /** Makes regexp which includes only unicode category */
+        static unicode_only(...category) {
+            return new $mol_regexp(`\\p{${category.join('=')}}`);
+        }
+        /** Makes regexp which excludes unicode category */
+        static unicode_except(...category) {
+            return new $mol_regexp(`\\P{${category.join('=')}}`);
+        }
+        static char_range(from, to) {
+            return new $mol_regexp(`${$mol_regexp.from(from).source}-${$mol_regexp.from(to).source}`);
+        }
+        static char_only(...allowed) {
+            const regexp = allowed.map(f => $mol_regexp.from(f).source).join('');
+            return new $mol_regexp(`[${regexp}]`);
+        }
+        static char_except(...forbidden) {
+            const regexp = forbidden.map(f => $mol_regexp.from(f).source).join('');
+            return new $mol_regexp(`[^${regexp}]`);
+        }
+        static decimal_only = $mol_regexp.from(/\d/gsu);
+        static decimal_except = $mol_regexp.from(/\D/gsu);
+        static latin_only = $mol_regexp.from(/\w/gsu);
+        static latin_except = $mol_regexp.from(/\W/gsu);
+        static space_only = $mol_regexp.from(/\s/gsu);
+        static space_except = $mol_regexp.from(/\S/gsu);
+        static word_break_only = $mol_regexp.from(/\b/gsu);
+        static word_break_except = $mol_regexp.from(/\B/gsu);
+        static tab = $mol_regexp.from(/\t/gsu);
+        static slash_back = $mol_regexp.from(/\\/gsu);
+        static nul = $mol_regexp.from(/\0/gsu);
+        static char_any = $mol_regexp.from(/./gsu);
+        static begin = $mol_regexp.from(/^/gsu);
+        static end = $mol_regexp.from(/$/gsu);
+        static or = $mol_regexp.from(/|/gsu);
+        static line_end = $mol_regexp.from({
+            win_end: [['\r'], '\n'],
+            mac_end: '\r',
+        });
+    }
+    $.$mol_regexp = $mol_regexp;
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Output text with dimmed mismatched substrings.
+         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_dimmer_demo
+         */
+        class $mol_dimmer extends $.$mol_dimmer {
+            parts() {
+                const needle = this.needle();
+                if (needle.length < 2)
+                    return [this.haystack()];
+                let chunks = [];
+                let strings = this.strings();
+                for (let index = 0; index < strings.length; index++) {
+                    if (strings[index] === '')
+                        continue;
+                    chunks.push((index % 2) ? this.High(index) : this.Low(index));
+                }
+                return chunks;
+            }
+            strings() {
+                const options = this.needle().split(/\s+/g).filter(Boolean);
+                if (!options.length)
+                    return [this.haystack()];
+                const variants = { ...options };
+                const regexp = $mol_regexp.from({ needle: variants }, { ignoreCase: true });
+                return this.haystack().split(regexp);
+            }
+            string(index) {
+                return this.strings()[index];
+            }
+            *view_find(check, path = []) {
+                if (check(this, this.haystack())) {
+                    yield [...path, this];
+                }
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $mol_dimmer.prototype, "strings", null);
+        $$.$mol_dimmer = $mol_dimmer;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/dimmer/dimmer.view.css", "[mol_dimmer] {\n\tdisplay: block;\n\tmax-width: 100%;\n}\n\n[mol_dimmer_low] {\n\tdisplay: inline;\n\topacity: 0.8;\n}\n\n[mol_dimmer_high] {\n\tdisplay: inline;\n\tcolor: var(--mol_theme_focus);\n\ttext-shadow: 0 0;\n}\n");
+})($ || ($ = {}));
+
+;
 	($.$mol_search) = class $mol_search extends ($.$mol_pop) {
 		clear(next){
 			if(next !== undefined) return next;
@@ -8868,11 +7980,477 @@ var $;
 })($ || ($ = {}));
 
 ;
-	($.$mol_icon_dots_vertical) = class $mol_icon_dots_vertical extends ($.$mol_icon) {
-		path(){
-			return "M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z";
+	($.$mol_link) = class $mol_link extends ($.$mol_view) {
+		uri_toggle(){
+			return "";
+		}
+		uri_unsafe(){
+			return (this.uri_toggle());
+		}
+		hint(){
+			return "";
+		}
+		hint_safe(){
+			return (this.hint());
+		}
+		target(){
+			return "_self";
+		}
+		file_name(){
+			return "";
+		}
+		current(){
+			return false;
+		}
+		relation(){
+			return "";
+		}
+		event_click(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		click(next){
+			return (this.event_click(next));
+		}
+		uri(){
+			return "";
+		}
+		dom_name(){
+			return "a";
+		}
+		uri_off(){
+			return "";
+		}
+		uri_native(){
+			return null;
+		}
+		external(){
+			return false;
+		}
+		attr(){
+			return {
+				...(super.attr()), 
+				"href": (this.uri_unsafe()), 
+				"title": (this.hint_safe()), 
+				"target": (this.target()), 
+				"download": (this.file_name()), 
+				"mol_link_current": (this.current()), 
+				"rel": (this.relation())
+			};
+		}
+		sub(){
+			return [(this.title())];
+		}
+		arg(){
+			return {};
+		}
+		event(){
+			return {...(super.event()), "click": (next) => (this.click(next))};
 		}
 	};
+	($mol_mem(($.$mol_link.prototype), "event_click"));
+
+
+;
+"use strict";
+
+;
+"use strict";
+var $;
+(function ($) {
+    /** State of arguments like `foo=bar xxx` */
+    class $mol_state_arg extends $mol_object {
+        prefix;
+        static prolog = '';
+        static separator = ' ';
+        static href(next) {
+            return next || process.argv.slice(2).join(' ');
+        }
+        static href_normal() {
+            return this.link({});
+        }
+        static dict(next) {
+            if (next !== void 0)
+                this.href(this.make_link(next));
+            var href = this.href();
+            var chunks = href.split(' ');
+            var params = {};
+            chunks.forEach(chunk => {
+                if (!chunk)
+                    return;
+                var vals = chunk.split('=').map(decodeURIComponent);
+                params[vals.shift()] = vals.join('=');
+            });
+            return params;
+        }
+        static value(key, next) {
+            if (next === void 0)
+                return this.dict()[key] ?? null;
+            this.href(this.link({ [key]: next }));
+            return next;
+        }
+        static link(next) {
+            const params = {};
+            var prev = this.dict();
+            for (var key in prev) {
+                params[key] = prev[key];
+            }
+            for (var key in next) {
+                params[key] = next[key];
+            }
+            return this.make_link(params);
+        }
+        static make_link(next) {
+            const chunks = [];
+            for (const key in next) {
+                if (next[key] !== null) {
+                    chunks.push([key, next[key]].map(encodeURIComponent).join('='));
+                }
+            }
+            return chunks.join(' ');
+        }
+        static go(next) {
+            this.href(this.link(next));
+        }
+        static commit() { }
+        constructor(prefix = '') {
+            super();
+            this.prefix = prefix;
+        }
+        value(key, next) {
+            return this.constructor.value(this.prefix + key, next);
+        }
+        sub(postfix) {
+            return new this.constructor(this.prefix + postfix + '.');
+        }
+        link(next) {
+            const prefix = this.prefix;
+            const dict = {};
+            for (var key in next) {
+                dict[prefix + key] = next[key];
+            }
+            return this.constructor.link(dict);
+        }
+    }
+    __decorate([
+        $mol_mem
+    ], $mol_state_arg, "href", null);
+    __decorate([
+        $mol_mem
+    ], $mol_state_arg, "href_normal", null);
+    __decorate([
+        $mol_mem
+    ], $mol_state_arg, "dict", null);
+    __decorate([
+        $mol_mem_key
+    ], $mol_state_arg, "value", null);
+    __decorate([
+        $mol_action
+    ], $mol_state_arg, "go", null);
+    $.$mol_state_arg = $mol_state_arg;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    function $mol_dom_safe_uri(uri) {
+        return uri.replace(/^(?=\w+script+:)/, 'about:blank#');
+    }
+    $.$mol_dom_safe_uri = $mol_dom_safe_uri;
+    function $mol_dom_safe_attr(val) {
+        return val;
+    }
+    $.$mol_dom_safe_attr = $mol_dom_safe_attr;
+    $.$mol_dom_safe_rules = {
+        // defaults
+        '': { id: $mol_dom_safe_attr },
+        // special
+        a: { href: $mol_dom_safe_uri },
+        img: { src: $mol_dom_safe_uri },
+        object: { src: $mol_dom_safe_uri },
+        // blocks
+        div: {},
+        p: {},
+        h1: {},
+        h2: {},
+        h3: {},
+        h4: {},
+        h5: {},
+        h6: {},
+        blockquote: {},
+        pre: {},
+        ul: {},
+        ol: {},
+        li: {},
+        details: {},
+        summary: {},
+        hr: {},
+        table: {},
+        tr: {},
+        td: {},
+        // inlines
+        span: {},
+        strong: {},
+        em: {},
+        br: {},
+        ins: {},
+        del: {},
+        code: {},
+    };
+    function $mol_dom_safe(nodes) {
+        const res = [];
+        for (const node of nodes) {
+            if (node.nodeType === node.TEXT_NODE) {
+                res.push(node);
+                continue;
+            }
+            if (node.nodeType === node.ELEMENT_NODE) {
+                const kids = this.$mol_dom_safe([...node.childNodes]);
+                const allowed = this.$mol_dom_safe_rules[node.localName];
+                if (!allowed) {
+                    res.push(...kids);
+                    continue;
+                }
+                for (const attr of [...node.attributes]) {
+                    const proc = allowed[attr.localName] ?? this.$mol_dom_safe_rules[''][attr.localName];
+                    if (proc)
+                        attr.nodeValue = proc(attr.nodeValue);
+                    else
+                        node.removeAttribute(attr.nodeName);
+                }
+                $mol_dom_render_children(node, kids);
+                res.push(node);
+                continue;
+            }
+        }
+        return res;
+    }
+    $.$mol_dom_safe = $mol_dom_safe;
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Dynamic hyperlink. It can add, change or remove parameters. A link that leads to the current page has [mol_link_current] attribute set to true.
+         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_link_demo
+         */
+        class $mol_link extends $.$mol_link {
+            uri_toggle() {
+                return this.current() ? this.uri_off() : this.uri();
+            }
+            uri() {
+                return new this.$.$mol_state_arg(this.state_key()).link(this.arg());
+            }
+            uri_off() {
+                const arg2 = {};
+                for (let i in this.arg())
+                    arg2[i] = null;
+                return new this.$.$mol_state_arg(this.state_key()).link(arg2);
+            }
+            uri_native() {
+                const base = this.$.$mol_state_arg.href();
+                return new URL(this.uri(), base);
+            }
+            current() {
+                const base = this.$.$mol_state_arg.href_normal();
+                const target = this.uri_native().toString();
+                if (base === target)
+                    return true;
+                const args = this.arg();
+                const keys = Object.keys(args).filter(key => args[key] != null);
+                if (keys.length === 0)
+                    return false;
+                for (const key of keys) {
+                    if (this.$.$mol_state_arg.value(key) != args[key])
+                        return false;
+                }
+                return true;
+            }
+            file_name() {
+                return null;
+            }
+            minimal_height() {
+                return Math.max(super.minimal_height(), 24);
+            }
+            external() {
+                return this.uri_native().origin !== $mol_dom_context.location.origin;
+            }
+            target() {
+                return this.external() ? '_blank' : '_self';
+            }
+            hint_safe() {
+                try {
+                    return this.hint();
+                }
+                catch (error) {
+                    $mol_fail_log(error);
+                    if (error instanceof Error)
+                        return '💥' + error.message;
+                    return '';
+                }
+            }
+            uri_unsafe() {
+                return $mol_dom_safe_uri(super.uri_unsafe());
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $mol_link.prototype, "uri_toggle", null);
+        __decorate([
+            $mol_mem
+        ], $mol_link.prototype, "uri", null);
+        __decorate([
+            $mol_mem
+        ], $mol_link.prototype, "uri_off", null);
+        __decorate([
+            $mol_mem
+        ], $mol_link.prototype, "uri_native", null);
+        __decorate([
+            $mol_mem
+        ], $mol_link.prototype, "current", null);
+        $$.$mol_link = $mol_link;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    const { rem } = $mol_style_unit;
+    $mol_style_define($mol_link, {
+        textDecoration: 'none',
+        color: $mol_theme.control,
+        stroke: 'currentcolor',
+        cursor: 'pointer',
+        padding: $mol_gap.text,
+        boxSizing: 'border-box',
+        position: 'relative',
+        minWidth: rem(2.5),
+        minHeight: rem(2.5),
+        gap: $mol_gap.space,
+        border: {
+            radius: $mol_gap.round,
+        },
+        ':hover': {
+            background: {
+                color: $mol_theme.hover,
+            },
+        },
+        ':focus': {
+            outline: 'none',
+        },
+        ':focus-visible': {
+            outline: 'none',
+            background: {
+                color: $mol_theme.hover,
+            }
+        },
+        ':active': {
+            color: $mol_theme.focus,
+        },
+        '@': {
+            mol_link_current: {
+                'true': {
+                    color: $mol_theme.current,
+                    textShadow: '0 0',
+                }
+            }
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$mol_page) = class $mol_page extends ($.$mol_view) {
+		tabindex(){
+			return -1;
+		}
+		Logo(){
+			return null;
+		}
+		title_content(){
+			return [(this.Logo()), (this.title())];
+		}
+		Title(){
+			const obj = new this.$.$mol_view();
+			(obj.dom_name) = () => ("h1");
+			(obj.sub) = () => ((this.title_content()));
+			return obj;
+		}
+		tools(){
+			return [];
+		}
+		Tools(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ((this.tools()));
+			return obj;
+		}
+		head(){
+			return [(this.Title()), (this.Tools())];
+		}
+		Head(){
+			const obj = new this.$.$mol_view();
+			(obj.minimal_height) = () => (64);
+			(obj.dom_name) = () => ("header");
+			(obj.sub) = () => ((this.head()));
+			return obj;
+		}
+		body_scroll_top(next){
+			return (this.Body().scroll_top(next));
+		}
+		body(){
+			return [];
+		}
+		Body_content(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ((this.body()));
+			return obj;
+		}
+		body_content(){
+			return [(this.Body_content())];
+		}
+		Body(){
+			const obj = new this.$.$mol_scroll();
+			(obj.sub) = () => ((this.body_content()));
+			return obj;
+		}
+		foot(){
+			return [];
+		}
+		Foot(){
+			const obj = new this.$.$mol_view();
+			(obj.dom_name) = () => ("footer");
+			(obj.sub) = () => ((this.foot()));
+			return obj;
+		}
+		dom_name(){
+			return "article";
+		}
+		attr(){
+			return {...(super.attr()), "tabIndex": (this.tabindex())};
+		}
+		sub(){
+			return [
+				(this.Head()), 
+				(this.Body()), 
+				(this.Foot())
+			];
+		}
+	};
+	($mol_mem(($.$mol_page.prototype), "Title"));
+	($mol_mem(($.$mol_page.prototype), "Tools"));
+	($mol_mem(($.$mol_page.prototype), "Head"));
+	($mol_mem(($.$mol_page.prototype), "Body_content"));
+	($mol_mem(($.$mol_page.prototype), "Body"));
+	($mol_mem(($.$mol_page.prototype), "Foot"));
 
 
 ;
@@ -8880,137 +8458,292 @@ var $;
 
 
 ;
-	($.$mol_select) = class $mol_select extends ($.$mol_pick) {
-		enabled(){
-			return true;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        const { per, rem } = $mol_style_unit;
+        const { hsla, blur } = $mol_style_func;
+        $mol_style_define($mol_page, {
+            display: 'flex',
+            flex: {
+                basis: 'auto',
+                direction: 'column',
+            },
+            position: 'relative',
+            alignSelf: 'stretch',
+            maxWidth: per(100),
+            maxHeight: per(100),
+            boxSizing: 'border-box',
+            color: $mol_theme.text,
+            // backdropFilter: blur( `3px` ), enforces layering
+            // zIndex: 0 ,
+            ':focus': {
+                outline: 'none',
+            },
+            Head: {
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'flex-end',
+                flex: 'none',
+                position: 'relative',
+                margin: 0,
+                minHeight: rem(4),
+                padding: $mol_gap.block,
+                background: {
+                    color: $mol_theme.card,
+                },
+                border: {
+                    radius: $mol_gap.round,
+                },
+                box: {
+                    shadow: [
+                        [0, `-0.5rem`, `0.5rem`, `-0.5rem`, hsla(0, 0, 0, .25)],
+                        [0, `0.5rem`, `0.5rem`, `-0.5rem`, hsla(0, 0, 0, .25)],
+                    ],
+                },
+                zIndex: 2,
+                '@media': {
+                    'print': {
+                        box: {
+                            shadow: [[0, `1px`, 0, 0, hsla(0, 0, 0, .25)]],
+                        },
+                    },
+                },
+            },
+            Title: {
+                minHeight: rem(2),
+                margin: 0,
+                padding: $mol_gap.text,
+                gap: $mol_gap.text,
+                wordBreak: 'normal',
+                textShadow: '0 0',
+                font: {
+                    size: 'inherit',
+                    weight: 'normal',
+                },
+                flex: {
+                    grow: 1,
+                    shrink: 1,
+                    basis: 'auto',
+                },
+            },
+            Tools: {
+                flex: {
+                    basis: 'auto',
+                    grow: 0,
+                    shrink: 1,
+                },
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'flex-start',
+                flexWrap: 'wrap',
+                '@media': {
+                    'print': {
+                        display: 'none',
+                    },
+                },
+            },
+            Body: {
+                flex: {
+                    grow: 1000,
+                    shrink: 1,
+                    basis: per(100),
+                },
+            },
+            Body_content: {
+                padding: $mol_gap.block,
+                minHeight: 0,
+                minWidth: 0,
+                flex: {
+                    direction: 'column',
+                    shrink: 1,
+                    grow: 1,
+                },
+                justify: {
+                    self: 'stretch',
+                },
+            },
+            Foot: {
+                display: 'flex',
+                justifyContent: 'space-between',
+                flex: 'none',
+                margin: 0,
+                background: {
+                    color: $mol_theme.card,
+                },
+                border: {
+                    radius: $mol_gap.round,
+                },
+                box: {
+                    shadow: [
+                        [0, `-0.5rem`, `0.5rem`, `-0.5rem`, hsla(0, 0, 0, .25)],
+                        [0, `0.5rem`, `0.5rem`, `-0.5rem`, hsla(0, 0, 0, .25)],
+                    ],
+                },
+                zIndex: 1,
+                padding: $mol_gap.block,
+                ':empty': {
+                    display: 'none',
+                },
+            },
+        });
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+	($.$mol_book2_catalog) = class $mol_book2_catalog extends ($.$mol_book2) {
+		Menu_title(){
+			return (this.Menu().Title());
 		}
-		event_select(id, next){
-			if(next !== undefined) return next;
+		menu_title(){
+			return "";
+		}
+		Menu_tools(){
+			return (this.Menu().Tools());
+		}
+		Menu_logo(){
 			return null;
 		}
-		option_label(id){
-			return "";
+		menu_head(){
+			return [(this.Menu_title()), (this.Menu_tools())];
 		}
-		filter_pattern(next){
+		menu_filter(next){
 			if(next !== undefined) return next;
 			return "";
 		}
-		Option_label(id){
+		Menu_filter(){
+			const obj = new this.$.$mol_search();
+			(obj.query) = (next) => ((this.menu_filter(next)));
+			return obj;
+		}
+		Menu_links_empty(){
+			const obj = new this.$.$mol_view();
+			return obj;
+		}
+		arg(id){
+			return {};
+		}
+		menu_link_arg(id){
+			return (this.arg(id));
+		}
+		spread_title(id){
+			return "";
+		}
+		Menu_link_title(id){
 			const obj = new this.$.$mol_dimmer();
-			(obj.haystack) = () => ((this.option_label(id)));
-			(obj.needle) = () => ((this.filter_pattern()));
+			(obj.needle) = () => ((this.menu_filter()));
+			(obj.haystack) = () => ((this.spread_title(id)));
 			return obj;
 		}
-		option_content(id){
-			return [(this.Option_label(id))];
+		menu_link_content(id){
+			return [(this.Menu_link_title(id))];
 		}
-		no_options_message(){
-			return (this.$.$mol_locale.text("$mol_select_no_options_message"));
-		}
-		nav_components(){
-			return [];
-		}
-		option_focused(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		nav_cycle(next){
-			if(next !== undefined) return next;
-			return true;
-		}
-		Nav(){
-			const obj = new this.$.$mol_nav();
-			(obj.keys_y) = () => ((this.nav_components()));
-			(obj.current_y) = (next) => ((this.option_focused(next)));
-			(obj.cycle) = (next) => ((this.nav_cycle(next)));
+		Menu_link(id){
+			const obj = new this.$.$mol_link();
+			(obj.arg) = () => ((this.menu_link_arg(id)));
+			(obj.sub) = () => ((this.menu_link_content(id)));
 			return obj;
 		}
-		menu_content(){
+		menu_item_content(id){
+			return [(this.Menu_link(id))];
+		}
+		Menu_item(id){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ((this.menu_item_content(id)));
+			return obj;
+		}
+		menu_links(){
+			return [(this.Menu_item("0"))];
+		}
+		Menu_links(){
+			const obj = new this.$.$mol_list();
+			(obj.Empty) = () => ((this.Menu_links_empty()));
+			(obj.rows) = () => ((this.menu_links()));
+			return obj;
+		}
+		menu_body(){
+			return [(this.Menu_filter()), (this.Menu_links())];
+		}
+		menu_foot(){
 			return [];
 		}
 		Menu(){
-			const obj = new this.$.$mol_list();
-			(obj.rows) = () => ((this.menu_content()));
+			const obj = new this.$.$mol_page();
+			(obj.title) = () => ((this.menu_title()));
+			(obj.Logo) = () => ((this.Menu_logo()));
+			(obj.tools) = () => ([...(this.menu_tools()), ...(this.addon_tools())]);
+			(obj.head) = () => ((this.menu_head()));
+			(obj.body) = () => ((this.menu_body()));
+			(obj.foot) = () => ((this.menu_foot()));
 			return obj;
 		}
-		Bubble_pane(){
-			const obj = new this.$.$mol_scroll();
-			(obj.sub) = () => ([(this.Menu())]);
-			return obj;
-		}
-		filter_hint(){
-			return (this.$.$mol_locale.text("$mol_select_filter_hint"));
-		}
-		submit(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		dictionary(next){
-			if(next !== undefined) return next;
+		spread_close_arg(){
 			return {};
 		}
-		options(){
-			return [];
+		Spread_close_icon(){
+			const obj = new this.$.$mol_icon_close();
+			return obj;
 		}
-		value(next){
+		param(){
+			return "";
+		}
+		spread(next){
 			if(next !== undefined) return next;
 			return "";
 		}
-		option_label_default(){
-			return "";
+		spreads(){
+			return {};
 		}
-		Option_row(id){
-			const obj = new this.$.$mol_button_minor();
-			(obj.enabled) = () => ((this.enabled()));
-			(obj.event_click) = (next) => ((this.event_select(id, next)));
-			(obj.sub) = () => ((this.option_content(id)));
-			return obj;
-		}
-		No_options(){
+		Spread(id){
 			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.no_options_message())]);
 			return obj;
 		}
-		plugins(){
-			return [...(super.plugins()), (this.Nav())];
+		Spread_default(){
+			return null;
 		}
-		hint(){
-			return (this.$.$mol_locale.text("$mol_select_hint"));
+		spread_ids(){
+			return [];
 		}
-		bubble_content(){
-			return [(this.Filter()), (this.Bubble_pane())];
+		menu_filter_enabled(){
+			return false;
 		}
-		Filter(){
-			const obj = new this.$.$mol_search();
-			(obj.query) = (next) => ((this.filter_pattern(next)));
-			(obj.hint) = () => ((this.filter_hint()));
-			(obj.submit) = (next) => ((this.submit(next)));
-			(obj.enabled) = () => ((this.enabled()));
+		spread_ids_filtered(){
+			return [];
+		}
+		spread_current(){
+			return null;
+		}
+		menu_tools(){
+			return [];
+		}
+		addon_tools(){
+			return [];
+		}
+		pages(){
+			return [(this.Menu())];
+		}
+		Spread_close(){
+			const obj = new this.$.$mol_link();
+			(obj.arg) = () => ((this.spread_close_arg()));
+			(obj.hint) = () => ((this.$.$mol_locale.text("$mol_book2_catalog_Spread_close_hint")));
+			(obj.sub) = () => ([(this.Spread_close_icon())]);
 			return obj;
-		}
-		Trigger_icon(){
-			const obj = new this.$.$mol_icon_dots_vertical();
-			return obj;
-		}
-		trigger_enabled(){
-			return (this.enabled());
 		}
 	};
-	($mol_mem_key(($.$mol_select.prototype), "event_select"));
-	($mol_mem(($.$mol_select.prototype), "filter_pattern"));
-	($mol_mem_key(($.$mol_select.prototype), "Option_label"));
-	($mol_mem(($.$mol_select.prototype), "option_focused"));
-	($mol_mem(($.$mol_select.prototype), "nav_cycle"));
-	($mol_mem(($.$mol_select.prototype), "Nav"));
-	($mol_mem(($.$mol_select.prototype), "Menu"));
-	($mol_mem(($.$mol_select.prototype), "Bubble_pane"));
-	($mol_mem(($.$mol_select.prototype), "submit"));
-	($mol_mem(($.$mol_select.prototype), "dictionary"));
-	($mol_mem(($.$mol_select.prototype), "value"));
-	($mol_mem_key(($.$mol_select.prototype), "Option_row"));
-	($mol_mem(($.$mol_select.prototype), "No_options"));
-	($mol_mem(($.$mol_select.prototype), "Filter"));
-	($mol_mem(($.$mol_select.prototype), "Trigger_icon"));
+	($mol_mem(($.$mol_book2_catalog.prototype), "menu_filter"));
+	($mol_mem(($.$mol_book2_catalog.prototype), "Menu_filter"));
+	($mol_mem(($.$mol_book2_catalog.prototype), "Menu_links_empty"));
+	($mol_mem_key(($.$mol_book2_catalog.prototype), "Menu_link_title"));
+	($mol_mem_key(($.$mol_book2_catalog.prototype), "Menu_link"));
+	($mol_mem_key(($.$mol_book2_catalog.prototype), "Menu_item"));
+	($mol_mem(($.$mol_book2_catalog.prototype), "Menu_links"));
+	($mol_mem(($.$mol_book2_catalog.prototype), "Menu"));
+	($mol_mem(($.$mol_book2_catalog.prototype), "Spread_close_icon"));
+	($mol_mem(($.$mol_book2_catalog.prototype), "spread"));
+	($mol_mem_key(($.$mol_book2_catalog.prototype), "Spread"));
+	($mol_mem(($.$mol_book2_catalog.prototype), "Spread_close"));
 
 
 ;
@@ -9040,154 +8773,105 @@ var $;
     var $$;
     (function ($$) {
         /**
-         * Allow user to select value from various options and displays current value.
-         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_select_demo_colors
+         * Variant of [mol_book2](../book2.view.ts) which draws menu in side bar on opens one of taken spreads.
+         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_book2_catalog_demo
          */
-        class $mol_select extends $.$mol_select {
-            filter_pattern(next) {
-                this.focused();
-                return next || '';
+        class $mol_book2_catalog extends $.$mol_book2_catalog {
+            spread_current() {
+                return this.spread() === '' ? this.Spread_default() : this.Spread(this.spread());
             }
-            open() {
-                this.showed(true);
-            }
-            options() {
-                return Object.keys(this.dictionary());
-            }
-            options_filtered() {
-                let options = this.options();
-                options = options.filter($mol_match_text(this.filter_pattern(), (id) => [this.option_label(id)]));
-                const index = options.indexOf(this.value());
-                if (index >= 0)
-                    options = [...options.slice(0, index), ...options.slice(index + 1)];
-                return options;
-            }
-            option_label(id) {
-                const value = this.dictionary()[id];
-                return (value == null ? id : value) || this.option_label_default();
-            }
-            option_rows() {
-                return this.options_filtered().map((option) => this.Option_row(option));
-            }
-            option_focused(component) {
-                if (component == null) {
-                    for (let comp of this.nav_components()) {
-                        if (comp && comp.focused())
-                            return comp;
-                    }
-                    return null;
-                }
-                if (this.showed()) {
-                    component.focused(true);
-                }
-                return component;
-            }
-            event_select(id, event) {
-                this.value(id);
-                this.showed(false);
-                event?.preventDefault();
-            }
-            nav_components() {
-                if (this.options().length > 1 && this.Filter()) {
-                    return [this.Filter(), ...this.option_rows()];
-                }
-                else {
-                    return this.option_rows();
-                }
-            }
-            trigger_content() {
+            pages() {
+                const spread = this.spread_current();
                 return [
-                    ...this.option_content(this.value()),
-                    ...this.trigger_enabled() ? [this.Trigger_icon()] : [],
+                    this.Menu(),
+                    ...spread
+                        ? spread instanceof $mol_book2
+                            ? spread.pages_deep()
+                            : [spread]
+                        : [],
                 ];
             }
-            menu_content() {
+            auto() {
+                const spread = this.spread_current();
+                if (spread instanceof $mol_book2)
+                    spread.auto();
+                return [];
+            }
+            spread_ids() {
+                return Object.keys(this.spreads());
+            }
+            menu_body() {
                 return [
-                    ...this.option_rows(),
-                    ...(this.options_filtered().length === 0) ? [this.No_options()] : []
+                    ...this.menu_filter_enabled() ? [this.Menu_filter()] : [],
+                    this.Menu_links(),
                 ];
+            }
+            menu_filter_enabled() {
+                return this.spread_ids().length >= 10;
+            }
+            menu_links() {
+                return this.spread_ids_filtered()
+                    .map(spread => this.Menu_item(spread));
+            }
+            spread_ids_filtered() {
+                return this.spread_ids()
+                    .filter($mol_match_text(this.menu_filter(), spread => [this.spread_title(spread)]));
+            }
+            Spread(id) {
+                return this.spreads()[id];
+            }
+            Spread_default() {
+                return this.spreads()[''];
+            }
+            spread(next) {
+                return this.$.$mol_state_arg.value(this.param(), next) ?? '';
+            }
+            arg(spread) {
+                return { [this.param()]: spread || null };
+            }
+            spread_close_arg() {
+                return { [this.param()]: null };
+            }
+            spread_title(spread) {
+                const page = this.Spread(spread);
+                return page instanceof $mol_book2
+                    && page.menu_title()
+                    || page.title()
+                    || spread;
+            }
+            spread_current_book() {
+                const spread = this.spread_current();
+                return spread instanceof $mol_book2 ? spread : null;
+            }
+            placeholders() {
+                const spread_placeholders = this.spread_current_book()?.placeholders() ?? [];
+                return spread_placeholders.length ? spread_placeholders : super.placeholders();
             }
         }
         __decorate([
             $mol_mem
-        ], $mol_select.prototype, "filter_pattern", null);
+        ], $mol_book2_catalog.prototype, "pages", null);
         __decorate([
             $mol_mem
-        ], $mol_select.prototype, "options", null);
+        ], $mol_book2_catalog.prototype, "spread_ids", null);
         __decorate([
             $mol_mem
-        ], $mol_select.prototype, "options_filtered", null);
+        ], $mol_book2_catalog.prototype, "menu_body", null);
         __decorate([
             $mol_mem
-        ], $mol_select.prototype, "option_focused", null);
-        $$.$mol_select = $mol_select;
+        ], $mol_book2_catalog.prototype, "menu_links", null);
+        __decorate([
+            $mol_mem
+        ], $mol_book2_catalog.prototype, "spread_ids_filtered", null);
+        __decorate([
+            $mol_mem
+        ], $mol_book2_catalog.prototype, "spread", null);
+        __decorate([
+            $mol_mem
+        ], $mol_book2_catalog.prototype, "placeholders", null);
+        $$.$mol_book2_catalog = $mol_book2_catalog;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/select/select.view.css", "[mol_select] {\n\tdisplay: flex;\n\tword-break: normal;\n\talign-self: flex-start;\n}\n\n[mol_select_option_row] {\n\tmin-width: 100%;\n\tpadding: 0;\n\tjustify-content: flex-start;\n}\n\n[mol_select_filter] {\n\tflex: 1 0 auto;\n\talign-self: stretch;\n}\n\n[mol_select_option_label] {\n\tpadding: var(--mol_gap_text);\n\ttext-align: start;\n\tmin-height: 1.5em;\n\tdisplay: block;\n\twhite-space: nowrap;\n}\n\n[mol_select_clear_option_content] {\n\tpadding: .5em 1rem .5rem 0;\n\ttext-align: start;\n\tbox-shadow: var(--mol_theme_line);\n\tflex: 1 0 auto;\n}\n\n[mol_select_no_options] {\n\tpadding: var(--mol_gap_text);\n\ttext-align: start;\n\tdisplay: block;\n\tcolor: var(--mol_theme_shade);\n}\n\n[mol_select_trigger] {\n\tpadding: 0;\n\tflex: 1 1 auto;\n\tdisplay: flex;\n}\n\n[mol_select_trigger] > * {\n\tmargin-inline-end: -1rem;\n}\n\n[mol_select_trigger] > *:last-child {\n\tmargin-inline-end: 0;\n}\n\n[mol_select_menu] {\n\tdisplay: flex;\n\tflex-direction: column;\n}\n\n");
-})($ || ($ = {}));
-
-;
-	($.$mol_avatar) = class $mol_avatar extends ($.$mol_icon) {
-		view_box(){
-			return "0 0 24 24";
-		}
-		id(){
-			return "";
-		}
-		path(){
-			return "M 12 12 l 0 0 M 0 0 l 0 0 M 24 24 l 0 0 M 0 24 l 0 0 M 24 0 l 0 0";
-		}
-	};
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    /**
-     * 48-bit streamable array hash function
-     * Based on cyrb53: https://stackoverflow.com/a/52171480
-     */
-    function $mol_hash_numbers(buff, seed = 0) {
-        let h1 = 0xdeadbeef ^ seed;
-        let h2 = 0x41c6ce57 ^ seed;
-        for (let i = 0; i < buff.length; ++i) {
-            const item = buff[i];
-            h1 = Math.imul(h1 ^ item, 2654435761);
-            h2 = Math.imul(h2 ^ item, 1597334677);
-        }
-        h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-        h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-        return 4294967296 * (((1 << 16) - 1) & h2) + (h1 >>> 0);
-    }
-    $.$mol_hash_numbers = $mol_hash_numbers;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    /**
-     * 48-bit streamable string hash function
-     * Based on cyrb53: https://stackoverflow.com/a/52171480
-     */
-    function $mol_hash_string(str, seed = 0) {
-        let nums = new Array(str.length);
-        for (let i = 0; i < str.length; ++i)
-            nums[i] = str.charCodeAt(i);
-        return $mol_hash_numbers(nums);
-    }
-    $.$mol_hash_string = $mol_hash_string;
-})($ || ($ = {}));
-
-;
-"use strict";
-
 
 ;
 "use strict";
@@ -9195,343 +8879,28 @@ var $;
 (function ($) {
     var $$;
     (function ($$) {
-        /**
-         * Avatar uniquely-generated by id string
-         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_avatar_demo
-         */
-        class $mol_avatar extends $.$mol_avatar {
-            path() {
-                const id = $mol_hash_string(this.id());
-                const p = 2.1;
-                const m = 2.7;
-                let path = '';
-                for (let x = 0; x < 4; ++x) {
-                    for (let y = 0; y < 8; ++y) {
-                        if ((id >> (x + y * 7)) & 1) {
-                            const mxp = Math.ceil(m * x + p);
-                            const myp = Math.ceil(m * y + p);
-                            path += `M ${mxp} ${myp} l 0 0 ` + `M ${24 - mxp} ${myp} l 0 0 `;
-                        }
-                    }
-                }
-                return path;
-            }
-        }
-        __decorate([
-            $mol_mem
-        ], $mol_avatar.prototype, "path", null);
-        $$.$mol_avatar = $mol_avatar;
+        $mol_style_define($mol_book2_catalog, {
+            Menu_filter: {
+                flex: {
+                    shrink: 0,
+                    grow: 0,
+                },
+                alignSelf: 'stretch',
+            },
+            Menu_item: {
+                align: {
+                    items: 'flex-start',
+                },
+            },
+            Menu_link: {
+                flex: {
+                    grow: 1,
+                    shrink: 1,
+                    wrap: 'wrap',
+                },
+            },
+        });
     })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/avatar/avatar.view.css", "[mol_avatar] {\n\tstroke-linecap: round;\n\tstroke-width: 3.5px;\n\tfill: none;\n\tstroke: currentColor;\n\t/* width: 1.5rem;\n\theight: 1.5rem;\n\tmargin: 0 -.25rem; */\n\t/* box-shadow: 0 0 0 1px var(--mol_theme_line); */\n}\n");
-})($ || ($ = {}));
-
-;
-	($.$mol_icon_sync) = class $mol_icon_sync extends ($.$mol_icon) {
-		path(){
-			return "M12,18A6,6 0 0,1 6,12C6,11 6.25,10.03 6.7,9.2L5.24,7.74C4.46,8.97 4,10.43 4,12A8,8 0 0,0 12,20V23L16,19L12,15M12,4V1L8,5L12,9V6A6,6 0 0,1 18,12C18,13 17.75,13.97 17.3,14.8L18.76,16.26C19.54,15.03 20,13.57 20,12A8,8 0 0,0 12,4Z";
-		}
-	};
-
-
-;
-"use strict";
-
-
-;
-	($.$mol_icon_sync_off) = class $mol_icon_sync_off extends ($.$mol_icon) {
-		path(){
-			return "M20,4H14V10L16.24,7.76C17.32,8.85 18,10.34 18,12C18,13 17.75,13.94 17.32,14.77L18.78,16.23C19.55,15 20,13.56 20,12C20,9.79 19.09,7.8 17.64,6.36L20,4M2.86,5.41L5.22,7.77C4.45,9 4,10.44 4,12C4,14.21 4.91,16.2 6.36,17.64L4,20H10V14L7.76,16.24C6.68,15.15 6,13.66 6,12C6,11 6.25,10.06 6.68,9.23L14.76,17.31C14.5,17.44 14.26,17.56 14,17.65V19.74C14.79,19.53 15.54,19.2 16.22,18.78L18.58,21.14L19.85,19.87L4.14,4.14L2.86,5.41M10,6.35V4.26C9.2,4.47 8.45,4.8 7.77,5.22L9.23,6.68C9.5,6.56 9.73,6.44 10,6.35Z";
-		}
-	};
-
-
-;
-"use strict";
-
-
-;
-	($.$giper_baza_status) = class $giper_baza_status extends ($.$mol_select) {
-		master_id(id){
-			return "";
-		}
-		Option_logo(id){
-			const obj = new this.$.$mol_avatar();
-			(obj.id) = () => ((this.master_id(id)));
-			return obj;
-		}
-		master_link(){
-			return "";
-		}
-		Well(){
-			const obj = new this.$.$mol_avatar();
-			(obj.id) = () => ((this.master_link()));
-			return obj;
-		}
-		Fail(){
-			const obj = new this.$.$mol_icon_sync_off();
-			return obj;
-		}
-		link_content(){
-			return [(this.Well()), (this.Fail())];
-		}
-		hint(){
-			return "Sync status";
-		}
-		message(){
-			return (this.hint());
-		}
-		Link(){
-			const obj = new this.$.$mol_link();
-			(obj.uri) = () => ((this.master_link()));
-			(obj.sub) = () => ((this.link_content()));
-			(obj.hint) = () => ((this.message()));
-			return obj;
-		}
-		minimal_width(){
-			return 40;
-		}
-		minimal_height(){
-			return 40;
-		}
-		Filter(){
-			return null;
-		}
-		option_content(id){
-			return [(this.Option_logo(id)), (this.option_label(id))];
-		}
-		trigger_content(){
-			return [(this.Link())];
-		}
-	};
-	($mol_mem_key(($.$giper_baza_status.prototype), "Option_logo"));
-	($mol_mem(($.$giper_baza_status.prototype), "Well"));
-	($mol_mem(($.$giper_baza_status.prototype), "Fail"));
-	($mol_mem(($.$giper_baza_status.prototype), "Link"));
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    /** Reactive Set */
-    class $mol_wire_set extends Set {
-        pub = new $mol_wire_pub;
-        // Accessors
-        has(value) {
-            this.pub.promote();
-            return super.has(value);
-        }
-        entries() {
-            this.pub.promote();
-            return super.entries();
-        }
-        keys() {
-            this.pub.promote();
-            return super.keys();
-        }
-        values() {
-            this.pub.promote();
-            return super.values();
-        }
-        forEach(task, self) {
-            this.pub.promote();
-            super.forEach(task, self);
-        }
-        [Symbol.iterator]() {
-            this.pub.promote();
-            return super[Symbol.iterator]();
-        }
-        get size() {
-            this.pub.promote();
-            return super.size;
-        }
-        // Mutators
-        add(value) {
-            if (super.has(value))
-                return this;
-            super.add(value);
-            this.pub.emit();
-            return this;
-        }
-        delete(value) {
-            const res = super.delete(value);
-            if (res)
-                this.pub.emit();
-            return res;
-        }
-        clear() {
-            if (!super.size)
-                return;
-            super.clear();
-            this.pub.emit();
-        }
-        // Extensions
-        item(val, next) {
-            if (next === undefined)
-                return this.has(val);
-            if (next)
-                this.add(val);
-            else
-                this.delete(val);
-            return next;
-        }
-    }
-    $.$mol_wire_set = $mol_wire_set;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    let $mol_rest_code;
-    (function ($mol_rest_code) {
-        $mol_rest_code[$mol_rest_code["Continue"] = 100] = "Continue";
-        $mol_rest_code[$mol_rest_code["Switching protocols"] = 101] = "Switching protocols";
-        $mol_rest_code[$mol_rest_code["Processing"] = 102] = "Processing";
-        $mol_rest_code[$mol_rest_code["OK"] = 200] = "OK";
-        $mol_rest_code[$mol_rest_code["Created"] = 201] = "Created";
-        $mol_rest_code[$mol_rest_code["Accepted"] = 202] = "Accepted";
-        $mol_rest_code[$mol_rest_code["Non-Authoritative Information"] = 203] = "Non-Authoritative Information";
-        $mol_rest_code[$mol_rest_code["No Content"] = 204] = "No Content";
-        $mol_rest_code[$mol_rest_code["Reset Content"] = 205] = "Reset Content";
-        $mol_rest_code[$mol_rest_code["Partial Content"] = 206] = "Partial Content";
-        $mol_rest_code[$mol_rest_code["Multi Status"] = 207] = "Multi Status";
-        $mol_rest_code[$mol_rest_code["Already Reported"] = 208] = "Already Reported";
-        $mol_rest_code[$mol_rest_code["IM Used"] = 226] = "IM Used";
-        $mol_rest_code[$mol_rest_code["Multiple Choices"] = 300] = "Multiple Choices";
-        $mol_rest_code[$mol_rest_code["Moved Permanently"] = 301] = "Moved Permanently";
-        $mol_rest_code[$mol_rest_code["Found"] = 302] = "Found";
-        $mol_rest_code[$mol_rest_code["See Other"] = 303] = "See Other";
-        $mol_rest_code[$mol_rest_code["Not Modified"] = 304] = "Not Modified";
-        $mol_rest_code[$mol_rest_code["Use Proxy"] = 305] = "Use Proxy";
-        $mol_rest_code[$mol_rest_code["Temporary Redirect"] = 307] = "Temporary Redirect";
-        $mol_rest_code[$mol_rest_code["Bad Request"] = 400] = "Bad Request";
-        $mol_rest_code[$mol_rest_code["Unauthorized"] = 401] = "Unauthorized";
-        $mol_rest_code[$mol_rest_code["Payment Required"] = 402] = "Payment Required";
-        $mol_rest_code[$mol_rest_code["Forbidden"] = 403] = "Forbidden";
-        $mol_rest_code[$mol_rest_code["Not Found"] = 404] = "Not Found";
-        $mol_rest_code[$mol_rest_code["Method Not Allowed"] = 405] = "Method Not Allowed";
-        $mol_rest_code[$mol_rest_code["Not Acceptable"] = 406] = "Not Acceptable";
-        $mol_rest_code[$mol_rest_code["Proxy Authentication Required"] = 407] = "Proxy Authentication Required";
-        $mol_rest_code[$mol_rest_code["Request Timeout"] = 408] = "Request Timeout";
-        $mol_rest_code[$mol_rest_code["Conflict"] = 409] = "Conflict";
-        $mol_rest_code[$mol_rest_code["Gone"] = 410] = "Gone";
-        $mol_rest_code[$mol_rest_code["Length Required"] = 411] = "Length Required";
-        $mol_rest_code[$mol_rest_code["Precondition Failed"] = 412] = "Precondition Failed";
-        $mol_rest_code[$mol_rest_code["Request Entity Too Large"] = 413] = "Request Entity Too Large";
-        $mol_rest_code[$mol_rest_code["Request URI Too Long"] = 414] = "Request URI Too Long";
-        $mol_rest_code[$mol_rest_code["Unsupported Media Type"] = 415] = "Unsupported Media Type";
-        $mol_rest_code[$mol_rest_code["Requested Range Not Satisfiable"] = 416] = "Requested Range Not Satisfiable";
-        $mol_rest_code[$mol_rest_code["Expectation Failed"] = 417] = "Expectation Failed";
-        $mol_rest_code[$mol_rest_code["Teapot"] = 418] = "Teapot";
-        $mol_rest_code[$mol_rest_code["Unprocessable Entity"] = 422] = "Unprocessable Entity";
-        $mol_rest_code[$mol_rest_code["Locked"] = 423] = "Locked";
-        $mol_rest_code[$mol_rest_code["Failed Dependency"] = 424] = "Failed Dependency";
-        $mol_rest_code[$mol_rest_code["Upgrade Required"] = 426] = "Upgrade Required";
-        $mol_rest_code[$mol_rest_code["Precondition Required"] = 428] = "Precondition Required";
-        $mol_rest_code[$mol_rest_code["Too Many Requests"] = 429] = "Too Many Requests";
-        $mol_rest_code[$mol_rest_code["Request Header Fields Too Large"] = 431] = "Request Header Fields Too Large";
-        $mol_rest_code[$mol_rest_code["Unavailable For Legal Reasons"] = 451] = "Unavailable For Legal Reasons";
-        $mol_rest_code[$mol_rest_code["Internal Server Error"] = 500] = "Internal Server Error";
-        $mol_rest_code[$mol_rest_code["Not Implemented"] = 501] = "Not Implemented";
-        $mol_rest_code[$mol_rest_code["Bad Gateway"] = 502] = "Bad Gateway";
-        $mol_rest_code[$mol_rest_code["Service Unavailable"] = 503] = "Service Unavailable";
-        $mol_rest_code[$mol_rest_code["Gateway Timeout"] = 504] = "Gateway Timeout";
-        $mol_rest_code[$mol_rest_code["HTTP Version Not Supported"] = 505] = "HTTP Version Not Supported";
-        $mol_rest_code[$mol_rest_code["Insufficient Storage"] = 507] = "Insufficient Storage";
-        $mol_rest_code[$mol_rest_code["Loop Detected"] = 508] = "Loop Detected";
-        $mol_rest_code[$mol_rest_code["Not Extended"] = 510] = "Not Extended";
-        $mol_rest_code[$mol_rest_code["Network Authentication Required"] = 511] = "Network Authentication Required";
-        $mol_rest_code[$mol_rest_code["Network Read Timeout Error"] = 598] = "Network Read Timeout Error";
-        $mol_rest_code[$mol_rest_code["Network Connect Timeout Error"] = 599] = "Network Connect Timeout Error";
-    })($mol_rest_code = $.$mol_rest_code || ($.$mol_rest_code = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    function $mol_dom_serialize(node) {
-        const serializer = new $mol_dom_context.XMLSerializer;
-        return serializer.serializeToString(node);
-    }
-    $.$mol_dom_serialize = $mol_dom_serialize;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_rest_port extends $mol_object {
-        send_code(code) { }
-        send_type(mime) { }
-        origin() { return 'unknown'; }
-        address() { return 'unknown'; }
-        send_data(data) {
-            if (data === null)
-                return this.send_nil();
-            if (typeof data === 'string')
-                return this.send_text(data);
-            if (data instanceof Uint8Array)
-                return this.send_bin(data);
-            if (data instanceof $mol_dom_context.Element)
-                return this.send_dom(data);
-            return this.send_json(data);
-        }
-        send_nil() {
-            this.send_code(204);
-        }
-        send_bin(data) {
-            this.send_code(200);
-            this.send_type('application/octet-stream');
-        }
-        send_text(data) {
-            this.send_code(200);
-            this.send_type('text/plain;charset=utf-8');
-            this.send_bin($mol_charset_encode(data));
-        }
-        send_json(data) {
-            this.send_code(200);
-            this.send_type('application/json');
-            this.send_text(JSON.stringify(data));
-        }
-        send_dom(data) {
-            this.send_code(200);
-            this.send_type('text/html;charset=utf-8');
-            this.send_text($mol_dom_serialize(data));
-        }
-        static make(config) {
-            return super.make(config);
-        }
-    }
-    __decorate([
-        $mol_action
-    ], $mol_rest_port.prototype, "send_data", null);
-    __decorate([
-        $mol_action
-    ], $mol_rest_port.prototype, "send_nil", null);
-    __decorate([
-        $mol_action
-    ], $mol_rest_port.prototype, "send_bin", null);
-    __decorate([
-        $mol_action
-    ], $mol_rest_port.prototype, "send_text", null);
-    __decorate([
-        $mol_action
-    ], $mol_rest_port.prototype, "send_json", null);
-    __decorate([
-        $mol_action
-    ], $mol_rest_port.prototype, "send_dom", null);
-    __decorate([
-        ($mol_action)
-    ], $mol_rest_port, "make", null);
-    $.$mol_rest_port = $mol_rest_port;
 })($ || ($ = {}));
 
 ;
@@ -9597,6 +8966,111 @@ var $;
         return $mol_base64_decode(str.replace(/æ/g, '+').replace(/Æ/g, '/'));
     }
     $.$mol_base64_ae_decode = $mol_base64_ae_decode;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    let sponge = new Uint32Array(80);
+    /** Fast small sync SHA-1 (20 bytes, 160 bits) */
+    function $mol_crypto2_hash(input) {
+        const data = input instanceof Uint8Array
+            ? input
+            : new Uint8Array(input.buffer, input.byteOffset, input.byteLength);
+        const bits = data.byteLength << 3;
+        const kbits = bits >> 5;
+        const kword = 0x80 << (24 - bits & 0b11111);
+        const bytes = 16 + ((bits + 64) >>> 9 << 4);
+        const klens = bytes - 1;
+        const wlen = data.byteLength >> 2 << 2;
+        let tail = 0;
+        for (let i = wlen; i < data.length; ++i) {
+            tail |= data[i] << ((3 - i & 0b11) << 3);
+        }
+        // Initial
+        const hash = new Int32Array([1732584193, -271733879, -1732584194, 271733878, -1009589776]);
+        // Digest
+        for (let i = 0; i < bytes; i += 16) {
+            let h0 = hash[0];
+            let h1 = hash[1];
+            let h2 = hash[2];
+            let h3 = hash[3];
+            let h4 = hash[4];
+            for (let j = 0; j < 16; ++j) {
+                const k = i + j;
+                if (k === klens) {
+                    sponge[j] = bits;
+                }
+                else {
+                    const pos = k << 2;
+                    let word = pos === wlen ? tail :
+                        pos > wlen ? 0 :
+                            (data[pos] << 24 | data[pos + 1] << 16 | data[pos + 2] << 8 | data[pos + 3]);
+                    if (k === kbits)
+                        word |= kword;
+                    sponge[j] = word;
+                }
+                const next = ((h1 & h2 | ~h1 & h3) + 1518500249 + h4 + (sponge[j] >>> 0) + ((h0 << 5) | (h0 >>> 27))) | 0;
+                h4 = h3;
+                h3 = h2;
+                h2 = (h1 << 30) | (h1 >>> 2);
+                h1 = h0;
+                h0 = next;
+            }
+            for (let j = 16; j < 20; ++j) {
+                const shuffle = sponge[j - 3] ^ sponge[j - 8] ^ sponge[j - 14] ^ sponge[j - 16];
+                sponge[j] = shuffle << 1 | shuffle >>> 31;
+                const next = ((h1 & h2 | ~h1 & h3) + 1518500249 + h4 + (sponge[j] >>> 0) + ((h0 << 5) | (h0 >>> 27))) | 0;
+                h4 = h3;
+                h3 = h2;
+                h2 = (h1 << 30) | (h1 >>> 2);
+                h1 = h0;
+                h0 = next;
+            }
+            for (let j = 20; j < 40; ++j) {
+                const shuffle = sponge[j - 3] ^ sponge[j - 8] ^ sponge[j - 14] ^ sponge[j - 16];
+                sponge[j] = shuffle << 1 | shuffle >>> 31;
+                const next = ((h1 ^ h2 ^ h3) + 1859775393 + h4 + (sponge[j] >>> 0) + ((h0 << 5) | (h0 >>> 27))) | 0;
+                h4 = h3;
+                h3 = h2;
+                h2 = (h1 << 30) | (h1 >>> 2);
+                h1 = h0;
+                h0 = next;
+            }
+            for (let j = 40; j < 60; ++j) {
+                const shuffle = sponge[j - 3] ^ sponge[j - 8] ^ sponge[j - 14] ^ sponge[j - 16];
+                sponge[j] = shuffle << 1 | shuffle >>> 31;
+                const next = ((h1 & h2 | h1 & h3 | h2 & h3) - 1894007588 + h4 + (sponge[j] >>> 0) + ((h0 << 5) | (h0 >>> 27))) | 0;
+                h4 = h3;
+                h3 = h2;
+                h2 = (h1 << 30) | (h1 >>> 2);
+                h1 = h0;
+                h0 = next;
+            }
+            for (let j = 60; j < 80; ++j) {
+                const shuffle = sponge[j - 3] ^ sponge[j - 8] ^ sponge[j - 14] ^ sponge[j - 16];
+                sponge[j] = shuffle << 1 | shuffle >>> 31;
+                const next = ((h1 ^ h2 ^ h3) - 899497514 + h4 + (sponge[j] >>> 0) + ((h0 << 5) | (h0 >>> 27))) | 0;
+                h4 = h3;
+                h3 = h2;
+                h2 = (h1 << 30) | (h1 >>> 2);
+                h1 = h0;
+                h0 = next;
+            }
+            hash[0] += h0;
+            hash[1] += h1;
+            hash[2] += h2;
+            hash[3] += h3;
+            hash[4] += h4;
+        }
+        for (let i = 0; i < 20; ++i) {
+            const word = hash[i];
+            hash[i] = word << 24 | word << 8 & 0xFF0000 | word >>> 8 & 0xFF00 | word >>> 24 & 0xFF; // BE -> LE
+        }
+        return new Uint8Array(hash.buffer);
+    }
+    $.$mol_crypto2_hash = $mol_crypto2_hash;
 })($ || ($ = {}));
 
 ;
@@ -9741,293 +9215,6 @@ var $;
         }
     }
     $.$mol_buffer = $mol_buffer;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    function $mol_base64_url_encode(buffer) {
-        return buffer.toBase64({ alphabet: 'base64url', omitPadding: true });
-    }
-    $.$mol_base64_url_encode = $mol_base64_url_encode;
-    function $mol_base64_url_decode(str) {
-        return Uint8Array.fromBase64(str, { alphabet: 'base64url' });
-    }
-    $.$mol_base64_url_decode = $mol_base64_url_decode;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    function $mol_base64_url_encode_node(str) {
-        if (!str)
-            return '';
-        const buf = Buffer.isBuffer(str) ? str : Buffer.from(str);
-        return buf.toString('base64url').replace(/=/g, '');
-    }
-    $.$mol_base64_url_encode_node = $mol_base64_url_encode_node;
-    if (!('toBase64' in Uint8Array.prototype)) {
-        $.$mol_base64_url_encode = $mol_base64_url_encode_node;
-    }
-    function $mol_base64_url_decode_node(str) {
-        // without Uint8Array breaks $mol_compare_deep
-        const buffer = Buffer.from(str, 'base64url');
-        return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
-    }
-    $.$mol_base64_url_decode_node = $mol_base64_url_decode_node;
-    if (!('fromBase64' in Uint8Array)) {
-        $.$mol_base64_url_decode = $mol_base64_url_decode_node;
-    }
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    /** Base class for crypto keys. */
-    class $mol_crypto2_key extends $mol_buffer {
-        static size_str = 43;
-        static size_bin = 32;
-        /** Kakes key from different params. */
-        static from(serial) {
-            if (typeof serial === 'string') {
-                serial = new Uint8Array(serial.match(/.{43}/g)
-                    ?.flatMap(chunk => [...$mol_base64_url_decode(chunk)])
-                    ?? $mol_fail(new Error('Str key too short', { cause: {
-                            min: 43,
-                            real: serial.length,
-                        } })));
-            }
-            return super.from(serial);
-        }
-        /** Array view of public part. */
-        asArray() {
-            const size = this.constructor.size_bin;
-            if (this.byteLength < size) {
-                return $mol_fail(new Error('Bin key too short', { cause: {
-                        min: size,
-                        real: this.byteLength,
-                    } }));
-            }
-            return new Uint8Array(this.buffer, this.byteOffset, size);
-        }
-        /** String representation of public part. */
-        toString() {
-            return $mol_base64_url_encode(this.asArray());
-        }
-    }
-    __decorate([
-        $mol_memo.method
-    ], $mol_crypto2_key.prototype, "toString", null);
-    $.$mol_crypto2_key = $mol_crypto2_key;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $.$mol_crypto_native = $node.crypto.webcrypto;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    /** Derived debuggable error with stack */
-    function $mol_crypto_restack(error) {
-        error = new Error(error instanceof Error ? error.message : String(error), { cause: error });
-        $mol_fail_hidden(error);
-    }
-    $.$mol_crypto_restack = $mol_crypto_restack;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    /** Ed25519 public key for sign verifying. */
-    class $mol_crypto2_auditor extends $mol_crypto2_key {
-        /** Native WebAPI public key. */
-        async native() {
-            return $mol_crypto_native.subtle.importKey('jwk', {
-                crv: "Ed25519",
-                ext: true,
-                key_ops: ['verify'],
-                kty: "OKP",
-                x: this.toString(),
-            }, "Ed25519", Boolean('extractable'), ['verify']).catch($mol_crypto_restack);
-        }
-        /** Verifies signature of data. */
-        async verify(data, sign) {
-            return await $mol_crypto_native.subtle.verify("Ed25519", await this.native(), sign, data).catch($mol_crypto_restack);
-        }
-    }
-    __decorate([
-        $mol_memo.method
-    ], $mol_crypto2_auditor.prototype, "native", null);
-    $.$mol_crypto2_auditor = $mol_crypto2_auditor;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    /** x25519 public key for data encryption. */
-    class $mol_crypto2_socket extends $mol_crypto2_key {
-        /** Native WebAPI public key. */
-        async native() {
-            return await $mol_crypto_native.subtle.importKey('jwk', {
-                crv: 'X25519',
-                ext: true,
-                kty: 'OKP',
-                key_ops: [],
-                x: this.toString(),
-            }, "X25519", true, []).catch($mol_crypto_restack);
-        }
-    }
-    __decorate([
-        $mol_memo.method
-    ], $mol_crypto2_socket.prototype, "native", null);
-    $.$mol_crypto2_socket = $mol_crypto2_socket;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    /** Compose public key for verifying and encryption, based on Curve25519. */
-    class $mol_crypto2_public extends $mol_crypto2_key {
-        static size_str = 86;
-        static size_bin = 64;
-        /** Return Auditor part. */
-        auditor() {
-            return $mol_crypto2_auditor.from(this.asArray().subarray(0, 32));
-        }
-        /** Return Socket part. */
-        socket() {
-            return $mol_crypto2_socket.from(this.asArray().subarray(32, 64));
-        }
-        toString() {
-            return this.auditor().toString() + this.socket().toString();
-        }
-    }
-    __decorate([
-        $mol_memo.method
-    ], $mol_crypto2_public.prototype, "auditor", null);
-    __decorate([
-        $mol_memo.method
-    ], $mol_crypto2_public.prototype, "socket", null);
-    __decorate([
-        $mol_memo.method
-    ], $mol_crypto2_public.prototype, "toString", null);
-    $.$mol_crypto2_public = $mol_crypto2_public;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    let sponge = new Uint32Array(80);
-    /** Fast small sync SHA-1 (20 bytes, 160 bits) */
-    function $mol_crypto2_hash(input) {
-        const data = input instanceof Uint8Array
-            ? input
-            : new Uint8Array(input.buffer, input.byteOffset, input.byteLength);
-        const bits = data.byteLength << 3;
-        const kbits = bits >> 5;
-        const kword = 0x80 << (24 - bits & 0b11111);
-        const bytes = 16 + ((bits + 64) >>> 9 << 4);
-        const klens = bytes - 1;
-        const wlen = data.byteLength >> 2 << 2;
-        let tail = 0;
-        for (let i = wlen; i < data.length; ++i) {
-            tail |= data[i] << ((3 - i & 0b11) << 3);
-        }
-        // Initial
-        const hash = new Int32Array([1732584193, -271733879, -1732584194, 271733878, -1009589776]);
-        // Digest
-        for (let i = 0; i < bytes; i += 16) {
-            let h0 = hash[0];
-            let h1 = hash[1];
-            let h2 = hash[2];
-            let h3 = hash[3];
-            let h4 = hash[4];
-            for (let j = 0; j < 16; ++j) {
-                const k = i + j;
-                if (k === klens) {
-                    sponge[j] = bits;
-                }
-                else {
-                    const pos = k << 2;
-                    let word = pos === wlen ? tail :
-                        pos > wlen ? 0 :
-                            (data[pos] << 24 | data[pos + 1] << 16 | data[pos + 2] << 8 | data[pos + 3]);
-                    if (k === kbits)
-                        word |= kword;
-                    sponge[j] = word;
-                }
-                const next = ((h1 & h2 | ~h1 & h3) + 1518500249 + h4 + (sponge[j] >>> 0) + ((h0 << 5) | (h0 >>> 27))) | 0;
-                h4 = h3;
-                h3 = h2;
-                h2 = (h1 << 30) | (h1 >>> 2);
-                h1 = h0;
-                h0 = next;
-            }
-            for (let j = 16; j < 20; ++j) {
-                const shuffle = sponge[j - 3] ^ sponge[j - 8] ^ sponge[j - 14] ^ sponge[j - 16];
-                sponge[j] = shuffle << 1 | shuffle >>> 31;
-                const next = ((h1 & h2 | ~h1 & h3) + 1518500249 + h4 + (sponge[j] >>> 0) + ((h0 << 5) | (h0 >>> 27))) | 0;
-                h4 = h3;
-                h3 = h2;
-                h2 = (h1 << 30) | (h1 >>> 2);
-                h1 = h0;
-                h0 = next;
-            }
-            for (let j = 20; j < 40; ++j) {
-                const shuffle = sponge[j - 3] ^ sponge[j - 8] ^ sponge[j - 14] ^ sponge[j - 16];
-                sponge[j] = shuffle << 1 | shuffle >>> 31;
-                const next = ((h1 ^ h2 ^ h3) + 1859775393 + h4 + (sponge[j] >>> 0) + ((h0 << 5) | (h0 >>> 27))) | 0;
-                h4 = h3;
-                h3 = h2;
-                h2 = (h1 << 30) | (h1 >>> 2);
-                h1 = h0;
-                h0 = next;
-            }
-            for (let j = 40; j < 60; ++j) {
-                const shuffle = sponge[j - 3] ^ sponge[j - 8] ^ sponge[j - 14] ^ sponge[j - 16];
-                sponge[j] = shuffle << 1 | shuffle >>> 31;
-                const next = ((h1 & h2 | h1 & h3 | h2 & h3) - 1894007588 + h4 + (sponge[j] >>> 0) + ((h0 << 5) | (h0 >>> 27))) | 0;
-                h4 = h3;
-                h3 = h2;
-                h2 = (h1 << 30) | (h1 >>> 2);
-                h1 = h0;
-                h0 = next;
-            }
-            for (let j = 60; j < 80; ++j) {
-                const shuffle = sponge[j - 3] ^ sponge[j - 8] ^ sponge[j - 14] ^ sponge[j - 16];
-                sponge[j] = shuffle << 1 | shuffle >>> 31;
-                const next = ((h1 ^ h2 ^ h3) - 899497514 + h4 + (sponge[j] >>> 0) + ((h0 << 5) | (h0 >>> 27))) | 0;
-                h4 = h3;
-                h3 = h2;
-                h2 = (h1 << 30) | (h1 >>> 2);
-                h1 = h0;
-                h0 = next;
-            }
-            hash[0] += h0;
-            hash[1] += h1;
-            hash[2] += h2;
-            hash[3] += h3;
-            hash[4] += h4;
-        }
-        for (let i = 0; i < 20; ++i) {
-            const word = hash[i];
-            hash[i] = word << 24 | word << 8 & 0xFF0000 | word >>> 8 & 0xFF00 | word >>> 24 & 0xFF; // BE -> LE
-        }
-        return new Uint8Array(hash.buffer);
-    }
-    $.$mol_crypto2_hash = $mol_crypto2_hash;
 })($ || ($ = {}));
 
 ;
@@ -10303,6 +9490,407 @@ var $;
     }
     $.$giper_baza_link_base = $giper_baza_link_base;
     $.$giper_baza_link_schema = $mol_schema_maybe($mol_schema_instance($giper_baza_link));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /** Reactive Set */
+    class $mol_wire_set extends Set {
+        pub = new $mol_wire_pub;
+        // Accessors
+        has(value) {
+            this.pub.promote();
+            return super.has(value);
+        }
+        entries() {
+            this.pub.promote();
+            return super.entries();
+        }
+        keys() {
+            this.pub.promote();
+            return super.keys();
+        }
+        values() {
+            this.pub.promote();
+            return super.values();
+        }
+        forEach(task, self) {
+            this.pub.promote();
+            super.forEach(task, self);
+        }
+        [Symbol.iterator]() {
+            this.pub.promote();
+            return super[Symbol.iterator]();
+        }
+        get size() {
+            this.pub.promote();
+            return super.size;
+        }
+        // Mutators
+        add(value) {
+            if (super.has(value))
+                return this;
+            super.add(value);
+            this.pub.emit();
+            return this;
+        }
+        delete(value) {
+            const res = super.delete(value);
+            if (res)
+                this.pub.emit();
+            return res;
+        }
+        clear() {
+            if (!super.size)
+                return;
+            super.clear();
+            this.pub.emit();
+        }
+        // Extensions
+        item(val, next) {
+            if (next === undefined)
+                return this.has(val);
+            if (next)
+                this.add(val);
+            else
+                this.delete(val);
+            return next;
+        }
+    }
+    $.$mol_wire_set = $mol_wire_set;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    let $mol_rest_code;
+    (function ($mol_rest_code) {
+        $mol_rest_code[$mol_rest_code["Continue"] = 100] = "Continue";
+        $mol_rest_code[$mol_rest_code["Switching protocols"] = 101] = "Switching protocols";
+        $mol_rest_code[$mol_rest_code["Processing"] = 102] = "Processing";
+        $mol_rest_code[$mol_rest_code["OK"] = 200] = "OK";
+        $mol_rest_code[$mol_rest_code["Created"] = 201] = "Created";
+        $mol_rest_code[$mol_rest_code["Accepted"] = 202] = "Accepted";
+        $mol_rest_code[$mol_rest_code["Non-Authoritative Information"] = 203] = "Non-Authoritative Information";
+        $mol_rest_code[$mol_rest_code["No Content"] = 204] = "No Content";
+        $mol_rest_code[$mol_rest_code["Reset Content"] = 205] = "Reset Content";
+        $mol_rest_code[$mol_rest_code["Partial Content"] = 206] = "Partial Content";
+        $mol_rest_code[$mol_rest_code["Multi Status"] = 207] = "Multi Status";
+        $mol_rest_code[$mol_rest_code["Already Reported"] = 208] = "Already Reported";
+        $mol_rest_code[$mol_rest_code["IM Used"] = 226] = "IM Used";
+        $mol_rest_code[$mol_rest_code["Multiple Choices"] = 300] = "Multiple Choices";
+        $mol_rest_code[$mol_rest_code["Moved Permanently"] = 301] = "Moved Permanently";
+        $mol_rest_code[$mol_rest_code["Found"] = 302] = "Found";
+        $mol_rest_code[$mol_rest_code["See Other"] = 303] = "See Other";
+        $mol_rest_code[$mol_rest_code["Not Modified"] = 304] = "Not Modified";
+        $mol_rest_code[$mol_rest_code["Use Proxy"] = 305] = "Use Proxy";
+        $mol_rest_code[$mol_rest_code["Temporary Redirect"] = 307] = "Temporary Redirect";
+        $mol_rest_code[$mol_rest_code["Bad Request"] = 400] = "Bad Request";
+        $mol_rest_code[$mol_rest_code["Unauthorized"] = 401] = "Unauthorized";
+        $mol_rest_code[$mol_rest_code["Payment Required"] = 402] = "Payment Required";
+        $mol_rest_code[$mol_rest_code["Forbidden"] = 403] = "Forbidden";
+        $mol_rest_code[$mol_rest_code["Not Found"] = 404] = "Not Found";
+        $mol_rest_code[$mol_rest_code["Method Not Allowed"] = 405] = "Method Not Allowed";
+        $mol_rest_code[$mol_rest_code["Not Acceptable"] = 406] = "Not Acceptable";
+        $mol_rest_code[$mol_rest_code["Proxy Authentication Required"] = 407] = "Proxy Authentication Required";
+        $mol_rest_code[$mol_rest_code["Request Timeout"] = 408] = "Request Timeout";
+        $mol_rest_code[$mol_rest_code["Conflict"] = 409] = "Conflict";
+        $mol_rest_code[$mol_rest_code["Gone"] = 410] = "Gone";
+        $mol_rest_code[$mol_rest_code["Length Required"] = 411] = "Length Required";
+        $mol_rest_code[$mol_rest_code["Precondition Failed"] = 412] = "Precondition Failed";
+        $mol_rest_code[$mol_rest_code["Request Entity Too Large"] = 413] = "Request Entity Too Large";
+        $mol_rest_code[$mol_rest_code["Request URI Too Long"] = 414] = "Request URI Too Long";
+        $mol_rest_code[$mol_rest_code["Unsupported Media Type"] = 415] = "Unsupported Media Type";
+        $mol_rest_code[$mol_rest_code["Requested Range Not Satisfiable"] = 416] = "Requested Range Not Satisfiable";
+        $mol_rest_code[$mol_rest_code["Expectation Failed"] = 417] = "Expectation Failed";
+        $mol_rest_code[$mol_rest_code["Teapot"] = 418] = "Teapot";
+        $mol_rest_code[$mol_rest_code["Unprocessable Entity"] = 422] = "Unprocessable Entity";
+        $mol_rest_code[$mol_rest_code["Locked"] = 423] = "Locked";
+        $mol_rest_code[$mol_rest_code["Failed Dependency"] = 424] = "Failed Dependency";
+        $mol_rest_code[$mol_rest_code["Upgrade Required"] = 426] = "Upgrade Required";
+        $mol_rest_code[$mol_rest_code["Precondition Required"] = 428] = "Precondition Required";
+        $mol_rest_code[$mol_rest_code["Too Many Requests"] = 429] = "Too Many Requests";
+        $mol_rest_code[$mol_rest_code["Request Header Fields Too Large"] = 431] = "Request Header Fields Too Large";
+        $mol_rest_code[$mol_rest_code["Unavailable For Legal Reasons"] = 451] = "Unavailable For Legal Reasons";
+        $mol_rest_code[$mol_rest_code["Internal Server Error"] = 500] = "Internal Server Error";
+        $mol_rest_code[$mol_rest_code["Not Implemented"] = 501] = "Not Implemented";
+        $mol_rest_code[$mol_rest_code["Bad Gateway"] = 502] = "Bad Gateway";
+        $mol_rest_code[$mol_rest_code["Service Unavailable"] = 503] = "Service Unavailable";
+        $mol_rest_code[$mol_rest_code["Gateway Timeout"] = 504] = "Gateway Timeout";
+        $mol_rest_code[$mol_rest_code["HTTP Version Not Supported"] = 505] = "HTTP Version Not Supported";
+        $mol_rest_code[$mol_rest_code["Insufficient Storage"] = 507] = "Insufficient Storage";
+        $mol_rest_code[$mol_rest_code["Loop Detected"] = 508] = "Loop Detected";
+        $mol_rest_code[$mol_rest_code["Not Extended"] = 510] = "Not Extended";
+        $mol_rest_code[$mol_rest_code["Network Authentication Required"] = 511] = "Network Authentication Required";
+        $mol_rest_code[$mol_rest_code["Network Read Timeout Error"] = 598] = "Network Read Timeout Error";
+        $mol_rest_code[$mol_rest_code["Network Connect Timeout Error"] = 599] = "Network Connect Timeout Error";
+    })($mol_rest_code = $.$mol_rest_code || ($.$mol_rest_code = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    function $mol_dom_serialize(node) {
+        const serializer = new $mol_dom_context.XMLSerializer;
+        return serializer.serializeToString(node);
+    }
+    $.$mol_dom_serialize = $mol_dom_serialize;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_rest_port extends $mol_object {
+        send_code(code) { }
+        send_type(mime) { }
+        origin() { return 'unknown'; }
+        address() { return 'unknown'; }
+        send_data(data) {
+            if (data === null)
+                return this.send_nil();
+            if (typeof data === 'string')
+                return this.send_text(data);
+            if (data instanceof Uint8Array)
+                return this.send_bin(data);
+            if (data instanceof $mol_dom_context.Element)
+                return this.send_dom(data);
+            return this.send_json(data);
+        }
+        send_nil() {
+            this.send_code(204);
+        }
+        send_bin(data) {
+            this.send_code(200);
+            this.send_type('application/octet-stream');
+        }
+        send_text(data) {
+            this.send_code(200);
+            this.send_type('text/plain;charset=utf-8');
+            this.send_bin($mol_charset_encode(data));
+        }
+        send_json(data) {
+            this.send_code(200);
+            this.send_type('application/json');
+            this.send_text(JSON.stringify(data));
+        }
+        send_dom(data) {
+            this.send_code(200);
+            this.send_type('text/html;charset=utf-8');
+            this.send_text($mol_dom_serialize(data));
+        }
+        static make(config) {
+            return super.make(config);
+        }
+    }
+    __decorate([
+        $mol_action
+    ], $mol_rest_port.prototype, "send_data", null);
+    __decorate([
+        $mol_action
+    ], $mol_rest_port.prototype, "send_nil", null);
+    __decorate([
+        $mol_action
+    ], $mol_rest_port.prototype, "send_bin", null);
+    __decorate([
+        $mol_action
+    ], $mol_rest_port.prototype, "send_text", null);
+    __decorate([
+        $mol_action
+    ], $mol_rest_port.prototype, "send_json", null);
+    __decorate([
+        $mol_action
+    ], $mol_rest_port.prototype, "send_dom", null);
+    __decorate([
+        ($mol_action)
+    ], $mol_rest_port, "make", null);
+    $.$mol_rest_port = $mol_rest_port;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    function $mol_base64_url_encode(buffer) {
+        return buffer.toBase64({ alphabet: 'base64url', omitPadding: true });
+    }
+    $.$mol_base64_url_encode = $mol_base64_url_encode;
+    function $mol_base64_url_decode(str) {
+        return Uint8Array.fromBase64(str, { alphabet: 'base64url' });
+    }
+    $.$mol_base64_url_decode = $mol_base64_url_decode;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    function $mol_base64_url_encode_node(str) {
+        if (!str)
+            return '';
+        const buf = Buffer.isBuffer(str) ? str : Buffer.from(str);
+        return buf.toString('base64url').replace(/=/g, '');
+    }
+    $.$mol_base64_url_encode_node = $mol_base64_url_encode_node;
+    if (!('toBase64' in Uint8Array.prototype)) {
+        $.$mol_base64_url_encode = $mol_base64_url_encode_node;
+    }
+    function $mol_base64_url_decode_node(str) {
+        // without Uint8Array breaks $mol_compare_deep
+        const buffer = Buffer.from(str, 'base64url');
+        return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+    }
+    $.$mol_base64_url_decode_node = $mol_base64_url_decode_node;
+    if (!('fromBase64' in Uint8Array)) {
+        $.$mol_base64_url_decode = $mol_base64_url_decode_node;
+    }
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /** Base class for crypto keys. */
+    class $mol_crypto2_key extends $mol_buffer {
+        static size_str = 43;
+        static size_bin = 32;
+        /** Kakes key from different params. */
+        static from(serial) {
+            if (typeof serial === 'string') {
+                serial = new Uint8Array(serial.match(/.{43}/g)
+                    ?.flatMap(chunk => [...$mol_base64_url_decode(chunk)])
+                    ?? $mol_fail(new Error('Str key too short', { cause: {
+                            min: 43,
+                            real: serial.length,
+                        } })));
+            }
+            return super.from(serial);
+        }
+        /** Array view of public part. */
+        asArray() {
+            const size = this.constructor.size_bin;
+            if (this.byteLength < size) {
+                return $mol_fail(new Error('Bin key too short', { cause: {
+                        min: size,
+                        real: this.byteLength,
+                    } }));
+            }
+            return new Uint8Array(this.buffer, this.byteOffset, size);
+        }
+        /** String representation of public part. */
+        toString() {
+            return $mol_base64_url_encode(this.asArray());
+        }
+    }
+    __decorate([
+        $mol_memo.method
+    ], $mol_crypto2_key.prototype, "toString", null);
+    $.$mol_crypto2_key = $mol_crypto2_key;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $.$mol_crypto_native = $node.crypto.webcrypto;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /** Derived debuggable error with stack */
+    function $mol_crypto_restack(error) {
+        error = new Error(error instanceof Error ? error.message : String(error), { cause: error });
+        $mol_fail_hidden(error);
+    }
+    $.$mol_crypto_restack = $mol_crypto_restack;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /** Ed25519 public key for sign verifying. */
+    class $mol_crypto2_auditor extends $mol_crypto2_key {
+        /** Native WebAPI public key. */
+        async native() {
+            return $mol_crypto_native.subtle.importKey('jwk', {
+                crv: "Ed25519",
+                ext: true,
+                key_ops: ['verify'],
+                kty: "OKP",
+                x: this.toString(),
+            }, "Ed25519", Boolean('extractable'), ['verify']).catch($mol_crypto_restack);
+        }
+        /** Verifies signature of data. */
+        async verify(data, sign) {
+            return await $mol_crypto_native.subtle.verify("Ed25519", await this.native(), sign, data).catch($mol_crypto_restack);
+        }
+    }
+    __decorate([
+        $mol_memo.method
+    ], $mol_crypto2_auditor.prototype, "native", null);
+    $.$mol_crypto2_auditor = $mol_crypto2_auditor;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /** x25519 public key for data encryption. */
+    class $mol_crypto2_socket extends $mol_crypto2_key {
+        /** Native WebAPI public key. */
+        async native() {
+            return await $mol_crypto_native.subtle.importKey('jwk', {
+                crv: 'X25519',
+                ext: true,
+                kty: 'OKP',
+                key_ops: [],
+                x: this.toString(),
+            }, "X25519", true, []).catch($mol_crypto_restack);
+        }
+    }
+    __decorate([
+        $mol_memo.method
+    ], $mol_crypto2_socket.prototype, "native", null);
+    $.$mol_crypto2_socket = $mol_crypto2_socket;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /** Compose public key for verifying and encryption, based on Curve25519. */
+    class $mol_crypto2_public extends $mol_crypto2_key {
+        static size_str = 86;
+        static size_bin = 64;
+        /** Return Auditor part. */
+        auditor() {
+            return $mol_crypto2_auditor.from(this.asArray().subarray(0, 32));
+        }
+        /** Return Socket part. */
+        socket() {
+            return $mol_crypto2_socket.from(this.asArray().subarray(32, 64));
+        }
+        toString() {
+            return this.auditor().toString() + this.socket().toString();
+        }
+    }
+    __decorate([
+        $mol_memo.method
+    ], $mol_crypto2_public.prototype, "auditor", null);
+    __decorate([
+        $mol_memo.method
+    ], $mol_crypto2_public.prototype, "socket", null);
+    __decorate([
+        $mol_memo.method
+    ], $mol_crypto2_public.prototype, "toString", null);
+    $.$mol_crypto2_public = $mol_crypto2_public;
 })($ || ($ = {}));
 
 ;
@@ -12412,6 +12000,29 @@ var $;
         }
     }
     $.$mol_wire_dict = $mol_wire_dict;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /**
+     * 48-bit streamable array hash function
+     * Based on cyrb53: https://stackoverflow.com/a/52171480
+     */
+    function $mol_hash_numbers(buff, seed = 0) {
+        let h1 = 0xdeadbeef ^ seed;
+        let h2 = 0x41c6ce57 ^ seed;
+        for (let i = 0; i < buff.length; ++i) {
+            const item = buff[i];
+            h1 = Math.imul(h1 ^ item, 2654435761);
+            h2 = Math.imul(h2 ^ item, 1597334677);
+        }
+        h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+        h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+        return 4294967296 * (((1 << 16) - 1) & h2) + (h1 >>> 0);
+    }
+    $.$mol_hash_numbers = $mol_hash_numbers;
 })($ || ($ = {}));
 
 ;
@@ -16830,6 +16441,23 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    /**
+     * 48-bit streamable string hash function
+     * Based on cyrb53: https://stackoverflow.com/a/52171480
+     */
+    function $mol_hash_string(str, seed = 0) {
+        let nums = new Array(str.length);
+        for (let i = 0; i < str.length; ++i)
+            nums[i] = str.charCodeAt(i);
+        return $mol_hash_numbers(nums);
+    }
+    $.$mol_hash_string = $mol_hash_string;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
     /** Atomic dynamic register */
     class $giper_baza_atom extends $giper_baza_pawn {
         static tag = $giper_baza_unit_sand_tag[$giper_baza_unit_sand_tag.solo];
@@ -17656,6 +17284,194 @@ var $;
         $mol_action
     ], $giper_baza_glob, "apply_parts", null);
     $.$giper_baza_glob = $giper_baza_glob;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /** Entity dictionary Model with Title property included by default */
+    class $giper_baza_entity extends $giper_baza_dict.with({
+        /** Entity Title - default property for use */
+        Title: $giper_baza_atom_text,
+    }) {
+        title(next) {
+            return this.Title(next)?.val(next) ?? '';
+        }
+    }
+    __decorate([
+        $mol_mem
+    ], $giper_baza_entity.prototype, "title", null);
+    $.$giper_baza_entity = $giper_baza_entity;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /**
+     * Подарочный сертификат. Живёт отдельным лендом, ссылка на который и есть предъявитель.
+     * Поэтому всё нужное для показа лежит внутри: получатель открывает карточку,
+     * ничего не зная про ленд салона и не имея к нему доступа.
+     */
+    class $bog_sert_cert extends $giper_baza_entity.with({
+        /** Название салона. Копия, чтобы карточка читалась в отрыве от ленда салона. */
+        Shop: $giper_baza_atom_text,
+        /** Адрес, телефон, условия. Тоже копия и по той же причине. */
+        Note: $giper_baza_atom_text,
+        /**
+         * Номинал в рублях. Ноль означает сертификат на услугу из Title.
+         *
+         * Не `$giper_baza_atom_bint`: небольшое целое возвращается из хранилища
+         * числом, а схема bigint приводит число к `null`, и номинал теряется.
+         */
+        Cost: $giper_baza_atom_real,
+        /** Кому подарок */
+        Whom: $giper_baza_atom_text,
+        /** От кого подарок */
+        From: $giper_baza_atom_text,
+        /** Поздравление */
+        Wish: $giper_baza_atom_text,
+        /** Почта получателя, подставляется в письмо */
+        Mail: $giper_baza_atom_text,
+        /** Когда выпущен */
+        Made: $giper_baza_atom_time,
+        /** Годен до */
+        Till: $giper_baza_atom_time,
+        /** Когда погашен. Пусто — сертификат ещё не использован. */
+        Used: $giper_baza_atom_time,
+    }, 'Cert') {
+        /**
+         * Дальше — чистые форматтеры, общие для карточки и строки реестра.
+         * В Базу они не пишут и в фибрах не участвуют, так что запрет на статику
+         * с побочными эффектами их не касается.
+         */
+        /** Что подарено, одной строкой: сумма, услуга, либо и то и другое. */
+        static gift_text(cost, title) {
+            if (!cost)
+                return title;
+            const money = cost.toLocaleString('ru-RU') + ' ₽';
+            return title ? `${money} · ${title}` : money;
+        }
+        /**
+         * Текст письма получателю. Собирается здесь, а не в карточке, чтобы
+         * его можно было проверить тестом, не поднимая ни вида, ни Базы.
+         */
+        static mail_body(parts) {
+            const lines = [
+                parts.whom ? `${parts.whom}, здравствуйте!` : 'Здравствуйте!',
+                '',
+                parts.wish || 'Дарим вам подарочный сертификат.',
+                '',
+                parts.gift,
+                parts.legend,
+                '',
+                'Сертификат открывается по ссылке:',
+                parts.uri,
+                '',
+                parts.note,
+            ];
+            return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+        }
+        /** Состояние сертификата словами, для реестра. */
+        static state_text(used, till, now) {
+            if (used)
+                return `Погашен ${used.toString('DD.MM.YYYY')}`;
+            if (!till)
+                return 'Активен';
+            if (till.valueOf() < now)
+                return `Просрочен ${till.toString('DD.MM.YYYY')}`;
+            return `Годен до ${till.toString('DD.MM.YYYY')}`;
+        }
+    }
+    $.$bog_sert_cert = $bog_sert_cert;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /**
+     * Операция по карте гостя: начисление, списание или приветственный бонус.
+     *
+     * Лежит внутри ленда салона и подписана его ключом. Гость такую запись
+     * подделать не может — у него нет прав писать в этот ленд.
+     */
+    class $bog_sert_op extends $giper_baza_entity.with({
+        // Title — чем операция была: «покупка», «списание», «приветственный»
+        /** Ссылка ленда карты гостя */
+        Pass: $giper_baza_atom_text,
+        /** Сумма чека в рублях. Ноль, если операция не про покупку. */
+        Cost: $giper_baza_atom_real,
+        /** Изменение баланса в баллах: плюс начислили, минус списали */
+        Delta: $giper_baza_atom_real,
+        /** Когда */
+        Made: $giper_baza_atom_time,
+    }, 'Op') {
+        /** Баланс карты как сумма всех операций по ней. */
+        static balance(ops, pass) {
+            let sum = 0;
+            for (const op of ops) {
+                if (op.Pass()?.val() !== pass)
+                    continue;
+                sum += op.Delta()?.val() ?? 0;
+            }
+            return Math.round(sum);
+        }
+        /** Сколько баллов вернуть с чека. Округляем вниз, чтобы не дарить лишнего. */
+        static accrual(cost, rate) {
+            if (cost <= 0 || rate <= 0)
+                return 0;
+            return Math.floor(cost * rate / 100);
+        }
+        /** Потолок списания: не больше баланса и не дороже самого чека. */
+        static writeoff_limit(balance, cost, price) {
+            if (balance <= 0 || cost <= 0)
+                return 0;
+            const affordable = price > 0 ? Math.floor(cost / price) : 0;
+            return Math.max(0, Math.min(balance, affordable));
+        }
+    }
+    $.$bog_sert_op = $bog_sert_op;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /**
+     * Салон: витрина, реестр выпущенных сертификатов и книга операций лояльности.
+     *
+     * Живёт в собственном ленде с чтением для всех: по ссылке на него заходит
+     * гость с улицы, а домашний ленд владельца для этого не годится.
+     *
+     * Писать сюда может только владелец ключа. На этом и держится вся защита
+     * от накрутки баллов: гость в книгу операций не пишет ничего.
+     */
+    class $bog_sert_shop extends $giper_baza_entity.with({
+        /** Адрес, телефон, условия. Печатается на каждом сертификате. */
+        Note: $giper_baza_atom_text,
+        /** Срок действия сертификата в месяцах */
+        Term: $giper_baza_atom_real,
+        /** Занятое имя витрины, для показа в кабинете */
+        Name: $giper_baza_atom_text,
+        /** Выпущенные сертификаты, каждый в своём ленде */
+        List: $giper_baza_list_link.to(() => $bog_sert_cert),
+        /** Процент от чека, который возвращается баллами */
+        Rate: $giper_baza_atom_real,
+        /** Приветственный бонус за первый визит. Даёт кассир, не сканирование. */
+        Bonus: $giper_baza_atom_real,
+        /** Сколько рублей стоит один балл при списании */
+        Price: $giper_baza_atom_real,
+        /**
+         * Книга операций. Каждая операция лежит прямо здесь, а не отдельным
+         * лендом: отдельный ленд стоит доказательства работы, и касса ждала бы
+         * секунды на каждом начислении.
+         */
+        Ops: $giper_baza_list_link.to(() => $bog_sert_op),
+    }, 'Sert') {
+    }
+    $.$bog_sert_shop = $bog_sert_shop;
 })($ || ($ = {}));
 
 ;
@@ -18845,1005 +18661,54 @@ var $;
 
 ;
 "use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        class $giper_baza_status extends $.$giper_baza_status {
-            message() {
-                try {
-                    this.$.$giper_baza_glob.yard().master();
-                    // this.glob().yard().sync()
-                    return this.hint();
-                }
-                catch (error) {
-                    if (error instanceof Promise)
-                        $mol_fail_hidden(error);
-                    $mol_fail_log(error);
-                    return String(error);
-                }
-            }
-            link_content() {
-                try {
-                    this.$.$giper_baza_glob.yard().master();
-                    // this.glob().yard().sync()
-                    return [this.Well()];
-                }
-                catch (error) {
-                    if (error instanceof Promise)
-                        $mol_fail_hidden(error);
-                    $mol_fail_log(error);
-                    return [this.Fail()];
-                }
-            }
-            // @ $mol_mem
-            // hint() {
-            // 	return super.hint() + ' ' + $hyoo_sync_revision
-            // }
-            options() {
-                return this.$.$giper_baza_yard.masters();
-            }
-            master_link() {
-                return this.$.$giper_baza_glob.yard().master_current() ?? 'javascript: return false';
-            }
-            master_id(uri) {
-                return uri;
-            }
-            option_label(uri) {
-                return uri.replace(/^\w+:\/\//, '').replace(/\/$/, '');
-            }
-            value(next) {
-                const peers = this.$.$giper_baza_yard.masters();
-                return peers[this.$.$giper_baza_glob.yard().master_cursor(next == undefined ? undefined : peers.indexOf(next))] ?? '';
-            }
-        }
-        __decorate([
-            $mol_mem
-        ], $giper_baza_status.prototype, "message", null);
-        __decorate([
-            $mol_mem
-        ], $giper_baza_status.prototype, "link_content", null);
-        __decorate([
-            $mol_mem
-        ], $giper_baza_status.prototype, "master_link", null);
-        $$.$giper_baza_status = $giper_baza_status;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("giper/baza/status/status.view.css", "[giper_baza_status_option_row] {\n\tpadding: var(--mol_gap_text);\n}\n\n[giper_baza_status_well] {\n\tcolor: var(--mol_theme_current);\n}\n\n[giper_baza_status_fail] {\n\tcolor: var(--mol_theme_focus);\n}\n\n[giper_baza_status][mol_view_error=\"Promise\"] {\n\tanimation: giper_baza_status_wait 1s linear infinite;\n}\n\n@keyframes giper_baza_status_wait {\n\tfrom {\n\t\topacity: 1;\n\t}\n\tto {\n\t\topacity: .5;\n\t}\n}\n");
-})($ || ($ = {}));
-
-;
-"use strict";
 var $;
 (function ($) {
     /**
-     * Theme css variables
-     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_textarea_demo
+     * База для страниц кабинета: у каждой есть салон, к которому она относится.
+     *
+     * Объявлена прямо в `$`, а не в `$.$$`, и без своего `view.tree`. Класс,
+     * порождённый из view.tree, наследуется от `$`-версии базы, поэтому методы,
+     * положенные в `$.$$`, до потомков не доходят — ровно так же устроен сам
+     * `$mol_view`.
      */
-    $.$bog_theme = $mol_style_prop('mol_theme', [
-        'back',
-        'background',
-        'hover',
-        'card',
-        'current',
-        'special',
-        'text',
-        'control',
-        'shade',
-        'line',
-        'focus',
-        'field',
-        'image',
-        'spirit',
-    ]);
-    /**
-     * Available theme names.
-     * Add new theme to theme.css and add its name here.
-     */
-    $.$bog_theme_names = [
-        '$mol_theme_giper_smash_dark',
-        '$mol_theme_giper_smash_light',
-        '$mol_theme_light',
-        '$mol_theme_dark',
-        '$mol_theme_monefro_light',
-        '$mol_theme_monefro_dark',
-        '$mol_theme_homerent_light',
-        '$mol_theme_homerent_dark',
-        '$mol_theme_upwork',
-        '$mol_theme_ainews_light',
-        '$mol_theme_ainews_dark',
-        '$mol_theme_calm_dark',
-        '$mol_theme_calm_light',
-    ];
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("bog/theme/theme.css", ":root {\n\t--mol_theme_hue: 645deg;\n\t--mol_theme_hue_spread: 90deg;\n\t--mol_theme_background: var(--mol_theme_back);\n\n\t/* Bog theme semantic aliases */\n\t--mol_theme_primary_hue: var(--mol_theme_hue);\n\t--mol_theme_secondary_hue: calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread));\n\t--mol_theme_tertiary_hue: calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread));\n\t--mol_theme_accent_hue: calc(var(--mol_theme_hue) + 180deg);\n}\n\n:where([mol_theme]) {\n\tcolor: var(--mol_theme_text);\n\tfill: var(--mol_theme_text);\n\tbackground-color: var(--mol_theme_back);\n}\n\n:root,\n[mol_theme='$mol_theme_dark'],\n:where([mol_theme='$mol_theme_dark']) [mol_theme] {\n\t--mol_theme_luma: -1;\n\t--mol_theme_image: invert(1) hue-rotate(180deg);\n\t--mol_theme_spirit: hsl(0deg, 0%, 0%, 0.75);\n\n\t--bog_theme_back: hsl(var(--bog_theme_hue), 8%, 12%);\n\t--bog_theme_card: hsl(var(--bog_theme_hue), 15%, 18%, 0.25);\n\t--bog_theme_field: hsl(var(--bog_theme_hue), 12%, 10%, 0.25);\n\t--bog_theme_hover: hsl(var(--bog_theme_hue), 0%, 50%, 0.1);\n\n\t--bog_theme_text: hsl(var(--bog_theme_hue), 8%, 85%);\n\t--bog_theme_shade: hsl(var(--bog_theme_hue), 12%, 65%, 1);\n\t--bog_theme_line: hsl(var(--bog_theme_hue), 8%, 50%, 0.25);\n\t--bog_theme_focus: hsl(calc(var(--bog_theme_hue) + 180deg), 60%, 65%);\n\n\t--bog_theme_control: hsl(var(--bog_theme_hue), 25%, 70%);\n\t--bog_theme_current: hsl(calc(var(--bog_theme_hue) - var(--bog_theme_hue_spread)), 25%, 70%);\n\t--bog_theme_special: hsl(calc(var(--bog_theme_hue) + var(--bog_theme_hue_spread)), 25%, 70%);\n}\n@supports (color: oklch(0% 0 0deg)) {\n\t:root,\n\t[mol_theme='$mol_theme_dark'],\n\t:where([mol_theme='$mol_theme_dark']) [mol_theme] {\n\t\t--bog_theme_back: oklch(12% 0.02 var(--bog_theme_hue));\n\t\t--bog_theme_card: oklch(18% 0.03 var(--bog_theme_hue) / 0.25);\n\t\t--bog_theme_field: oklch(10% 0.015 var(--bog_theme_hue) / 0.25);\n\t\t--bog_theme_hover: oklch(70% 0 var(--bog_theme_hue) / 0.1);\n\n\t\t--bog_theme_text: oklch(85% 0.025 var(--bog_theme_hue));\n\t\t--bog_theme_shade: oklch(65% 0.035 var(--bog_theme_hue));\n\t\t--bog_theme_line: oklch(50% 0.025 var(--bog_theme_hue) / 0.25);\n\t\t--bog_theme_focus: oklch(75% 0.15 calc(var(--bog_theme_hue) + 180deg));\n\n\t\t--bog_theme_control: oklch(70% 0.06 var(--bog_theme_hue));\n\t\t--bog_theme_current: oklch(70% 0.08 calc(var(--bog_theme_hue) - var(--bog_theme_hue_spread)));\n\t\t--bog_theme_special: oklch(70% 0.08 calc(var(--bog_theme_hue) + var(--bog_theme_hue_spread)));\n\t}\n}\n\n[mol_theme='$mol_theme_light'],\n:where([mol_theme='$mol_theme_light']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: hsl(0deg, 0%, 100%, 0.75);\n\n\t--mol_theme_back: hsl(var(--mol_theme_hue), 0%, 100%);\n\t--mol_theme_card: hsl(var(--mol_theme_hue), 50%, 100%, 0.5);\n\t--mol_theme_field: hsl(var(--mol_theme_hue), 50%, 100%, 0.75);\n\t--mol_theme_hover: hsl(var(--mol_theme_hue), 0%, 50%, 0.1);\n\n\t--mol_theme_text: hsl(var(--mol_theme_hue), 0%, 0%);\n\t--mol_theme_shade: hsl(var(--mol_theme_hue), 0%, 40%, 1);\n\t--mol_theme_line: hsl(var(--mol_theme_hue), 0%, 50%, 0.25);\n\t--mol_theme_focus: hsl(calc(var(--mol_theme_hue) + 180deg), 100%, 40%);\n\n\t--mol_theme_control: hsl(var(--mol_theme_hue), 80%, 30%);\n\t--mol_theme_current: hsl(calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)), 80%, 30%);\n\t--mol_theme_special: hsl(calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)), 80%, 30%);\n}\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_light'],\n\t:where([mol_theme='$mol_theme_light']) [mol_theme] {\n\t\t--mol_theme_back: oklch(100% 0 var(--mol_theme_hue));\n\t\t--mol_theme_card: oklch(99% 0.01 var(--mol_theme_hue) / 0.5);\n\t\t--mol_theme_field: oklch(100% 0 var(--mol_theme_hue) / 0.5);\n\t\t--mol_theme_hover: oklch(70% 0 var(--mol_theme_hue) / 0.1);\n\n\t\t--mol_theme_text: oklch(20% 0 var(--mol_theme_hue));\n\t\t--mol_theme_shade: oklch(60% 0 var(--mol_theme_hue));\n\t\t--mol_theme_line: oklch(50% 0 var(--mol_theme_hue) / 0.25);\n\t\t--mol_theme_focus: oklch(60% 0.2 calc(var(--mol_theme_hue) + 180deg));\n\n\t\t--mol_theme_control: oklch(40% 0.15 var(--mol_theme_hue));\n\t\t--mol_theme_current: oklch(50% 0.2 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)));\n\t\t--mol_theme_special: oklch(50% 0.2 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)));\n\t}\n}\n\n:where(:root, [mol_theme='$mol_theme_dark']) [mol_theme='$mol_theme_base'] {\n\t--mol_theme_back: oklch(25% 0.075 var(--mol_theme_hue));\n\t--mol_theme_card: oklch(35% 0.1 var(--mol_theme_hue) / 0.25);\n}\n:where([mol_theme='$mol_theme_light']) [mol_theme='$mol_theme_base'] {\n\t--mol_theme_back: oklch(85% 0.075 var(--mol_theme_hue));\n\t--mol_theme_card: oklch(98% 0.03 var(--mol_theme_hue) / 0.25);\n}\n\n:where(:root, [mol_theme='$mol_theme_dark']) [mol_theme='$mol_theme_current'] {\n\t--mol_theme_back: oklch(25% 0.05 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)));\n\t--mol_theme_card: oklch(35% 0.1 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)) / 0.25);\n}\n:where([mol_theme='$mol_theme_light']) [mol_theme='$mol_theme_current'] {\n\t--mol_theme_back: oklch(85% 0.05 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)));\n\t--mol_theme_card: oklch(98% 0.03 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)) / 0.25);\n}\n\n:where(:root, [mol_theme='$mol_theme_dark']) [mol_theme='$mol_theme_special'] {\n\t--mol_theme_back: oklch(25% 0.05 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)));\n\t--mol_theme_card: oklch(35% 0.1 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)) / 0.25);\n}\n:where([mol_theme='$mol_theme_light']) [mol_theme='$mol_theme_special'] {\n\t--mol_theme_back: oklch(85% 0.05 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)));\n\t--mol_theme_card: oklch(98% 0.03 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)) / 0.25);\n}\n\n:where(:root, [mol_theme='$mol_theme_dark']) [mol_theme='$mol_theme_accent'] {\n\t--mol_theme_back: oklch(35% 0.1 calc(var(--mol_theme_hue) + 180deg));\n\t--mol_theme_card: oklch(45% 0.15 calc(var(--mol_theme_hue) + 180deg) / 0.25);\n}\n:where([mol_theme='$mol_theme_light']) [mol_theme='$mol_theme_accent'] {\n\t--mol_theme_back: oklch(83% 0.1 calc(var(--mol_theme_hue) + 180deg));\n\t--mol_theme_card: oklch(98% 0.03 calc(var(--mol_theme_hue) + 180deg) / 0.25);\n}\n\n/* Upwork theme - based on Upwork brand colors */\n[mol_theme='$mol_theme_upwork'],\n:where([mol_theme='$mol_theme_upwork']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: rgba(255, 255, 255, 0.75);\n\n\t/* Upwork brand colors: #73bb44 (primary green), #4fab4a (medium green), #385925 (dark green), #b5deb1 (light green) */\n\t--mol_theme_back: #ffffff;\n\t--mol_theme_card: #f9fcf7;\n\t--mol_theme_field: #ffffff;\n\t--mol_theme_hover: rgba(115, 187, 68, 0.1);\n\n\t--mol_theme_text: #4c4444;\n\t--mol_theme_shade: #6e6d7a;\n\t--mol_theme_line: rgba(115, 187, 68, 0.25);\n\t--mol_theme_focus: #73bb44;\n\n\t--mol_theme_control: #73bb44;\n\t--mol_theme_current: #4fab4a;\n\t--mol_theme_special: #385925;\n}\n\n/* Ainews dark theme - based on Ainews brand palette */\n[mol_theme='$mol_theme_ainews_dark'],\n:where([mol_theme='$mol_theme_ainews_dark']) [mol_theme] {\n\t--mol_theme_luma: -1;\n\t--mol_theme_image: invert(1) hue-rotate(180deg);\n\n\t/* ВАЖНО: mol_* — именно их читает демка */\n\t--mol_theme_back: #3e3e3e; /* paper dark */\n\t--mol_theme_card: #4a4a4a40; /* paper-2 dark 25% */\n\t--mol_theme_field: #4c4c4c40; /* chip dark 25% */\n\t--mol_theme_hover: #5a5a5a1a; /* edge dark 10% */\n\n\t--mol_theme_text: #bcbcbc; /* ink dark */\n\t--mol_theme_shade: #909090; /* ink-muted dark */\n\t--mol_theme_line: #5a5a5a40; /* edge dark 25% */\n\t--mol_theme_focus: #a8bcff; /* accent dark */\n\n\t--mol_theme_control: #a8bcff; /* accent dark */\n\t--mol_theme_current: #c7b18c; /* accent-2 dark */\n\t--mol_theme_special: #d4bf9d; /* accent-2 lighter */\n}\n\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_ainews_dark'],\n\t:where([mol_theme='$mol_theme_ainews_dark']) [mol_theme] {\n\t\t--mol_theme_back: #3e3e3e;\n\t\t--mol_theme_card: #4a4a4a40;\n\t\t--mol_theme_field: #4c4c4c40;\n\t\t--mol_theme_hover: #5a5a5a1a;\n\n\t\t--mol_theme_text: #bcbcbc;\n\t\t--mol_theme_shade: #909090;\n\t\t--mol_theme_line: #5a5a5a40;\n\t\t--mol_theme_focus: #a8bcff;\n\n\t\t--mol_theme_control: #a8bcff;\n\t\t--mol_theme_current: #c7b18c;\n\t\t--mol_theme_special: #d4bf9d;\n\t}\n}\n\n/* Ainews light theme */\n[mol_theme='$mol_theme_ainews_light'],\n:where([mol_theme='$mol_theme_ainews_light']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: #fbf8f1bf; /* 75% */\n\n\t--mol_theme_back: #f7f3e9; /* paper */\n\t--mol_theme_card: #fbf8f180; /* paper-2 50% */\n\t--mol_theme_field: #efe8d8bf; /* chip 75% */\n\t--mol_theme_hover: #ded7c81a; /* edge 10% */\n\n\t--mol_theme_text: #22211f; /* ink */\n\t--mol_theme_shade: #6e6a62; /* ink-muted */\n\t--mol_theme_line: #ded7c840; /* edge 25% */\n\t--mol_theme_focus: #3b5aad; /* accent */\n\n\t--mol_theme_control: #3b5aad; /* accent */\n\t--mol_theme_current: #92734b; /* accent-2 */\n\t--mol_theme_special: #c7b18c; /* accent-2 lighter */\n}\n\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_ainews_light'],\n\t:where([mol_theme='$mol_theme_ainews_light']) [mol_theme] {\n\t\t--mol_theme_back: #f7f3e9;\n\t\t--mol_theme_card: #fbf8f180;\n\t\t--mol_theme_field: #efe8d8bf;\n\t\t--mol_theme_hover: #ded7c81a;\n\n\t\t--mol_theme_text: #22211f;\n\t\t--mol_theme_shade: #6e6a62;\n\t\t--mol_theme_line: #ded7c840;\n\t\t--mol_theme_focus: #3b5aad;\n\n\t\t--mol_theme_control: #3b5aad;\n\t\t--mol_theme_current: #92734b;\n\t\t--mol_theme_special: #c7b18c;\n\t}\n}\n\n/* HomeRent dark theme */\n[mol_theme='$mol_theme_homerent_dark'],\n:where([mol_theme='$mol_theme_homerent_dark']) [mol_theme] {\n\t--mol_theme_luma: -1;\n\t--mol_theme_image: invert(1) hue-rotate(180deg);\n\t--mol_theme_spirit: rgba(0, 0, 0, 0.6);\n\n\t--mol_theme_back: #2f2f2f;\n\t--mol_theme_background: #f5f5f5;\n\t--mol_theme_card: #3a3a3a;\n\t--mol_theme_field: #3a3a3a;\n\t--mol_theme_hover: rgba(255, 255, 255, 0.06);\n\n\t--mol_theme_text: #f5f5f5;\n\t--mol_theme_shade: #c7c7c7;\n\t--mol_theme_line: #ffffff26;\n\t--mol_theme_focus: #8fc32b;\n\n\t--mol_theme_control: #dbe05b;\n\t--mol_theme_current: #8fc32b;\n\t--mol_theme_special: #8fc32b;\n}\n\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_homerent_dark'],\n\t:where([mol_theme='$mol_theme_homerent_dark']) [mol_theme] {\n\t\t--mol_theme_back: #2f2f2f;\n\t\t--mol_theme_background: #f5f5f5;\n\t\t--mol_theme_card: #3a3a3a;\n\t\t--mol_theme_field: #3a3a3a;\n\t\t--mol_theme_hover: rgba(255, 255, 255, 0.06);\n\n\t\t--mol_theme_text: #f5f5f5;\n\t\t--mol_theme_shade: #c7c7c7;\n\t\t--mol_theme_line: #ffffff26;\n\t\t--mol_theme_focus: #8fc32b;\n\n\t\t--mol_theme_control: #dbe05b;\n\t\t--mol_theme_current: #8fc32b;\n\t\t--mol_theme_special: #8fc32b;\n\t}\n}\n\n/* HomeRent light theme */\n[mol_theme='$mol_theme_homerent_light'],\n:where([mol_theme='$mol_theme_homerent_light']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: rgba(245, 245, 245, 0.75);\n\n\t--mol_theme_back: #ffffff;\n\t--mol_theme_background: #f5f5f5;\n\t--mol_theme_card: #ffffff;\n\t--mol_theme_field: #ffffff;\n\t--mol_theme_hover: #8fc32b1a;\n\n\t--mol_theme_text: #4c4c4c;\n\t--mol_theme_shade: #707070;\n\t--mol_theme_line: #4c4c4c26;\n\t--mol_theme_focus: #8fc32b;\n\n\t--mol_theme_control: #dbe05b;\n\t--mol_theme_current: #8fc32b;\n\t--mol_theme_special: #8fc32b;\n}\n\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_homerent_light'],\n\t:where([mol_theme='$mol_theme_homerent_light']) [mol_theme] {\n\t\t--mol_theme_back: #ffffff;\n\t\t--mol_theme_background: #f5f5f5;\n\t\t--mol_theme_card: #ffffff;\n\t\t--mol_theme_field: #ffffff;\n\t\t--mol_theme_hover: #8fc32b1a;\n\n\t\t--mol_theme_text: #4c4c4c;\n\t\t--mol_theme_shade: #707070;\n\t\t--mol_theme_line: #4c4c4c26;\n\t\t--mol_theme_focus: #8fc32b;\n\n\t\t--mol_theme_control: #dbe05b;\n\t\t--mol_theme_current: #8fc32b;\n\t\t--mol_theme_special: #8fc32b;\n\t}\n}\n\n/* Giper Smash dark theme - original game palette */\n[mol_theme='$mol_theme_giper_smash_dark'],\n:where([mol_theme='$mol_theme_giper_smash_dark']) [mol_theme] {\n\t--mol_theme_luma: -1;\n\t--mol_theme_image: invert(1) hue-rotate(180deg);\n\t--mol_theme_spirit: rgba(0, 0, 0, 0.85);\n\n\t--mol_theme_back: #1a1a2e;\n\t--mol_theme_card: #2d2d44;\n\t--mol_theme_field: #16213e;\n\t--mol_theme_hover: rgba(118, 75, 162, 0.15);\n\n\t--mol_theme_text: #ffffff;\n\t--mol_theme_shade: #b0b0cc;\n\t--mol_theme_line: rgba(255, 255, 255, 0.12);\n\t--mol_theme_focus: #f5b041;\n\n\t--mol_theme_control: #44a08d;\n\t--mol_theme_current: #0088cc;\n\t--mol_theme_special: #764ba2;\n}\n\n/* Giper Smash light theme - bright game palette */\n[mol_theme='$mol_theme_giper_smash_light'],\n:where([mol_theme='$mol_theme_giper_smash_light']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: rgba(255, 255, 255, 0.85);\n\n\t--mol_theme_back: #f0eef5;\n\t--mol_theme_card: #ffffff;\n\t--mol_theme_field: #e8e5f0;\n\t--mol_theme_hover: rgba(118, 75, 162, 0.08);\n\n\t--mol_theme_text: #1a1a2e;\n\t--mol_theme_shade: #5c5c7a;\n\t--mol_theme_line: rgba(26, 26, 46, 0.12);\n\t--mol_theme_focus: #d4941a;\n\n\t--mol_theme_control: #2e8b73;\n\t--mol_theme_current: #0077b3;\n\t--mol_theme_special: #6a3d99;\n}\n\n/* Monefro dark theme - inspired by Monefy */\n[mol_theme='$mol_theme_monefro_dark'],\n:where([mol_theme='$mol_theme_monefro_dark']) [mol_theme] {\n\t--mol_theme_luma: -1;\n\t--mol_theme_image: invert(1) hue-rotate(180deg);\n\t--mol_theme_spirit: rgba(0, 0, 0, 0.6);\n\n\t--mol_theme_back: #24201c;\n\t--mol_theme_card: #2c2722;\n\t--mol_theme_field: #29241f;\n\t--mol_theme_hover: rgba(255, 255, 255, 0.04);\n\n\t--mol_theme_text: #f0e7dc;\n\t--mol_theme_shade: #b5a99c;\n\t--mol_theme_line: rgba(255, 255, 255, 0.12);\n\t--mol_theme_focus: #56c78a;\n\n\t--mol_theme_control: #56c78a;\n\t--mol_theme_current: #f2776e;\n\t--mol_theme_special: #f6b04a;\n}\n\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_monefro_dark'],\n\t:where([mol_theme='$mol_theme_monefro_dark']) [mol_theme] {\n\t\t--mol_theme_back: #24201c;\n\t\t--mol_theme_card: #2c2722;\n\t\t--mol_theme_field: #29241f;\n\t\t--mol_theme_hover: rgba(255, 255, 255, 0.04);\n\n\t\t--mol_theme_text: #f0e7dc;\n\t\t--mol_theme_shade: #b5a99c;\n\t\t--mol_theme_line: rgba(255, 255, 255, 0.12);\n\t\t--mol_theme_focus: #56c78a;\n\n\t\t--mol_theme_control: #56c78a;\n\t\t--mol_theme_current: #f2776e;\n\t\t--mol_theme_special: #f6b04a;\n\t}\n}\n\n/* Monefro light theme - inspired by Monefy */\n[mol_theme='$mol_theme_monefro_light'],\n:where([mol_theme='$mol_theme_monefro_light']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: rgba(255, 255, 255, 0.75);\n\n\t--mol_theme_back: #f6f2ea;\n\t--mol_theme_card: #ffffff;\n\t--mol_theme_field: #fff8ef;\n\t--mol_theme_hover: rgba(0, 0, 0, 0.04);\n\n\t--mol_theme_text: #3f3b36;\n\t--mol_theme_shade: #8b8278;\n\t--mol_theme_line: rgba(64, 55, 46, 0.15);\n\t--mol_theme_focus: #2f9a6a;\n\n\t--mol_theme_control: #2f9a6a;\n\t--mol_theme_current: #e85b54;\n\t--mol_theme_special: #f3a43b;\n}\n\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_monefro_light'],\n\t:where([mol_theme='$mol_theme_monefro_light']) [mol_theme] {\n\t\t--mol_theme_back: #f6f2ea;\n\t\t--mol_theme_card: #ffffff;\n\t\t--mol_theme_field: #fff8ef;\n\t\t--mol_theme_hover: rgba(0, 0, 0, 0.04);\n\n\t\t--mol_theme_text: #3f3b36;\n\t\t--mol_theme_shade: #8b8278;\n\t\t--mol_theme_line: rgba(64, 55, 46, 0.15);\n\t\t--mol_theme_focus: #2f9a6a;\n\n\t\t--mol_theme_control: #2f9a6a;\n\t\t--mol_theme_current: #e85b54;\n\t\t--mol_theme_special: #f3a43b;\n\t}\n}\n\n/* ═══════════════════════════════════════════════════════════════\n   Calm theme — universal working theme (draft for review)\n   Base hue: 230° (blue-gray), spread: 90°\n   Style: quiet, professional, no noise\n   ═══════════════════════════════════════════════════════════════ */\n\n/* Calm dark theme */\n[mol_theme='$mol_theme_calm_dark'],\n:where([mol_theme='$mol_theme_calm_dark']) [mol_theme] {\n\t--mol_theme_luma: -1;\n\t--mol_theme_image: invert(1) hue-rotate(180deg);\n\t--mol_theme_spirit: #000000bf;\n\t--mol_theme_hue: 230deg;\n\t--mol_theme_hue_spread: 90deg;\n\n\t--mol_theme_back: #0d1117;\n\t--mol_theme_card: #161b2240;\n\t--mol_theme_field: #0a0e1440;\n\t--mol_theme_hover: #ffffff0c;\n\n\t--mol_theme_text: #e6edf3;\n\t--mol_theme_shade: #8b949e;\n\t--mol_theme_line: #30363d;\n\t--mol_theme_focus: #d29922;\n\n\t--mol_theme_control: #2f81f7;\n\t--mol_theme_current: #3fb950;\n\t--mol_theme_special: #a371f7;\n}\n\n/* Calm light theme */\n[mol_theme='$mol_theme_calm_light'],\n:where([mol_theme='$mol_theme_calm_light']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: #f7f8fabf;\n\t--mol_theme_hue: 230deg;\n\t--mol_theme_hue_spread: 90deg;\n\n\t--mol_theme_back: #f7f8fa;\n\t--mol_theme_card: #ffffff80;\n\t--mol_theme_field: #e8eaf0bf;\n\t--mol_theme_hover: #0000000a;\n\n\t--mol_theme_text: #1a1c23;\n\t--mol_theme_shade: #656a80;\n\t--mol_theme_line: #3a3e5026;\n\t--mol_theme_focus: #b87518;\n\n\t--mol_theme_control: #3560b8;\n\t--mol_theme_current: #28856e;\n\t--mol_theme_special: #8a4aad;\n}\n\n/* Calm dark sub-themes */\n:where([mol_theme='$mol_theme_calm_dark']) [mol_theme='$mol_theme_base'] {\n\t--mol_theme_back: #1a2840;\n\t--mol_theme_card: #243450;\n}\n:where([mol_theme='$mol_theme_calm_dark']) [mol_theme='$mol_theme_current'] {\n\t--mol_theme_back: #143028;\n\t--mol_theme_card: #1c3e3450;\n}\n:where([mol_theme='$mol_theme_calm_dark']) [mol_theme='$mol_theme_special'] {\n\t--mol_theme_back: #2a1c48;\n\t--mol_theme_card: #3a2a5c50;\n}\n:where([mol_theme='$mol_theme_calm_dark']) [mol_theme='$mol_theme_accent'] {\n\t--mol_theme_back: #3a1c2a;\n\t--mol_theme_card: #4c283a50;\n}\n\n:where([mol_theme='$mol_theme_calm_light']) [mol_theme='$mol_theme_base'] {\n\t--mol_theme_back: oklch(85% 0.075 var(--mol_theme_hue));\n\t--mol_theme_card: oklch(98% 0.03 var(--mol_theme_hue) / 0.25);\n}\n:where([mol_theme='$mol_theme_calm_light']) [mol_theme='$mol_theme_current'] {\n\t--mol_theme_back: oklch(85% 0.05 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)));\n\t--mol_theme_card: oklch(98% 0.03 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)) / 0.25);\n}\n:where([mol_theme='$mol_theme_calm_light']) [mol_theme='$mol_theme_special'] {\n\t--mol_theme_back: oklch(85% 0.05 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)));\n\t--mol_theme_card: oklch(98% 0.03 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)) / 0.25);\n}\n:where([mol_theme='$mol_theme_calm_light']) [mol_theme='$mol_theme_accent'] {\n\t--mol_theme_back: oklch(83% 0.1 calc(var(--mol_theme_hue) + 180deg));\n\t--mol_theme_card: oklch(98% 0.03 calc(var(--mol_theme_hue) + 180deg) / 0.25);\n}\n");
-})($ || ($ = {}));
-
-;
-	($.$bog_theme_auto) = class $bog_theme_auto extends ($.$mol_plugin) {
-		themes_default(){
-			return [];
-		}
-		theme(){
-			return "";
-		}
-		themes(){
-			return (this.themes_default());
-		}
-		theme_light(){
-			return "$mol_theme_light";
-		}
-		theme_dark(){
-			return "$mol_theme_dark";
-		}
-		mode(next){
-			if(next !== undefined) return next;
-			return "system";
-		}
-		mode_next(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		theme_next(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		theme_prev(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		theme_set(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		is_light_now(){
-			return false;
-		}
-		attr(){
-			return {"mol_theme": (this.theme())};
-		}
-	};
-	($mol_mem(($.$bog_theme_auto.prototype), "mode"));
-	($mol_mem(($.$bog_theme_auto.prototype), "mode_next"));
-	($mol_mem(($.$bog_theme_auto.prototype), "theme_next"));
-	($mol_mem(($.$bog_theme_auto.prototype), "theme_prev"));
-	($mol_mem(($.$bog_theme_auto.prototype), "theme_set"));
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_media extends $mol_object2 {
-        static match(query, next) {
-            if (next !== undefined)
-                return next;
-            const res = this.$.$mol_dom_context.matchMedia?.(query) ?? {};
-            res.onchange = () => this.match(query, res.matches);
-            return res.matches;
+    class $bog_sert_page extends $mol_page {
+        /** Ссылка ленда салона. Проставляется из кабинета. */
+        shop_uri() {
+            return '';
         }
-    }
-    __decorate([
-        $mol_mem_key
-    ], $mol_media, "match", null);
-    $.$mol_media = $mol_media;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    function parse(theme) {
-        if (theme === 'true')
-            return true;
-        if (theme === 'false')
-            return false;
-        return null;
-    }
-    /**
-     * Switcher between light/dark themes (usually for `mol_theme_auto` plugin).
-     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_lights_demo
-     */
-    function $mol_lights(next) {
-        const arg = parse(this.$mol_state_arg.value('mol_lights'));
-        const base = this.$mol_media.match('(prefers-color-scheme: light)');
-        if (next === undefined) {
-            return arg ?? this.$mol_state_local.value('$mol_lights') ?? base;
-        }
-        else {
-            if (arg === null) {
-                this.$mol_state_local.value('$mol_lights', next === base ? null : next);
-            }
-            else {
-                this.$mol_state_arg.value('mol_lights', String(next));
-            }
-            return next;
-        }
-    }
-    $.$mol_lights = $mol_lights;
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        class $bog_theme_auto extends $.$bog_theme_auto {
-            themes_default() {
-                return this.$.$bog_theme_names;
-            }
-            /** Stores current mode in localStorage. Defaults to 'system'.
-             *  При записи дёргает класс `.bog_theme_switching` на `<html>` —
-             *  это активирует CSS-transition'ы на цветах темы.
-             */
-            mode(next) {
-                if (next !== undefined && typeof document !== 'undefined') {
-                    const root = document.documentElement;
-                    root.classList.add('bog_theme_switching');
-                    setTimeout(() => root.classList.remove('bog_theme_switching'), 350);
-                }
-                return this.$.$mol_state_local.value(`${this}.mode()`, next) ?? 'system';
-            }
-            click_step(next) {
-                return this.$.$mol_state_session.value(`${this}.click_step()`, next) ?? 0;
-            }
-            /** 3-click cycle: opposite → back → system. */
-            mode_next() {
-                const step = (this.click_step() + 1) % 3;
-                this.click_step(step);
-                if (step === 0)
-                    this.mode('system');
-                else
-                    this.mode(this.is_light_now() ? 'dark' : 'light');
-            }
-            is_light_now() {
-                const mode = this.mode();
-                if (mode === 'light')
-                    return true;
-                if (mode === 'dark')
-                    return false;
-                if (mode === 'system')
-                    return this.$.$mol_lights();
-                return this.theme().toLowerCase().includes('light');
-            }
-            theme_index(next) {
-                const stored = this.$.$mol_state_local.value(`${this}.theme_index()`, next);
-                if (stored === null && next === undefined) {
-                    return this.system_theme_index();
-                }
-                return stored ?? 0;
-            }
-            system_theme_index() {
-                const themes = this.themes();
-                const prefersLight = this.$.$mol_lights();
-                const preferredTheme = prefersLight ? this.theme_light() : this.theme_dark();
-                const index = themes.indexOf(preferredTheme);
-                return index !== -1 ? index : 0;
-            }
-            theme() {
-                const mode = this.mode();
-                if (mode === 'light')
-                    return this.theme_light();
-                if (mode === 'dark')
-                    return this.theme_dark();
-                if (mode === 'custom') {
-                    const themes = this.themes();
-                    const index = this.theme_index();
-                    if (themes.length === 0)
-                        return this.theme_light();
-                    return themes[index % themes.length];
-                }
-                // system — follow browser preference
-                return this.$.$mol_lights() ? this.theme_light() : this.theme_dark();
-            }
-            theme_next() {
-                this.mode_next();
-            }
-            theme_prev() {
-                const cycle = ['system', 'light', 'dark'];
-                const i = cycle.indexOf(this.mode());
-                this.mode(cycle[i <= 0 ? cycle.length - 1 : i - 1]);
-            }
-            /** Called by picker. Sets mode to light/dark or custom for themed palettes. */
-            theme_set(index) {
-                const themes = this.themes();
-                if (themes.length === 0)
-                    return;
-                const theme = themes[index % themes.length];
-                if (theme === this.theme_light()) {
-                    this.mode('light');
-                }
-                else if (theme === this.theme_dark()) {
-                    this.mode('dark');
-                }
-                else {
-                    this.mode('custom');
-                    this.theme_index(index % themes.length);
-                }
-                this.click_step(0);
-            }
-        }
-        __decorate([
-            $mol_mem
-        ], $bog_theme_auto.prototype, "mode", null);
-        __decorate([
-            $mol_mem
-        ], $bog_theme_auto.prototype, "click_step", null);
-        __decorate([
-            $mol_action
-        ], $bog_theme_auto.prototype, "mode_next", null);
-        __decorate([
-            $mol_mem
-        ], $bog_theme_auto.prototype, "is_light_now", null);
-        __decorate([
-            $mol_mem
-        ], $bog_theme_auto.prototype, "theme_index", null);
-        __decorate([
-            $mol_mem
-        ], $bog_theme_auto.prototype, "system_theme_index", null);
-        __decorate([
-            $mol_mem
-        ], $bog_theme_auto.prototype, "theme", null);
-        __decorate([
-            $mol_action
-        ], $bog_theme_auto.prototype, "theme_next", null);
-        __decorate([
-            $mol_action
-        ], $bog_theme_auto.prototype, "theme_prev", null);
-        __decorate([
-            $mol_action
-        ], $bog_theme_auto.prototype, "theme_set", null);
-        $$.$bog_theme_auto = $bog_theme_auto;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("bog/theme/auto/auto.view.css", ".bog_theme_switching,\n.bog_theme_switching * {\n\ttransition: background-color 300ms ease, color 300ms ease, border-color 300ms ease, fill 300ms ease !important;\n}\n\n@media (prefers-reduced-motion: reduce) {\n\t.bog_theme_switching,\n\t.bog_theme_switching * {\n\t\ttransition: none !important;\n\t}\n}\n");
-})($ || ($ = {}));
-
-;
-	($.$bog_theme_picker_row) = class $bog_theme_picker_row extends ($.$mol_button_minor) {
-		focused_str(){
-			return "";
-		}
-		hover(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		theme_name(){
-			return "";
-		}
-		title(){
-			return (this.theme_name());
-		}
-		attr(){
-			return {...(super.attr()), "bog_theme_picker_row_focused": (this.focused_str())};
-		}
-		event(){
-			return {...(super.event()), "pointerenter": (next) => (this.hover(next))};
-		}
-	};
-	($mol_mem(($.$bog_theme_picker_row.prototype), "hover"));
-
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        class $bog_theme_picker_row extends $.$bog_theme_picker_row {
-            focused_str() {
-                return this.focused() ? 'true' : '';
-            }
-        }
-        $$.$bog_theme_picker_row = $bog_theme_picker_row;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        $mol_style_define($bog_theme_picker_row, {
-            '@': {
-                bog_theme_picker_row_focused: {
-                    true: {
-                        background: {
-                            color: $mol_theme.hover,
-                        },
-                        boxShadow: `inset 0 0 0 1px #000, inset 0 0 0 2px #fff`,
-                    },
-                },
-            },
-        });
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-	($.$bog_theme_picker) = class $bog_theme_picker extends ($.$mol_scroll) {
-		theme_name(id){
-			return "";
-		}
-		theme_focused(id){
-			return false;
-		}
-		theme_select(id, next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		theme_hover(id, next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		Search(){
-			const obj = new this.$.$mol_string();
-			(obj.value) = (next) => ((this.query(next)));
-			(obj.hint) = () => ((this.$.$mol_locale.text("$bog_theme_picker_Search_hint")));
-			return obj;
-		}
-		theme_rows(){
-			return [];
-		}
-		Theme_list(){
-			const obj = new this.$.$mol_list();
-			(obj.rows) = () => ((this.theme_rows()));
-			return obj;
-		}
-		Content(){
-			const obj = new this.$.$mol_list();
-			(obj.rows) = () => ([(this.Search()), (this.Theme_list())]);
-			return obj;
-		}
-		key_down(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		theme_auto(){
-			const obj = new this.$.$bog_theme_auto();
-			return obj;
-		}
-		close(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		query(next){
-			if(next !== undefined) return next;
-			return "";
-		}
-		focused_index(next){
-			if(next !== undefined) return next;
-			return -1;
-		}
-		Theme_row(id){
-			const obj = new this.$.$bog_theme_picker_row();
-			(obj.theme_name) = () => ((this.theme_name(id)));
-			(obj.focused) = () => ((this.theme_focused(id)));
-			(obj.click) = (next) => ((this.theme_select(id, next)));
-			(obj.hover) = (next) => ((this.theme_hover(id, next)));
-			return obj;
-		}
-		sub(){
-			return [(this.Content())];
-		}
-		event(){
-			return {...(super.event()), "keydown": (next) => (this.key_down(next))};
-		}
-	};
-	($mol_mem_key(($.$bog_theme_picker.prototype), "theme_select"));
-	($mol_mem_key(($.$bog_theme_picker.prototype), "theme_hover"));
-	($mol_mem(($.$bog_theme_picker.prototype), "Search"));
-	($mol_mem(($.$bog_theme_picker.prototype), "Theme_list"));
-	($mol_mem(($.$bog_theme_picker.prototype), "Content"));
-	($mol_mem(($.$bog_theme_picker.prototype), "key_down"));
-	($mol_mem(($.$bog_theme_picker.prototype), "theme_auto"));
-	($mol_mem(($.$bog_theme_picker.prototype), "close"));
-	($mol_mem(($.$bog_theme_picker.prototype), "query"));
-	($mol_mem(($.$bog_theme_picker.prototype), "focused_index"));
-	($mol_mem_key(($.$bog_theme_picker.prototype), "Theme_row"));
-
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
         /**
-         * Theme picker popup with search and list
+         * Салон по ссылке. Без `@ $mol_mem`: метод отдаёт объект Базы, а $mol
+         * при сбросе ячейки дёрнул бы у него `destructor()`.
          */
-        class $bog_theme_picker extends $.$bog_theme_picker {
-            theme_rows() {
-                const themes = this.filtered_themes();
-                return themes.map((_, index) => this.Theme_row(index));
-            }
-            filtered_themes() {
-                const query = this.query().toLowerCase().trim();
-                const themes = this.$.$bog_theme_names;
-                const filtered = query ? themes.filter(name => name.toLowerCase().includes(query)) : [...themes];
-                // Reset focused index when filter changes
-                const current = this.focused_index();
-                if (current >= filtered.length) {
-                    this.focused_index(-1);
-                }
-                return filtered;
-            }
-            theme_name(index) {
-                return this.filtered_themes()[index] || '';
-            }
-            theme_focused(index) {
-                return this.focused_index() === index;
-            }
-            theme_select(index, event) {
-                if (!event)
-                    return null;
-                const themes = this.filtered_themes();
-                const theme_name = themes[index];
-                const global_index = this.$.$bog_theme_names.indexOf(theme_name);
-                if (global_index !== -1) {
-                    this.theme_auto().theme_set(global_index);
-                }
-                // Close popup
-                this.close();
+        shop() {
+            const uri = this.shop_uri();
+            if (!this.$.$giper_baza_link.check(uri))
                 return null;
-            }
-            theme_hover(index, event) {
-                if (!event)
-                    return null;
-                // Update focused index on hover (this will apply preview via theme_focused)
-                this.focused_index(index);
-                const themes = this.filtered_themes();
-                const theme_name = themes[index];
-                const global_index = this.$.$bog_theme_names.indexOf(theme_name);
-                if (global_index !== -1) {
-                    this.theme_auto().theme_set(global_index);
-                }
-                return null;
-            }
-            key_down(event) {
-                if (!event)
-                    return null;
-                const themes = this.filtered_themes();
-                let current = this.focused_index();
-                switch (event.key) {
-                    case 'ArrowDown':
-                        event.preventDefault();
-                        event.stopPropagation();
-                        // If focus is on search (-1), start from first item
-                        if (current === -1) {
-                            current = 0;
-                        }
-                        else {
-                            current = current < themes.length - 1 ? current + 1 : 0;
-                        }
-                        this.focused_index(current);
-                        this.preview_theme(current);
-                        break;
-                    case 'ArrowUp':
-                        event.preventDefault();
-                        event.stopPropagation();
-                        // If focus is on search (-1), start from last item
-                        if (current === -1) {
-                            current = themes.length - 1;
-                        }
-                        else {
-                            current = current > 0 ? current - 1 : themes.length - 1;
-                        }
-                        this.focused_index(current);
-                        this.preview_theme(current);
-                        break;
-                    case 'Enter':
-                        event.preventDefault();
-                        if (current >= 0 && current < themes.length) {
-                            this.select_theme(current);
-                        }
-                        break;
-                    case 'Escape':
-                        event.preventDefault();
-                        this.close();
-                        break;
-                }
-                return null;
-            }
-            select_theme(index) {
-                const themes = this.filtered_themes();
-                const theme_name = themes[index];
-                const global_index = this.$.$bog_theme_names.indexOf(theme_name);
-                if (global_index !== -1) {
-                    this.theme_auto().theme_set(global_index);
-                }
-                // Close popup
-                this.close();
-            }
-            preview_theme(index) {
-                const themes = this.filtered_themes();
-                const theme_name = themes[index];
-                const global_index = this.$.$bog_theme_names.indexOf(theme_name);
-                if (global_index !== -1) {
-                    this.theme_auto().theme_set(global_index);
-                }
-            }
+            return this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(uri), $bog_sert_shop);
         }
-        __decorate([
-            $mol_mem
-        ], $bog_theme_picker.prototype, "theme_rows", null);
-        __decorate([
-            $mol_mem
-        ], $bog_theme_picker.prototype, "filtered_themes", null);
-        __decorate([
-            $mol_action
-        ], $bog_theme_picker.prototype, "select_theme", null);
-        __decorate([
-            $mol_action
-        ], $bog_theme_picker.prototype, "preview_theme", null);
-        $$.$bog_theme_picker = $bog_theme_picker;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        $mol_style_define($bog_theme_picker, {
-            background: {
-                color: $mol_theme.back,
-            },
-            borderRadius: '8px',
-            overflow: 'hidden',
-            opacity: 1,
-            Search: {
-                borderRadius: '8px',
-            },
-        });
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-	($.$mol_icon_white_balance_sunny) = class $mol_icon_white_balance_sunny extends ($.$mol_icon) {
-		path(){
-			return "M3.55 19.09L4.96 20.5L6.76 18.71L5.34 17.29M12 6C8.69 6 6 8.69 6 12S8.69 18 12 18 18 15.31 18 12C18 8.68 15.31 6 12 6M20 13H23V11H20M17.24 18.71L19.04 20.5L20.45 19.09L18.66 17.29M20.45 5L19.04 3.6L17.24 5.39L18.66 6.81M13 1H11V4H13M6.76 5.39L4.96 3.6L3.55 5L5.34 6.81L6.76 5.39M1 13H4V11H1M13 20H11V23H13";
-		}
-	};
-
-
-;
-"use strict";
-
-
-;
-	($.$mol_icon_weather_night) = class $mol_icon_weather_night extends ($.$mol_icon) {
-		path(){
-			return "M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.64 6.35,17.66C9.37,20.67 14.19,20.78 17.33,17.97Z";
-		}
-	};
-
-
-;
-"use strict";
-
-
-;
-	($.$mol_icon_monitor) = class $mol_icon_monitor extends ($.$mol_icon) {
-		path(){
-			return "M21,16H3V4H21M21,2H3C1.89,2 1,2.89 1,4V16A2,2 0 0,0 3,18H10V20H8V22H16V20H14V18H21A2,2 0 0,0 23,16V4C23,2.89 22.1,2 21,2Z";
-		}
-	};
-
-
-;
-"use strict";
-
-
-;
-	($.$bog_theme_toggle) = class $bog_theme_toggle extends ($.$mol_pop) {
-		Icon(){
-			const obj = new this.$.$mol_view();
-			return obj;
-		}
-		anchor_hint(){
-			return "Переключить тему";
-		}
-		clicked(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		press_start(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		press_move(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		press_end(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		press_cancel(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		press_lost(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		backdrop_click(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		Backdrop(){
-			const obj = new this.$.$mol_view();
-			(obj.event) = () => ({"click": (next) => (this.backdrop_click(next))});
-			return obj;
-		}
-		picker_close(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		Picker(){
-			const obj = new this.$.$bog_theme_picker();
-			(obj.theme_auto) = () => ((this.theme_auto()));
-			(obj.close) = (next) => ((this.picker_close(next)));
-			return obj;
-		}
-		theme_auto(){
-			const obj = new this.$.$bog_theme_auto();
-			return obj;
-		}
-		showed(next){
-			if(next !== undefined) return next;
-			return false;
-		}
-		align(){
-			return "bottom_right";
-		}
-		Anchor(){
-			const obj = new this.$.$mol_button_minor();
-			(obj.sub) = () => ([(this.Icon())]);
-			(obj.hint) = () => ((this.anchor_hint()));
-			(obj.click) = (next) => ((this.clicked(next)));
-			(obj.event) = () => ({
-				...(this.$.$mol_button_minor.prototype.event.call(obj)), 
-				"pointerdown": (next) => (this.press_start(next)), 
-				"pointermove": (next) => (this.press_move(next)), 
-				"pointerup": (next) => (this.press_end(next)), 
-				"pointercancel": (next) => (this.press_cancel(next)), 
-				"lostpointercapture": (next) => (this.press_lost(next))
-			});
-			return obj;
-		}
-		Icon_light(){
-			const obj = new this.$.$mol_icon_white_balance_sunny();
-			return obj;
-		}
-		Icon_dark(){
-			const obj = new this.$.$mol_icon_weather_night();
-			return obj;
-		}
-		Icon_system(){
-			const obj = new this.$.$mol_icon_monitor();
-			return obj;
-		}
-		bubble_content(){
-			return [(this.Backdrop()), (this.Picker())];
-		}
-	};
-	($mol_mem(($.$bog_theme_toggle.prototype), "Icon"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "clicked"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "press_start"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "press_move"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "press_end"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "press_cancel"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "press_lost"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "backdrop_click"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "Backdrop"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "picker_close"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "Picker"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "theme_auto"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "showed"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "Anchor"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "Icon_light"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "Icon_dark"));
-	($mol_mem(($.$bog_theme_toggle.prototype), "Icon_system"));
-
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        class $bog_theme_toggle extends $.$bog_theme_toggle {
-            long_press_delay = 300;
-            move_threshold = 8;
-            press_timer = null;
-            press_start_x = 0;
-            press_start_y = 0;
-            is_long_press = false;
-            Icon() {
-                const mode = this.theme_auto().mode();
-                if (mode === 'light')
-                    return this.Icon_light();
-                if (mode === 'dark')
-                    return this.Icon_dark();
-                if (mode === 'custom') {
-                    const theme = this.theme_auto().theme();
-                    return theme.includes('light') ? this.Icon_light() : this.Icon_dark();
-                }
-                return this.Icon_system();
-            }
-            anchor_hint() {
-                const mode = this.theme_auto().mode();
-                if (mode === 'light')
-                    return 'Светлая тема';
-                if (mode === 'dark')
-                    return 'Тёмная тема';
-                if (mode === 'custom')
-                    return 'Пользовательская тема';
-                return 'Как в системе';
-            }
-            clicked(event) {
-                if (!event)
-                    return null;
-                if (this.is_long_press) {
-                    this.is_long_press = false;
-                    return null;
-                }
-                this.theme_auto().mode_next();
-                return null;
-            }
-            press_start(event) {
-                if (!event)
-                    return null;
-                this.clear_press_timer();
-                this.press_start_x = event.clientX;
-                this.press_start_y = event.clientY;
-                this.is_long_press = false;
-                this.press_timer = setTimeout(() => {
-                    this.is_long_press = true;
-                    this.on_long_press();
-                }, this.long_press_delay);
-                return null;
-            }
-            press_move(event) {
-                if (!event || !this.press_timer)
-                    return null;
-                const dx = Math.abs(event.clientX - this.press_start_x);
-                const dy = Math.abs(event.clientY - this.press_start_y);
-                if (dx > this.move_threshold || dy > this.move_threshold) {
-                    this.clear_press_timer();
-                }
-                return null;
-            }
-            press_end(event) {
-                if (!event)
-                    return null;
-                this.clear_press_timer();
-                return null;
-            }
-            press_cancel(event) {
-                if (!event)
-                    return null;
-                this.clear_press_timer();
-                return null;
-            }
-            press_lost(event) {
-                if (!event)
-                    return null;
-                this.clear_press_timer();
-                return null;
-            }
-            clear_press_timer() {
-                if (this.press_timer) {
-                    clearTimeout(this.press_timer);
-                    this.press_timer = null;
-                }
-            }
-            on_long_press() {
-                this.showed(true);
-                setTimeout(() => {
-                    try {
-                        const search = this.Picker().Search();
-                        search.focused(true);
-                    }
-                    catch (e) {
-                        // Ignore focus errors
-                    }
-                }, 100);
-            }
-            picker_close() {
-                this.showed(false);
-            }
-            backdrop_click(event) {
-                if (!event)
-                    return null;
-                this.showed(false);
-                return null;
-            }
+        /** Книга операций салона. Пустая, пока салона нет. */
+        ops() {
+            return this.shop()?.Ops()?.remote_list() ?? [];
         }
-        $$.$bog_theme_toggle = $bog_theme_toggle;
-    })($$ = $.$$ || ($.$$ = {}));
+    }
+    $.$bog_sert_page = $bog_sert_page;
 })($ || ($ = {}));
 
 ;
 "use strict";
 var $;
 (function ($) {
-    var $$;
-    (function ($$) {
-        $mol_style_define($bog_theme_toggle, {
-            Bubble: {
-                position: 'fixed !important',
-                left: '0 !important',
-                top: '0 !important',
-                transform: 'none !important',
-                width: '100vw !important',
-                height: '100vh !important',
-                maxWidth: 'none !important',
-                maxHeight: 'none !important',
-                padding: '0 !important',
-                boxShadow: 'none',
-                background: 'transparent !important',
+    /** Общая раскладка всех страниц кабинета: одна колонка разумной ширины. */
+    $mol_style_define($bog_sert_page, {
+        Body_content: {
+            flex: {
+                direction: 'column',
             },
-            Backdrop: {
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                zIndex: 1,
-                opacity: 0,
-            },
-            Picker: {
-                position: 'fixed',
-                left: '50%',
-                top: '15vh',
-                transform: 'translateX(-50%)',
-                maxWidth: '400px',
-                width: '90vw',
-                maxHeight: '70vh',
-                zIndex: 2,
-            },
-        });
-    })($$ = $.$$ || ($.$$ = {}));
+            gap: $mol_gap.block,
+            maxWidth: '34rem',
+            width: '100%',
+        },
+    });
 })($ || ($ = {}));
 
 ;
@@ -21271,2133 +20136,6 @@ var $;
 })($ || ($ = {}));
 
 ;
-	($.$mol_button_major) = class $mol_button_major extends ($.$mol_button_minor) {
-		theme(){
-			return "$mol_theme_base";
-		}
-	};
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/button/major/major.view.css", "[mol_button_major] {\n\tbackground-color: var(--mol_theme_back);\n\tcolor: var(--mol_theme_text);\n}\n");
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-	($.$mol_status) = class $mol_status extends ($.$mol_view) {
-		message(){
-			return "";
-		}
-		status(){
-			return (this.title());
-		}
-		minimal_height(){
-			return 24;
-		}
-		minimal_width(){
-			return 0;
-		}
-		sub(){
-			return [(this.message())];
-		}
-	};
-
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        class $mol_status extends $.$mol_status {
-            message() {
-                try {
-                    return this.status() ?? null;
-                }
-                catch (error) {
-                    if (error instanceof Promise)
-                        $mol_fail_hidden(error);
-                    $mol_fail_log(error);
-                    return error.message;
-                }
-            }
-        }
-        $$.$mol_status = $mol_status;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/status/status.view.css", "[mol_status] {\n\tpadding: var(--mol_gap_text);\n\tborder-radius: var(--mol_gap_round);\n\tdisplay: block;\n\tflex-shrink: 1;\n\tword-wrap: break-word;\n}\n\n[mol_status]:not([mol_view_error=\"Promise\"]) {\n\tcolor: var(--mol_theme_focus);\n}\n\n[mol_status]:not([mol_view_error=\"Promise\"]):empty {\n\tdisplay: none;\n}\n");
-})($ || ($ = {}));
-
-;
-	($.$bog_qr) = class $bog_qr extends ($.$mol_svg_root) {
-		stop_offset(id){
-			return "0%";
-		}
-		stop_color(id){
-			return "";
-		}
-		qr_view_box(){
-			return "0 0 1 1";
-		}
-		grad_x1(){
-			return "0";
-		}
-		grad_y1(){
-			return "0";
-		}
-		grad_x2(){
-			return "1";
-		}
-		grad_y2(){
-			return "1";
-		}
-		gradient_stop_list(){
-			return [];
-		}
-		Gradient(){
-			const obj = new this.$.$mol_svg();
-			(obj.dom_name) = () => ("linearGradient");
-			(obj.attr) = () => ({
-				...(this.$.$mol_svg.prototype.attr.call(obj)), 
-				"id": (this.gradient_id()), 
-				"x1": (this.grad_x1()), 
-				"y1": (this.grad_y1()), 
-				"x2": (this.grad_x2()), 
-				"y2": (this.grad_y2())
-			});
-			(obj.sub) = () => ((this.gradient_stop_list()));
-			return obj;
-		}
-		Defs(){
-			const obj = new this.$.$mol_svg();
-			(obj.dom_name) = () => ("defs");
-			(obj.sub) = () => ([(this.Gradient())]);
-			return obj;
-		}
-		modules_d(){
-			return "";
-		}
-		Modules(){
-			const obj = new this.$.$mol_svg_path();
-			(obj.geometry) = () => ((this.modules_d()));
-			(obj.attr) = () => ({...(this.$.$mol_svg_path.prototype.attr.call(obj)), "fill": (this.gradient_fill())});
-			return obj;
-		}
-		rings_d(){
-			return "";
-		}
-		Rings(){
-			const obj = new this.$.$mol_svg_path();
-			(obj.geometry) = () => ((this.rings_d()));
-			(obj.attr) = () => ({
-				...(this.$.$mol_svg_path.prototype.attr.call(obj)), 
-				"fill": (this.gradient_fill()), 
-				"fill-rule": "evenodd"
-			});
-			return obj;
-		}
-		centers_d(){
-			return "";
-		}
-		Centers(){
-			const obj = new this.$.$mol_svg_path();
-			(obj.geometry) = () => ((this.centers_d()));
-			(obj.attr) = () => ({...(this.$.$mol_svg_path.prototype.attr.call(obj)), "fill": (this.gradient_fill())});
-			return obj;
-		}
-		center_x(){
-			return "0";
-		}
-		center_y(){
-			return "0";
-		}
-		center_size(){
-			return "0";
-		}
-		Center_body(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ((this.center()));
-			return obj;
-		}
-		Center_wrap(){
-			const obj = new this.$.$mol_svg();
-			(obj.dom_name) = () => ("foreignObject");
-			(obj.attr) = () => ({
-				...(this.$.$mol_svg.prototype.attr.call(obj)), 
-				"x": (this.center_x()), 
-				"y": (this.center_y()), 
-				"width": (this.center_size()), 
-				"height": (this.center_size())
-			});
-			(obj.sub) = () => ([(this.Center_body())]);
-			return obj;
-		}
-		uri(){
-			return "";
-		}
-		module_radius(){
-			return 0.35;
-		}
-		finder_radius(){
-			return 1.2;
-		}
-		gradient_angle(){
-			return 45;
-		}
-		error_correction(){
-			return "M";
-		}
-		quiet_zone(){
-			return 2;
-		}
-		center(){
-			return [];
-		}
-		gradient_id(){
-			return "qr-grad";
-		}
-		gradient_fill(){
-			return "url(#qr-grad)";
-		}
-		gradient_stops(){
-			return ["var(--mol_theme_special)", "var(--mol_theme_focus)"];
-		}
-		Stop(id){
-			const obj = new this.$.$mol_svg();
-			(obj.dom_name) = () => ("stop");
-			(obj.attr) = () => ({
-				...(this.$.$mol_svg.prototype.attr.call(obj)), 
-				"offset": (this.stop_offset(id)), 
-				"stop-color": (this.stop_color(id))
-			});
-			return obj;
-		}
-		view_box(){
-			return (this.qr_view_box());
-		}
-		sub(){
-			return [
-				(this.Defs()), 
-				(this.Modules()), 
-				(this.Rings()), 
-				(this.Centers()), 
-				(this.Center_wrap())
-			];
-		}
-	};
-	($mol_mem(($.$bog_qr.prototype), "Gradient"));
-	($mol_mem(($.$bog_qr.prototype), "Defs"));
-	($mol_mem(($.$bog_qr.prototype), "Modules"));
-	($mol_mem(($.$bog_qr.prototype), "Rings"));
-	($mol_mem(($.$bog_qr.prototype), "Centers"));
-	($mol_mem(($.$bog_qr.prototype), "Center_body"));
-	($mol_mem(($.$bog_qr.prototype), "Center_wrap"));
-	($mol_mem_key(($.$bog_qr.prototype), "Stop"));
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    /** Dynamic sources import. */
-    class $mol_import extends $mol_object2 {
-        static module(uri) {
-            $mol_wire_solid();
-            return $mol_wire_sync(this).module_async(uri);
-        }
-        static module_async(uri) {
-            return import(uri);
-        }
-        static script(uri) {
-            $mol_wire_solid();
-            return $mol_wire_sync(this).script_async(uri);
-        }
-        static script_async(uri) {
-            const doc = $mol_dom_context.document;
-            const script = doc.createElement('script');
-            script.src = uri;
-            doc.head.appendChild(script);
-            return new Promise((done, fail) => {
-                script.onload = () => done($mol_dom_context);
-                script.onerror = () => fail(new Error(`Can not import ${uri}`));
-            });
-        }
-        static style(uri) {
-            return $mol_wire_sync(this).style_async(uri);
-        }
-        static style_async(uri) {
-            const doc = $mol_dom_context.document;
-            const style = doc.createElement('link');
-            style.rel = 'stylesheet';
-            style.href = uri;
-            doc.head.appendChild(style);
-            return new Promise((done, fail) => {
-                style.onload = () => done(style.sheet);
-                style.onerror = () => fail(new Error(`Can not import ${uri}`));
-            });
-        }
-    }
-    __decorate([
-        $mol_mem_key
-    ], $mol_import, "module", null);
-    __decorate([
-        $mol_mem_key
-    ], $mol_import, "script", null);
-    __decorate([
-        $mol_mem_key
-    ], $mol_import, "style", null);
-    $.$mol_import = $mol_import;
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        let grad_counter = 0;
-        class $bog_qr extends $.$bog_qr {
-            gradient_id() {
-                return 'qr-grad-' + (++grad_counter);
-            }
-            gradient_fill() {
-                return `url(#${this.gradient_id()})`;
-            }
-            grad_x1() {
-                const a = this.gradient_angle() * Math.PI / 180;
-                return String(0.5 - Math.cos(a) * 0.5);
-            }
-            grad_y1() {
-                const a = this.gradient_angle() * Math.PI / 180;
-                return String(0.5 - Math.sin(a) * 0.5);
-            }
-            grad_x2() {
-                const a = this.gradient_angle() * Math.PI / 180;
-                return String(0.5 + Math.cos(a) * 0.5);
-            }
-            grad_y2() {
-                const a = this.gradient_angle() * Math.PI / 180;
-                return String(0.5 + Math.sin(a) * 0.5);
-            }
-            gradient_stop_list() {
-                const colors = this.gradient_stops();
-                return colors.map((_, i) => this.Stop(i));
-            }
-            stop_offset(index) {
-                const colors = this.gradient_stops();
-                if (colors.length <= 1)
-                    return '0%';
-                return Math.round(index / (colors.length - 1) * 100) + '%';
-            }
-            stop_color(index) {
-                return this.gradient_stops()[index];
-            }
-            qr_lib() {
-                return $mol_import.script('https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js');
-            }
-            qr_matrix() {
-                this.qr_lib();
-                const data = this.uri();
-                if (!data)
-                    return null;
-                const qr = qrcode(0, this.error_correction());
-                qr.addData(data);
-                qr.make();
-                const count = qr.getModuleCount();
-                const matrix = [];
-                for (let r = 0; r < count; r++) {
-                    matrix[r] = [];
-                    for (let c = 0; c < count; c++) {
-                        matrix[r][c] = qr.isDark(r, c);
-                    }
-                }
-                return matrix;
-            }
-            qr_view_box() {
-                const matrix = this.qr_matrix();
-                if (!matrix)
-                    return '0 0 1 1';
-                const total = matrix.length + this.quiet_zone() * 2;
-                return `0 0 ${total} ${total}`;
-            }
-            qr_paths() {
-                const matrix = this.qr_matrix();
-                if (!matrix)
-                    return { modules: '', rings: '', centers: '' };
-                const count = matrix.length;
-                const quiet = this.quiet_zone();
-                const r = this.module_radius();
-                const dark = (row, col) => row >= 0 && row < count && col >= 0 && col < count && matrix[row][col];
-                const isFinder = (row, col) => (row < 7 && col < 7) || (row < 7 && col >= count - 7) || (row >= count - 7 && col < 7);
-                const hasCenter = this.center().length > 0;
-                const centerRadius = hasCenter ? count * 0.15 : 0;
-                const centerMid = count / 2;
-                const isCenter = (row, col) => {
-                    if (!hasCenter)
-                        return false;
-                    const dx = col + 0.5 - centerMid;
-                    const dy = row + 0.5 - centerMid;
-                    return dx * dx + dy * dy < centerRadius * centerRadius;
-                };
-                let modules = '';
-                for (let row = 0; row < count; row++) {
-                    for (let col = 0; col < count; col++) {
-                        if (!matrix[row][col])
-                            continue;
-                        if (isFinder(row, col))
-                            continue;
-                        if (isCenter(row, col))
-                            continue;
-                        const x = col + quiet;
-                        const y = row + quiet;
-                        const top = dark(row - 1, col);
-                        const bottom = dark(row + 1, col);
-                        const left = dark(row, col - 1);
-                        const right = dark(row, col + 1);
-                        const alone = !top && !bottom && !left && !right;
-                        if (alone) {
-                            const cx = x + 0.5;
-                            const cy = y + 0.5;
-                            const cr = 0.5;
-                            modules += `M${cx - cr},${cy}A${cr},${cr},0,1,1,${cx + cr},${cy}A${cr},${cr},0,1,1,${cx - cr},${cy}Z`;
-                        }
-                        else {
-                            const tl = !top && !left ? r : 0;
-                            const tr = !top && !right ? r : 0;
-                            const br = !bottom && !right ? r : 0;
-                            const bl = !bottom && !left ? r : 0;
-                            modules += this.rect_path(x, y, 1, 1, tl, tr, br, bl);
-                        }
-                    }
-                }
-                const fr = this.finder_radius();
-                const finders = [
-                    [quiet, quiet],
-                    [count - 7 + quiet, quiet],
-                    [quiet, count - 7 + quiet],
-                ];
-                let rings = '';
-                let centers = '';
-                for (const [fx, fy] of finders) {
-                    rings += this.rect_path(fx, fy, 7, 7, fr, fr, fr, fr);
-                    rings += this.rect_path(fx + 1, fy + 1, 5, 5, fr * 0.7, fr * 0.7, fr * 0.7, fr * 0.7);
-                    centers += this.rect_path(fx + 2, fy + 2, 3, 3, fr * 0.5, fr * 0.5, fr * 0.5, fr * 0.5);
-                }
-                return { modules, rings, centers };
-            }
-            center_area() {
-                const matrix = this.qr_matrix();
-                if (!matrix || this.center().length === 0)
-                    return { x: 0, y: 0, size: 0 };
-                const count = matrix.length;
-                const quiet = this.quiet_zone();
-                const centerSize = count * 0.3;
-                const total = count + quiet * 2;
-                return {
-                    x: (total - centerSize) / 2,
-                    y: (total - centerSize) / 2,
-                    size: centerSize,
-                };
-            }
-            center_x() {
-                return String(this.center_area().x);
-            }
-            center_y() {
-                return String(this.center_area().y);
-            }
-            center_size() {
-                return String(this.center_area().size);
-            }
-            modules_d() {
-                return this.qr_paths().modules;
-            }
-            rings_d() {
-                return this.qr_paths().rings;
-            }
-            centers_d() {
-                return this.qr_paths().centers;
-            }
-            rect_path(x, y, w, h, tl, tr, br, bl) {
-                return [
-                    `M${x + tl},${y}`,
-                    `H${x + w - tr}`,
-                    tr ? `A${tr},${tr},0,0,1,${x + w},${y + tr}` : '',
-                    `V${y + h - br}`,
-                    br ? `A${br},${br},0,0,1,${x + w - br},${y + h}` : '',
-                    `H${x + bl}`,
-                    bl ? `A${bl},${bl},0,0,1,${x},${y + h - bl}` : '',
-                    `V${y + tl}`,
-                    tl ? `A${tl},${tl},0,0,1,${x + tl},${y}` : '',
-                    'Z',
-                ]
-                    .filter(Boolean)
-                    .join('');
-            }
-        }
-        __decorate([
-            $mol_mem
-        ], $bog_qr.prototype, "gradient_id", null);
-        __decorate([
-            $mol_mem
-        ], $bog_qr.prototype, "gradient_fill", null);
-        __decorate([
-            $mol_mem
-        ], $bog_qr.prototype, "grad_x1", null);
-        __decorate([
-            $mol_mem
-        ], $bog_qr.prototype, "grad_y1", null);
-        __decorate([
-            $mol_mem
-        ], $bog_qr.prototype, "grad_x2", null);
-        __decorate([
-            $mol_mem
-        ], $bog_qr.prototype, "grad_y2", null);
-        __decorate([
-            $mol_mem
-        ], $bog_qr.prototype, "gradient_stop_list", null);
-        __decorate([
-            $mol_mem
-        ], $bog_qr.prototype, "qr_lib", null);
-        __decorate([
-            $mol_mem
-        ], $bog_qr.prototype, "qr_matrix", null);
-        __decorate([
-            $mol_mem
-        ], $bog_qr.prototype, "qr_view_box", null);
-        __decorate([
-            $mol_mem
-        ], $bog_qr.prototype, "qr_paths", null);
-        __decorate([
-            $mol_mem
-        ], $bog_qr.prototype, "center_area", null);
-        $$.$bog_qr = $bog_qr;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        $mol_style_define($bog_qr, {
-            width: '300px',
-            height: '300px',
-            Center_body: {
-                width: '80%',
-                height: '80%',
-                position: 'absolute',
-                top: '10%',
-                left: '10%',
-            },
-        });
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-	($.$bog_sert_card) = class $bog_sert_card extends ($.$mol_list) {
-		Empty(){
-			const obj = new this.$.$mol_status();
-			(obj.message) = () => ("Ссылка не похожа на сертификат");
-			return obj;
-		}
-		shop(){
-			return "";
-		}
-		Shop(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.shop())]);
-			return obj;
-		}
-		kind(){
-			return "Подарочный сертификат";
-		}
-		Kind(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.kind())]);
-			return obj;
-		}
-		Head(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.Shop()), (this.Kind())]);
-			return obj;
-		}
-		gift(){
-			return "";
-		}
-		Gift(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.gift())]);
-			return obj;
-		}
-		whom(){
-			return "";
-		}
-		Whom(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.whom())]);
-			return obj;
-		}
-		from(){
-			return "";
-		}
-		From(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.from())]);
-			return obj;
-		}
-		Names(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.Whom()), (this.From())]);
-			return obj;
-		}
-		wish(){
-			return "";
-		}
-		Wish(){
-			const obj = new this.$.$mol_paragraph();
-			(obj.title) = () => ((this.wish()));
-			return obj;
-		}
-		legend(){
-			return "";
-		}
-		Legend(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.legend())]);
-			return obj;
-		}
-		note(){
-			return "";
-		}
-		Note(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.note())]);
-			return obj;
-		}
-		Foot(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.Legend()), (this.Note())]);
-			return obj;
-		}
-		stamp(){
-			return "";
-		}
-		Stamp(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.stamp())]);
-			return obj;
-		}
-		sheet(){
-			return [
-				(this.Head()), 
-				(this.Gift()), 
-				(this.Names()), 
-				(this.Wish()), 
-				(this.Foot()), 
-				(this.Stamp())
-			];
-		}
-		Sheet(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ((this.sheet()));
-			return obj;
-		}
-		page_uri(){
-			return "";
-		}
-		Code(){
-			const obj = new this.$.$bog_qr();
-			(obj.uri) = () => ((this.page_uri()));
-			(obj.error_correction) = () => ("M");
-			return obj;
-		}
-		Ident_label(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => (["Номер сертификата"]);
-			return obj;
-		}
-		ident(){
-			return "";
-		}
-		Ident_value(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.ident())]);
-			return obj;
-		}
-		Ident(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.Ident_label()), (this.Ident_value())]);
-			return obj;
-		}
-		Aside(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.Code()), (this.Ident())]);
-			return obj;
-		}
-		mail_uri(){
-			return "";
-		}
-		mail_title(){
-			return "Отправить почтой";
-		}
-		Mail(){
-			const obj = new this.$.$mol_link();
-			(obj.uri) = () => ((this.mail_uri()));
-			(obj.title) = () => ((this.mail_title()));
-			(obj.hint) = () => ("Откроется почтовая программа с готовым письмом");
-			return obj;
-		}
-		copy_title(){
-			return "Скопировать ссылку";
-		}
-		copy(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		Copy(){
-			const obj = new this.$.$mol_button_minor();
-			(obj.title) = () => ((this.copy_title()));
-			(obj.click) = (next) => ((this.copy(next)));
-			return obj;
-		}
-		redeem_title(){
-			return "Погасить";
-		}
-		redeem(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		Redeem(){
-			const obj = new this.$.$mol_button_major();
-			(obj.title) = () => ((this.redeem_title()));
-			(obj.hint) = () => ("Отметить сертификат использованным");
-			(obj.click) = (next) => ((this.redeem(next)));
-			return obj;
-		}
-		tools(){
-			return [
-				(this.Mail()), 
-				(this.Copy()), 
-				(this.Redeem())
-			];
-		}
-		Tools(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ((this.tools()));
-			return obj;
-		}
-		card_rows(){
-			return [
-				(this.Empty()), 
-				(this.Sheet()), 
-				(this.Aside()), 
-				(this.Tools())
-			];
-		}
-		uri(){
-			return "";
-		}
-		rows(){
-			return (this.card_rows());
-		}
-	};
-	($mol_mem(($.$bog_sert_card.prototype), "Empty"));
-	($mol_mem(($.$bog_sert_card.prototype), "Shop"));
-	($mol_mem(($.$bog_sert_card.prototype), "Kind"));
-	($mol_mem(($.$bog_sert_card.prototype), "Head"));
-	($mol_mem(($.$bog_sert_card.prototype), "Gift"));
-	($mol_mem(($.$bog_sert_card.prototype), "Whom"));
-	($mol_mem(($.$bog_sert_card.prototype), "From"));
-	($mol_mem(($.$bog_sert_card.prototype), "Names"));
-	($mol_mem(($.$bog_sert_card.prototype), "Wish"));
-	($mol_mem(($.$bog_sert_card.prototype), "Legend"));
-	($mol_mem(($.$bog_sert_card.prototype), "Note"));
-	($mol_mem(($.$bog_sert_card.prototype), "Foot"));
-	($mol_mem(($.$bog_sert_card.prototype), "Stamp"));
-	($mol_mem(($.$bog_sert_card.prototype), "Sheet"));
-	($mol_mem(($.$bog_sert_card.prototype), "Code"));
-	($mol_mem(($.$bog_sert_card.prototype), "Ident_label"));
-	($mol_mem(($.$bog_sert_card.prototype), "Ident_value"));
-	($mol_mem(($.$bog_sert_card.prototype), "Ident"));
-	($mol_mem(($.$bog_sert_card.prototype), "Aside"));
-	($mol_mem(($.$bog_sert_card.prototype), "Mail"));
-	($mol_mem(($.$bog_sert_card.prototype), "copy"));
-	($mol_mem(($.$bog_sert_card.prototype), "Copy"));
-	($mol_mem(($.$bog_sert_card.prototype), "redeem"));
-	($mol_mem(($.$bog_sert_card.prototype), "Redeem"));
-	($mol_mem(($.$bog_sert_card.prototype), "Tools"));
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    /** Entity dictionary Model with Title property included by default */
-    class $giper_baza_entity extends $giper_baza_dict.with({
-        /** Entity Title - default property for use */
-        Title: $giper_baza_atom_text,
-    }) {
-        title(next) {
-            return this.Title(next)?.val(next) ?? '';
-        }
-    }
-    __decorate([
-        $mol_mem
-    ], $giper_baza_entity.prototype, "title", null);
-    $.$giper_baza_entity = $giper_baza_entity;
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    /**
-     * Подарочный сертификат. Живёт отдельным лендом, ссылка на который и есть предъявитель.
-     * Поэтому всё нужное для показа лежит внутри: получатель открывает карточку,
-     * ничего не зная про ленд салона и не имея к нему доступа.
-     */
-    class $bog_sert_cert extends $giper_baza_entity.with({
-        /** Название салона. Копия, чтобы карточка читалась в отрыве от ленда салона. */
-        Shop: $giper_baza_atom_text,
-        /** Адрес, телефон, условия. Тоже копия и по той же причине. */
-        Note: $giper_baza_atom_text,
-        /**
-         * Номинал в рублях. Ноль означает сертификат на услугу из Title.
-         *
-         * Не `$giper_baza_atom_bint`: небольшое целое возвращается из хранилища
-         * числом, а схема bigint приводит число к `null`, и номинал теряется.
-         */
-        Cost: $giper_baza_atom_real,
-        /** Кому подарок */
-        Whom: $giper_baza_atom_text,
-        /** От кого подарок */
-        From: $giper_baza_atom_text,
-        /** Поздравление */
-        Wish: $giper_baza_atom_text,
-        /** Почта получателя, подставляется в письмо */
-        Mail: $giper_baza_atom_text,
-        /** Когда выпущен */
-        Made: $giper_baza_atom_time,
-        /** Годен до */
-        Till: $giper_baza_atom_time,
-        /** Когда погашен. Пусто — сертификат ещё не использован. */
-        Used: $giper_baza_atom_time,
-    }, 'Cert') {
-        /**
-         * Дальше — чистые форматтеры, общие для карточки и строки реестра.
-         * В Базу они не пишут и в фибрах не участвуют, так что запрет на статику
-         * с побочными эффектами их не касается.
-         */
-        /** Что подарено, одной строкой: сумма, услуга, либо и то и другое. */
-        static gift_text(cost, title) {
-            if (!cost)
-                return title;
-            const money = cost.toLocaleString('ru-RU') + ' ₽';
-            return title ? `${money} · ${title}` : money;
-        }
-        /**
-         * Текст письма получателю. Собирается здесь, а не в карточке, чтобы
-         * его можно было проверить тестом, не поднимая ни вида, ни Базы.
-         */
-        static mail_body(parts) {
-            const lines = [
-                parts.whom ? `${parts.whom}, здравствуйте!` : 'Здравствуйте!',
-                '',
-                parts.wish || 'Дарим вам подарочный сертификат.',
-                '',
-                parts.gift,
-                parts.legend,
-                '',
-                'Сертификат открывается по ссылке:',
-                parts.uri,
-                '',
-                parts.note,
-            ];
-            return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
-        }
-        /** Состояние сертификата словами, для реестра. */
-        static state_text(used, till, now) {
-            if (used)
-                return `Погашен ${used.toString('DD.MM.YYYY')}`;
-            if (!till)
-                return 'Активен';
-            if (till.valueOf() < now)
-                return `Просрочен ${till.toString('DD.MM.YYYY')}`;
-            return `Годен до ${till.toString('DD.MM.YYYY')}`;
-        }
-    }
-    $.$bog_sert_cert = $bog_sert_cert;
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        /**
-         * Карточка сертификата — то, что видит получатель, открыв присланную ссылку.
-         * Всё рисуется из самого сертификата: к ленду салона тут доступа нет и не должно быть.
-         */
-        class $bog_sert_card extends $.$bog_sert_card {
-            /**
-             * Сертификат по ссылке из адресной строки.
-             *
-             * Без `@ $mol_mem`: метод отдаёт объект Базы, а $mol при сбросе ячейки
-             * дёрнул бы у него `destructor()` и уронил бы весь ленд.
-             */
-            cert() {
-                const uri = this.uri();
-                if (!this.$.$giper_baza_link.check(uri))
-                    return null;
-                const cert = this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(uri), $bog_sert_cert);
-                // Ленд чужой и сам собой не приедет: `glob.Pawn` его не синкает.
-                cert.land().sync();
-                return cert;
-            }
-            shop() {
-                return this.cert()?.Shop()?.val() ?? '';
-            }
-            note() {
-                return this.cert()?.Note()?.val() ?? '';
-            }
-            /** Номинал в рублях. Ноль означает сертификат на услугу. */
-            cost() {
-                return this.cert()?.Cost()?.val() ?? 0;
-            }
-            /** Что подарено: сумма, услуга, либо и то и другое. */
-            gift() {
-                const cert = this.cert();
-                if (!cert)
-                    return '';
-                return $bog_sert_cert.gift_text(this.cost(), cert.title());
-            }
-            whom() {
-                const whom = this.cert()?.Whom()?.val() ?? '';
-                return whom ? `Кому: ${whom}` : '';
-            }
-            from() {
-                const from = this.cert()?.From()?.val() ?? '';
-                return from ? `От кого: ${from}` : '';
-            }
-            wish() {
-                return this.cert()?.Wish()?.val() ?? '';
-            }
-            /** Годен до, в человеческом виде. Пусто — без срока. */
-            term() {
-                const till = this.cert()?.Till()?.val();
-                return till ? till.toString('DD.MM.YYYY') : '';
-            }
-            legend() {
-                const term = this.term();
-                if (!term)
-                    return 'Без срока действия';
-                return this.expired() ? `Срок вышел ${term}` : `Действует до ${term}`;
-            }
-            expired() {
-                const till = this.cert()?.Till()?.val();
-                if (!till)
-                    return false;
-                return till.valueOf() < Date.now();
-            }
-            /** Момент гашения. Пусто — сертификат ещё не использован. */
-            used() {
-                return this.cert()?.Used()?.val() ?? null;
-            }
-            stamp() {
-                const used = this.used();
-                if (used)
-                    return `Погашено ${used.toString('DD.MM.YYYY')}`;
-                return this.expired() ? 'Просрочено' : '';
-            }
-            ident() {
-                return this.uri();
-            }
-            /** Абсолютный адрес этой же карточки — он же содержимое QR-кода и тело письма. */
-            page_uri() {
-                const uri = this.uri();
-                if (!uri)
-                    return '';
-                return this.$.$mol_state_arg.link({ screen: null, cert: uri });
-            }
-            /** Готовое письмо получателю. Открывается в его почтовой программе. */
-            mail_uri() {
-                const cert = this.cert();
-                if (!cert)
-                    return '';
-                const to = cert.Mail()?.val() ?? '';
-                const subj = `Подарочный сертификат${this.shop() ? ' — ' + this.shop() : ''}`;
-                const body = $bog_sert_cert.mail_body({
-                    whom: cert.Whom()?.val() ?? '',
-                    wish: this.wish(),
-                    gift: this.gift(),
-                    legend: this.legend(),
-                    uri: this.page_uri(),
-                    note: this.note(),
-                });
-                return `mailto:${encodeURIComponent(to)}`
-                    + `?subject=${encodeURIComponent(subj)}`
-                    + `&body=${encodeURIComponent(body)}`;
-            }
-            /** Гасить может только тот, у кого есть права на запись в ленд сертификата. */
-            can_redeem() {
-                const cert = this.cert();
-                if (!cert)
-                    return false;
-                if (this.used())
-                    return false;
-                // Ранги живут в подарках ленда, а те приезжают только вместе с данными.
-                // Без чтения хоть одного поля `can_change` молча ответит «нет».
-                cert.Shop()?.val();
-                return cert.can_change();
-            }
-            redeem() {
-                const cert = this.cert();
-                if (!cert)
-                    return;
-                cert.Used('auto').val(new this.$.$mol_time_moment());
-            }
-            copy() {
-                this.$.$mol_dom_context.navigator.clipboard.writeText(this.page_uri());
-            }
-            sheet() {
-                return [
-                    this.Head(),
-                    this.Gift(),
-                    this.Names(),
-                    ...this.wish() ? [this.Wish()] : [],
-                    this.Foot(),
-                    ...this.stamp() ? [this.Stamp()] : [],
-                ];
-            }
-            tools() {
-                return [
-                    this.Mail(),
-                    this.Copy(),
-                    ...this.can_redeem() ? [this.Redeem()] : [],
-                ];
-            }
-            card_rows() {
-                if (!this.cert())
-                    return [this.Empty()];
-                return [this.Sheet(), this.Aside(), this.Tools()];
-            }
-        }
-        __decorate([
-            $mol_action
-        ], $bog_sert_card.prototype, "redeem", null);
-        __decorate([
-            $mol_action
-        ], $bog_sert_card.prototype, "copy", null);
-        $$.$bog_sert_card = $bog_sert_card;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_define($bog_sert_card, {
-        flex: {
-            direction: 'column',
-        },
-        gap: $mol_gap.block,
-        padding: $mol_gap.block,
-        maxWidth: '42rem',
-        width: '100%',
-        margin: {
-            left: 'auto',
-            right: 'auto',
-        },
-        Sheet: {
-            flex: {
-                direction: 'column',
-            },
-            gap: $mol_gap.text,
-            padding: [$mol_gap.block, $mol_gap.block],
-            background: {
-                color: $mol_theme.card,
-            },
-            border: {
-                radius: $mol_gap.round,
-            },
-            boxShadow: `0 0 0 1px ${$mol_theme.line}, 0 1.5rem 2.5rem -2rem ${$mol_theme.shade}`,
-            position: 'relative',
-            overflow: 'hidden',
-            // Полоса фирменного цвета по верхнему краю — единственное украшение,
-            // которое не мешает читать и не требует картинок.
-            '::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '4px',
-                background: {
-                    image: [[`linear-gradient( 90deg, ${$mol_theme.focus}, ${$mol_theme.special} )`]],
-                },
-            },
-        },
-        Head: {
-            flex: {
-                direction: 'column',
-            },
-            gap: '.25rem',
-            padding: {
-                top: $mol_gap.text,
-            },
-        },
-        Shop: {
-            font: {
-                size: '1.25rem',
-                weight: 'bold',
-            },
-        },
-        Kind: {
-            font: {
-                size: '.75rem',
-            },
-            letterSpacing: '.15em',
-            textTransform: 'uppercase',
-            color: $mol_theme.shade,
-        },
-        Gift: {
-            font: {
-                size: '2rem',
-                weight: 'bold',
-            },
-            lineHeight: '1.2',
-            padding: {
-                top: $mol_gap.text,
-                bottom: $mol_gap.text,
-            },
-        },
-        Names: {
-            flex: {
-                direction: 'column',
-            },
-            gap: '.125rem',
-            color: $mol_theme.shade,
-        },
-        Wish: {
-            fontStyle: 'italic',
-            padding: {
-                top: $mol_gap.text,
-                bottom: $mol_gap.text,
-            },
-            whiteSpace: 'pre-wrap',
-        },
-        Foot: {
-            flex: {
-                direction: 'column',
-            },
-            gap: '.125rem',
-            padding: {
-                top: $mol_gap.text,
-            },
-            border: {
-                top: {
-                    width: '1px',
-                    style: 'solid',
-                    color: $mol_theme.line,
-                },
-            },
-            font: {
-                size: '.85rem',
-            },
-            color: $mol_theme.shade,
-            whiteSpace: 'pre-wrap',
-        },
-        Stamp: {
-            alignSelf: 'flex-start',
-            margin: {
-                top: $mol_gap.text,
-            },
-            padding: ['.25rem', '.75rem'],
-            border: {
-                width: '2px',
-                style: 'solid',
-                color: 'red',
-                radius: $mol_gap.round,
-            },
-            color: 'red',
-            font: {
-                size: '.9rem',
-                weight: 'bold',
-            },
-            letterSpacing: '.05em',
-            textTransform: 'uppercase',
-            transform: 'rotate(-3deg)',
-        },
-        Aside: {
-            align: {
-                items: 'center',
-            },
-            gap: $mol_gap.block,
-            padding: [0, $mol_gap.text],
-        },
-        Code: {
-            width: '7rem',
-            height: '7rem',
-            flex: {
-                grow: 0,
-                shrink: 0,
-            },
-        },
-        Ident: {
-            flex: {
-                direction: 'column',
-            },
-            gap: '.125rem',
-            minWidth: 0,
-        },
-        Ident_label: {
-            font: {
-                size: '.75rem',
-            },
-            color: $mol_theme.shade,
-        },
-        Ident_value: {
-            fontFamily: 'monospace',
-            wordBreak: 'break-all',
-        },
-        Tools: {
-            flexWrap: 'wrap',
-            gap: $mol_gap.text,
-            padding: [0, $mol_gap.text],
-        },
-    });
-})($ || ($ = {}));
-
-;
-	($.$bog_sert_desk_row) = class $bog_sert_desk_row extends ($.$mol_link) {
-		gift(){
-			return "";
-		}
-		Gift(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.gift())]);
-			return obj;
-		}
-		whom(){
-			return "";
-		}
-		Whom(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.whom())]);
-			return obj;
-		}
-		state(){
-			return "";
-		}
-		State(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.state())]);
-			return obj;
-		}
-		cert_uri(){
-			return "";
-		}
-		arg(){
-			return {"screen": null, "cert": (this.cert_uri())};
-		}
-		sub(){
-			return [
-				(this.Gift()), 
-				(this.Whom()), 
-				(this.State())
-			];
-		}
-	};
-	($mol_mem(($.$bog_sert_desk_row.prototype), "Gift"));
-	($mol_mem(($.$bog_sert_desk_row.prototype), "Whom"));
-	($mol_mem(($.$bog_sert_desk_row.prototype), "State"));
-
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        /** Строка реестра: что за сертификат, кому и в каком он состоянии. */
-        class $bog_sert_desk_row extends $.$bog_sert_desk_row {
-            /**
-             * Сертификат этой строки. Без `@ $mol_mem`, потому что это объект Базы.
-             *
-             * `sync()` тут не зовём: ленды своих сертификатов лежат локально,
-             * а чтение полей и так поднимает синхронизацию.
-             */
-            cert() {
-                const uri = this.cert_uri();
-                if (!this.$.$giper_baza_link.check(uri))
-                    return null;
-                return this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(uri), $bog_sert_cert);
-            }
-            gift() {
-                const cert = this.cert();
-                if (!cert)
-                    return this.cert_uri();
-                return $bog_sert_cert.gift_text(cert.Cost()?.val() ?? 0, cert.title()) || 'Без названия';
-            }
-            whom() {
-                return this.cert()?.Whom()?.val() || '—';
-            }
-            state() {
-                const cert = this.cert();
-                if (!cert)
-                    return '';
-                return $bog_sert_cert.state_text(cert.Used()?.val() ?? null, cert.Till()?.val() ?? null, Date.now());
-            }
-            /** Строка всегда ведёт на сертификат: «текущей» ссылкой она не бывает. */
-            current() {
-                return false;
-            }
-        }
-        $$.$bog_sert_desk_row = $bog_sert_desk_row;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_define($bog_sert_desk_row, {
-        flex: {
-            direction: 'row',
-            wrap: 'wrap',
-        },
-        align: {
-            items: 'baseline',
-        },
-        gap: $mol_gap.text,
-        padding: [$mol_gap.text, $mol_gap.block],
-        background: {
-            color: $mol_theme.card,
-        },
-        Gift: {
-            flex: {
-                grow: 1,
-            },
-            minWidth: '10rem',
-            font: {
-                weight: 'bold',
-            },
-        },
-        Whom: {
-            color: $mol_theme.shade,
-        },
-        State: {
-            font: {
-                size: '.85rem',
-            },
-            color: $mol_theme.shade,
-            whiteSpace: 'nowrap',
-        },
-    });
-})($ || ($ = {}));
-
-;
-	($.$mol_row) = class $mol_row extends ($.$mol_view) {};
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/row/row.view.css", "[mol_row] {\n\tdisplay: flex;\n\tflex-wrap: wrap;\n\talign-items: flex-start;\n\talign-content: flex-start;\n\tjustify-content: flex-start;\n\tpadding: var(--mol_gap_block);\n\tgap: var(--mol_gap_block);\n\tflex: 0 0 auto;\n\tbox-sizing: border-box;\n\tmax-width: 100%;\n}\n\n[mol_row] > * {\n\tmax-width: 100%;\n}\n");
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-	($.$mol_form) = class $mol_form extends ($.$mol_list) {
-		keydown(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		form_invalid(){
-			return (this.$.$mol_locale.text("$mol_form_form_invalid"));
-		}
-		form_fields(){
-			return [];
-		}
-		body(){
-			return (this.form_fields());
-		}
-		Body(){
-			const obj = new this.$.$mol_list();
-			(obj.sub) = () => ((this.body()));
-			return obj;
-		}
-		submit_title(){
-			return (this.$.$mol_locale.text("$mol_form_submit_title"));
-		}
-		submit_hint(){
-			return "";
-		}
-		submit_activate(next){
-			return (this.Submit().activate(next));
-		}
-		submit(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		Submit(){
-			const obj = new this.$.$mol_button_major();
-			(obj.title) = () => ((this.submit_title()));
-			(obj.hint) = () => ((this.submit_hint()));
-			(obj.click) = (next) => ((this.submit(next)));
-			return obj;
-		}
-		result(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		Result(){
-			const obj = new this.$.$mol_status();
-			(obj.message) = () => ((this.result()));
-			return obj;
-		}
-		buttons(){
-			return [(this.Submit()), (this.Result())];
-		}
-		foot(){
-			return (this.buttons());
-		}
-		Foot(){
-			const obj = new this.$.$mol_row();
-			(obj.sub) = () => ((this.foot()));
-			return obj;
-		}
-		submit_allowed(){
-			return true;
-		}
-		submit_blocked(){
-			return false;
-		}
-		event(){
-			return {...(super.event()), "keydown": (next) => (this.keydown(next))};
-		}
-		save(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		message_done(){
-			return (this.$.$mol_locale.text("$mol_form_message_done"));
-		}
-		errors(){
-			return {"Form invalid": (this.form_invalid())};
-		}
-		rows(){
-			return [(this.Body()), (this.Foot())];
-		}
-	};
-	($mol_mem(($.$mol_form.prototype), "keydown"));
-	($mol_mem(($.$mol_form.prototype), "Body"));
-	($mol_mem(($.$mol_form.prototype), "submit"));
-	($mol_mem(($.$mol_form.prototype), "Submit"));
-	($mol_mem(($.$mol_form.prototype), "result"));
-	($mol_mem(($.$mol_form.prototype), "Result"));
-	($mol_mem(($.$mol_form.prototype), "Foot"));
-	($mol_mem(($.$mol_form.prototype), "save"));
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/form/form.view.css", "[mol_form] {\r\n\tgap: var(--mol_gap_block);\r\n}\r\n\r\n[mol_form_body] {\r\n\tgap: var(--mol_gap_block);\r\n}");
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        /**
-         * Form, that contains form fields and action buttons.
-         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_form_demo
-         */
-        class $mol_form extends $.$mol_form {
-            form_fields() {
-                return [...this.view_find(view => view instanceof $mol_form_field)]
-                    .map(path => path[path.length - 1]);
-            }
-            submit_allowed() {
-                return this.form_fields().every(field => !field.bid());
-            }
-            submit_blocked() {
-                return !this.submit_allowed();
-            }
-            keydown(next) {
-                if (next.ctrlKey && next.keyCode === $mol_keyboard_code.enter && !this.submit_blocked())
-                    this.submit(next);
-            }
-            result(next) {
-                if (next instanceof Error)
-                    next = this.errors()[next.message] || next.message || this.form_invalid();
-                return next ?? '';
-            }
-            buttons() {
-                return [
-                    this.Submit(),
-                    ...this.result() ? [this.Result()] : [],
-                ];
-            }
-            submit(next) {
-                try {
-                    if (!this.submit_allowed()) {
-                        throw new Error('Form invalid');
-                    }
-                    this.save(next);
-                }
-                catch (e) {
-                    if ($mol_promise_like(e))
-                        $mol_fail_hidden(e);
-                    $mol_fail_log(e);
-                    this.result(e);
-                    return false;
-                }
-                this.result(this.message_done());
-                return true;
-            }
-        }
-        __decorate([
-            $mol_mem
-        ], $mol_form.prototype, "form_fields", null);
-        __decorate([
-            $mol_mem
-        ], $mol_form.prototype, "submit_allowed", null);
-        __decorate([
-            $mol_mem
-        ], $mol_form.prototype, "result", null);
-        __decorate([
-            $mol_mem
-        ], $mol_form.prototype, "buttons", null);
-        __decorate([
-            $mol_action
-        ], $mol_form.prototype, "submit", null);
-        $$.$mol_form = $mol_form;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-	($.$bog_sert_desk) = class $bog_sert_desk extends ($.$mol_list) {
-		Shop_title(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => (["Салон"]);
-			return obj;
-		}
-		shop_name(next){
-			if(next !== undefined) return next;
-			return "";
-		}
-		Name(){
-			const obj = new this.$.$mol_string();
-			(obj.hint) = () => ("Барбершоп «Бритва»");
-			(obj.value) = (next) => ((this.shop_name(next)));
-			return obj;
-		}
-		Name_field(){
-			const obj = new this.$.$mol_form_field();
-			(obj.name) = () => ("Название");
-			(obj.control) = () => ((this.Name()));
-			return obj;
-		}
-		shop_note(next){
-			if(next !== undefined) return next;
-			return "";
-		}
-		Note(){
-			const obj = new this.$.$bog_sert_area();
-			(obj.hint) = () => ("Ленина 1 · +7 900 000-00-00 · запись по телефону");
-			(obj.value) = (next) => ((this.shop_note(next)));
-			return obj;
-		}
-		Note_field(){
-			const obj = new this.$.$mol_form_field();
-			(obj.name) = () => ("Адрес, телефон, условия");
-			(obj.control) = () => ((this.Note()));
-			return obj;
-		}
-		shop_term(next){
-			if(next !== undefined) return next;
-			return 6;
-		}
-		Term(){
-			const obj = new this.$.$mol_number();
-			(obj.value_min) = () => (0);
-			(obj.value_max) = () => (60);
-			(obj.precision) = () => (1);
-			(obj.value) = (next) => ((this.shop_term(next)));
-			return obj;
-		}
-		Term_field(){
-			const obj = new this.$.$mol_form_field();
-			(obj.name) = () => ("Срок действия, месяцев");
-			(obj.control) = () => ((this.Term()));
-			return obj;
-		}
-		Shop_block(){
-			const obj = new this.$.$mol_list();
-			(obj.rows) = () => ([
-				(this.Shop_title()), 
-				(this.Name_field()), 
-				(this.Note_field()), 
-				(this.Term_field())
-			]);
-			return obj;
-		}
-		Issue_title(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => (["Новый сертификат"]);
-			return obj;
-		}
-		gift(next){
-			if(next !== undefined) return next;
-			return "";
-		}
-		Gift(){
-			const obj = new this.$.$mol_string();
-			(obj.hint) = () => ("Стрижка и борода");
-			(obj.value) = (next) => ((this.gift(next)));
-			return obj;
-		}
-		Gift_field(){
-			const obj = new this.$.$mol_form_field();
-			(obj.name) = () => ("Услуга или повод");
-			(obj.control) = () => ((this.Gift()));
-			return obj;
-		}
-		cost(next){
-			if(next !== undefined) return next;
-			return 0;
-		}
-		Cost(){
-			const obj = new this.$.$mol_number();
-			(obj.value_min) = () => (0);
-			(obj.precision) = () => (100);
-			(obj.value) = (next) => ((this.cost(next)));
-			return obj;
-		}
-		Cost_field(){
-			const obj = new this.$.$mol_form_field();
-			(obj.name) = () => ("Номинал в рублях, 0 — сертификат на услугу");
-			(obj.control) = () => ((this.Cost()));
-			return obj;
-		}
-		whom(next){
-			if(next !== undefined) return next;
-			return "";
-		}
-		Whom(){
-			const obj = new this.$.$mol_string();
-			(obj.hint) = () => ("Анна");
-			(obj.value) = (next) => ((this.whom(next)));
-			return obj;
-		}
-		Whom_field(){
-			const obj = new this.$.$mol_form_field();
-			(obj.name) = () => ("Кому");
-			(obj.control) = () => ((this.Whom()));
-			return obj;
-		}
-		from(next){
-			if(next !== undefined) return next;
-			return "";
-		}
-		From(){
-			const obj = new this.$.$mol_string();
-			(obj.hint) = () => ("Мама и папа");
-			(obj.value) = (next) => ((this.from(next)));
-			return obj;
-		}
-		From_field(){
-			const obj = new this.$.$mol_form_field();
-			(obj.name) = () => ("От кого");
-			(obj.control) = () => ((this.From()));
-			return obj;
-		}
-		mail(next){
-			if(next !== undefined) return next;
-			return "";
-		}
-		Mail(){
-			const obj = new this.$.$mol_string();
-			(obj.type) = () => ("email");
-			(obj.hint) = () => ("anna@example.com");
-			(obj.value) = (next) => ((this.mail(next)));
-			return obj;
-		}
-		Mail_field(){
-			const obj = new this.$.$mol_form_field();
-			(obj.name) = () => ("Почта получателя");
-			(obj.control) = () => ((this.Mail()));
-			return obj;
-		}
-		wish(next){
-			if(next !== undefined) return next;
-			return "";
-		}
-		Wish(){
-			const obj = new this.$.$bog_sert_area();
-			(obj.hint) = () => ("С днём рождения!");
-			(obj.value) = (next) => ((this.wish(next)));
-			return obj;
-		}
-		Wish_field(){
-			const obj = new this.$.$mol_form_field();
-			(obj.name) = () => ("Поздравление");
-			(obj.control) = () => ((this.Wish()));
-			return obj;
-		}
-		issue_allowed(){
-			return true;
-		}
-		issue(next){
-			if(next !== undefined) return next;
-			return null;
-		}
-		Issue(){
-			const obj = new this.$.$mol_button_major();
-			(obj.title) = () => ("Выпустить");
-			(obj.enabled) = () => ((this.issue_allowed()));
-			(obj.click) = (next) => ((this.issue(next)));
-			return obj;
-		}
-		Issue_block(){
-			const obj = new this.$.$mol_list();
-			(obj.rows) = () => ([
-				(this.Issue_title()), 
-				(this.Gift_field()), 
-				(this.Cost_field()), 
-				(this.Whom_field()), 
-				(this.From_field()), 
-				(this.Mail_field()), 
-				(this.Wish_field()), 
-				(this.Issue())
-			]);
-			return obj;
-		}
-		Last_title(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => (["Только что выпущен"]);
-			return obj;
-		}
-		last(){
-			return "";
-		}
-		Last_card(){
-			const obj = new this.$.$bog_sert_card();
-			(obj.uri) = () => ((this.last()));
-			return obj;
-		}
-		Last_block(){
-			const obj = new this.$.$mol_list();
-			(obj.rows) = () => ([(this.Last_title()), (this.Last_card())]);
-			return obj;
-		}
-		list_title(){
-			return "Выпущенные";
-		}
-		List_title(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ([(this.list_title())]);
-			return obj;
-		}
-		cert_rows(){
-			return [];
-		}
-		List(){
-			const obj = new this.$.$mol_list();
-			(obj.rows) = () => ((this.cert_rows()));
-			return obj;
-		}
-		List_block(){
-			const obj = new this.$.$mol_list();
-			(obj.rows) = () => ([(this.List_title()), (this.List())]);
-			return obj;
-		}
-		desk_rows(){
-			return [
-				(this.Shop_block()), 
-				(this.Issue_block()), 
-				(this.Last_block()), 
-				(this.List_block())
-			];
-		}
-		row_uri(id){
-			return "";
-		}
-		rows(){
-			return (this.desk_rows());
-		}
-		Row(id){
-			const obj = new this.$.$bog_sert_desk_row();
-			(obj.cert_uri) = () => ((this.row_uri(id)));
-			return obj;
-		}
-	};
-	($mol_mem(($.$bog_sert_desk.prototype), "Shop_title"));
-	($mol_mem(($.$bog_sert_desk.prototype), "shop_name"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Name"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Name_field"));
-	($mol_mem(($.$bog_sert_desk.prototype), "shop_note"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Note"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Note_field"));
-	($mol_mem(($.$bog_sert_desk.prototype), "shop_term"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Term"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Term_field"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Shop_block"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Issue_title"));
-	($mol_mem(($.$bog_sert_desk.prototype), "gift"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Gift"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Gift_field"));
-	($mol_mem(($.$bog_sert_desk.prototype), "cost"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Cost"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Cost_field"));
-	($mol_mem(($.$bog_sert_desk.prototype), "whom"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Whom"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Whom_field"));
-	($mol_mem(($.$bog_sert_desk.prototype), "from"));
-	($mol_mem(($.$bog_sert_desk.prototype), "From"));
-	($mol_mem(($.$bog_sert_desk.prototype), "From_field"));
-	($mol_mem(($.$bog_sert_desk.prototype), "mail"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Mail"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Mail_field"));
-	($mol_mem(($.$bog_sert_desk.prototype), "wish"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Wish"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Wish_field"));
-	($mol_mem(($.$bog_sert_desk.prototype), "issue"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Issue"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Issue_block"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Last_title"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Last_card"));
-	($mol_mem(($.$bog_sert_desk.prototype), "Last_block"));
-	($mol_mem(($.$bog_sert_desk.prototype), "List_title"));
-	($mol_mem(($.$bog_sert_desk.prototype), "List"));
-	($mol_mem(($.$bog_sert_desk.prototype), "List_block"));
-	($mol_mem_key(($.$bog_sert_desk.prototype), "Row"));
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    /**
-     * Салон: реквизиты и реестр выпущенных сертификатов.
-     * Лежит в домашнем ленде владельца, наружу не отдаётся.
-     */
-    class $bog_sert_shop extends $giper_baza_entity.with({
-        /** Адрес, телефон, условия. Печатается на каждом сертификате. */
-        Note: $giper_baza_atom_text,
-        /** Номиналы через запятую, из них собираются кнопки в форме выпуска. */
-        Cost: $giper_baza_atom_text,
-        /** Срок годности в месяцах. Числом по той же причине, что и номинал. */
-        Term: $giper_baza_atom_real,
-        /** Выпущенные сертификаты, каждый в своём ленде */
-        List: $giper_baza_list_link.to(() => $bog_sert_cert),
-    }, 'Sert') {
-    }
-    $.$bog_sert_shop = $bog_sert_shop;
-})($ || ($ = {}));
-
-;
-"use strict";
-
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        /**
-         * Кабинет салона: реквизиты, форма выпуска и реестр выпущенного.
-         * Всё лежит в домашнем ленде владельца, наружу уходят только сертификаты.
-         */
-        class $bog_sert_desk extends $.$bog_sert_desk {
-            /**
-             * Салон текущего пользователя.
-             *
-             * Без `@ $mol_mem`: метод отдаёт объект Базы, а $mol при сбросе ячейки
-             * дёрнул бы у него `destructor()`.
-             */
-            shop() {
-                return this.$.$giper_baza_glob.home().land().Data($bog_sert_shop);
-            }
-            shop_name(next) {
-                return this.shop().title(next);
-            }
-            shop_note(next) {
-                return this.shop().Note(next)?.val(next) ?? '';
-            }
-            shop_term(next) {
-                const term = next === undefined ? undefined : Math.max(0, Math.round(next));
-                return this.shop().Term(term)?.val(term) ?? 6;
-            }
-            gift(next) {
-                return next ?? '';
-            }
-            cost(next) {
-                return next ?? 0;
-            }
-            whom(next) {
-                return next ?? '';
-            }
-            from(next) {
-                return next ?? '';
-            }
-            mail(next) {
-                return next ?? '';
-            }
-            wish(next) {
-                return next ?? '';
-            }
-            /** Ссылка последнего выпущенного сертификата, чтобы сразу показать карточку. */
-            last(next) {
-                return next ?? '';
-            }
-            /** Пустой сертификат выпускать незачем: нужна либо услуга, либо сумма. */
-            issue_allowed() {
-                return Boolean(this.gift().trim()) || this.cost() > 0;
-            }
-            issue() {
-                // Чтения из Базы могут подвиснуть промисом, и тогда фибра стартует заново.
-                // Поэтому сначала всё читаем, и только потом пишем.
-                const shop = this.shop();
-                const name = shop.title();
-                const note = shop.Note()?.val() ?? '';
-                const term = this.shop_term();
-                const gift = this.gift().trim();
-                const cost = Math.max(0, Math.round(this.cost()));
-                const whom = this.whom().trim();
-                const from = this.from().trim();
-                const mail = this.mail().trim();
-                const wish = this.wish().trim();
-                if (!gift && !cost)
-                    return;
-                const now = new this.$.$mol_time_moment();
-                // Сертификат получает свой ленд: ссылка на него и есть предъявитель,
-                // поэтому читать его может каждый, кому эту ссылку прислали.
-                const cert = shop.List('auto').make([
-                    [null, this.$.$giper_baza_rank_read],
-                ]);
-                cert.Title('auto').val(gift);
-                cert.Shop('auto').val(name);
-                cert.Note('auto').val(note);
-                cert.Cost('auto').val(cost);
-                cert.Whom('auto').val(whom);
-                cert.From('auto').val(from);
-                cert.Mail('auto').val(mail);
-                cert.Wish('auto').val(wish);
-                cert.Made('auto').val(now);
-                if (term > 0)
-                    cert.Till('auto').val(now.shift({ month: term }));
-                // Номинал и услуга обычно повторяются от подарка к подарку, их оставляем.
-                this.whom('');
-                this.from('');
-                this.mail('');
-                this.wish('');
-                this.last(cert.link().str);
-            }
-            /** Ссылки выпущенных сертификатов, новые сверху. */
-            cert_uris() {
-                const items = this.shop().List()?.items() ?? [];
-                return items.map(link => link.str).reverse();
-            }
-            row_uri(uri) {
-                return uri;
-            }
-            cert_rows() {
-                return this.cert_uris().map(uri => this.Row(uri));
-            }
-            list_title() {
-                return `Выпущенные — ${this.cert_uris().length}`;
-            }
-            desk_rows() {
-                const rows = [
-                    this.Shop_block(),
-                    ...this.shop_name() ? [this.Issue_block()] : [],
-                    ...this.last() ? [this.Last_block()] : [],
-                    ...this.cert_uris().length ? [this.List_block()] : [],
-                ];
-                return rows;
-            }
-        }
-        __decorate([
-            $mol_mem
-        ], $bog_sert_desk.prototype, "shop_name", null);
-        __decorate([
-            $mol_mem
-        ], $bog_sert_desk.prototype, "shop_note", null);
-        __decorate([
-            $mol_mem
-        ], $bog_sert_desk.prototype, "shop_term", null);
-        __decorate([
-            $mol_mem
-        ], $bog_sert_desk.prototype, "gift", null);
-        __decorate([
-            $mol_mem
-        ], $bog_sert_desk.prototype, "cost", null);
-        __decorate([
-            $mol_mem
-        ], $bog_sert_desk.prototype, "whom", null);
-        __decorate([
-            $mol_mem
-        ], $bog_sert_desk.prototype, "from", null);
-        __decorate([
-            $mol_mem
-        ], $bog_sert_desk.prototype, "mail", null);
-        __decorate([
-            $mol_mem
-        ], $bog_sert_desk.prototype, "wish", null);
-        __decorate([
-            $mol_mem
-        ], $bog_sert_desk.prototype, "last", null);
-        __decorate([
-            $mol_action
-        ], $bog_sert_desk.prototype, "issue", null);
-        __decorate([
-            $mol_mem
-        ], $bog_sert_desk.prototype, "cert_rows", null);
-        $$.$bog_sert_desk = $bog_sert_desk;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_define($bog_sert_desk, {
-        flex: {
-            direction: 'column',
-        },
-        gap: $mol_gap.block,
-        padding: $mol_gap.block,
-        maxWidth: '42rem',
-        width: '100%',
-        margin: {
-            left: 'auto',
-            right: 'auto',
-        },
-        Shop_block: {
-            flex: {
-                direction: 'column',
-            },
-            gap: $mol_gap.text,
-            padding: $mol_gap.block,
-            background: {
-                color: $mol_theme.card,
-            },
-            border: {
-                radius: $mol_gap.round,
-            },
-        },
-        Issue_block: {
-            flex: {
-                direction: 'column',
-            },
-            gap: $mol_gap.text,
-            padding: $mol_gap.block,
-            background: {
-                color: $mol_theme.card,
-            },
-            border: {
-                radius: $mol_gap.round,
-            },
-        },
-        Last_block: {
-            flex: {
-                direction: 'column',
-            },
-            gap: $mol_gap.text,
-        },
-        List_block: {
-            flex: {
-                direction: 'column',
-            },
-            gap: $mol_gap.text,
-        },
-        Shop_title: {
-            font: {
-                size: '1.1rem',
-                weight: 'bold',
-            },
-        },
-        Issue_title: {
-            font: {
-                size: '1.1rem',
-                weight: 'bold',
-            },
-        },
-        Last_title: {
-            font: {
-                size: '1.1rem',
-                weight: 'bold',
-            },
-        },
-        List_title: {
-            font: {
-                size: '1.1rem',
-                weight: 'bold',
-            },
-        },
-        Issue: {
-            alignSelf: 'flex-start',
-            margin: {
-                top: $mol_gap.text,
-            },
-        },
-        Last_card: {
-            padding: 0,
-        },
-        List: {
-            flex: {
-                direction: 'column',
-            },
-            gap: '1px',
-        },
-    });
-})($ || ($ = {}));
-
-;
 	($.$mol_float) = class $mol_float extends ($.$mol_view) {
 		style(){
 			return {...(super.style()), "minHeight": "auto"};
@@ -23415,6 +20153,122 @@ var $;
 ;
 "use strict";
 
+
+;
+	($.$mol_check) = class $mol_check extends ($.$mol_button_minor) {
+		checked(next){
+			if(next !== undefined) return next;
+			return false;
+		}
+		aria_checked(){
+			return "false";
+		}
+		aria_role(){
+			return "checkbox";
+		}
+		Icon(){
+			return null;
+		}
+		title(){
+			return "";
+		}
+		Title(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.title())]);
+			return obj;
+		}
+		label(){
+			return [(this.Title())];
+		}
+		attr(){
+			return {
+				...(super.attr()), 
+				"mol_check_checked": (this.checked()), 
+				"aria-checked": (this.aria_checked()), 
+				"role": (this.aria_role())
+			};
+		}
+		sub(){
+			return [(this.Icon()), (this.label())];
+		}
+	};
+	($mol_mem(($.$mol_check.prototype), "checked"));
+	($mol_mem(($.$mol_check.prototype), "Title"));
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_dom_event extends $mol_object {
+        native;
+        constructor(native) {
+            super();
+            this.native = native;
+        }
+        prevented(next) {
+            if (next)
+                this.native.preventDefault();
+            return this.native.defaultPrevented;
+        }
+        static wrap(event) {
+            return new this.$.$mol_dom_event(event);
+        }
+    }
+    __decorate([
+        $mol_action
+    ], $mol_dom_event.prototype, "prevented", null);
+    __decorate([
+        $mol_action
+    ], $mol_dom_event, "wrap", null);
+    $.$mol_dom_event = $mol_dom_event;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/check/check.css", "[mol_check] {\n\tflex: 0 0 auto;\n\tjustify-content: flex-start;\n\talign-content: center;\n\t/* align-items: flex-start; */\n\tborder: none;\n\tfont-weight: inherit;\n\tbox-shadow: none;\n\ttext-align: start;\n\tdisplay: inline-flex;\n\tflex-wrap: nowrap;\n}\n\n[mol_check_title] {\n\tflex-shrink: 1;\n}\n");
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Checkbox UI component. See Variants for more concrete implementations.
+         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_check_box_demo
+         */
+        class $mol_check extends $.$mol_check {
+            click(next) {
+                const event = next ? $mol_dom_event.wrap(next) : null;
+                if (event?.prevented())
+                    return;
+                event?.prevented(true);
+                this.checked(!this.checked());
+            }
+            sub() {
+                return [
+                    ...$mol_maybe(this.Icon()),
+                    ...this.label(),
+                ];
+            }
+            label() {
+                return this.title() ? super.label() : [];
+            }
+            aria_checked() {
+                return String(this.checked());
+            }
+        }
+        $$.$mol_check = $mol_check;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
 
 ;
 	($.$mol_check_expand) = class $mol_check_expand extends ($.$mol_check) {
@@ -23631,6 +20485,58 @@ var $;
 	};
 	($.$mol_grid_number) = class $mol_grid_number extends ($.$mol_grid_cell) {};
 
+
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_state_session extends $mol_object {
+        static 'native()';
+        static native() {
+            if (this['native()'])
+                return this['native()'];
+            check: try {
+                const native = $mol_dom_context.sessionStorage;
+                if (!native)
+                    break check;
+                native.setItem('', '');
+                native.removeItem('');
+                return this['native()'] = native;
+            }
+            catch (error) {
+                console.warn(error);
+            }
+            return this['native()'] = {
+                getItem(key) {
+                    return this[':' + key];
+                },
+                setItem(key, value) {
+                    this[':' + key] = value;
+                },
+                removeItem(key) {
+                    this[':' + key] = void 0;
+                }
+            };
+        }
+        static value(key, next) {
+            if (next === void 0)
+                return JSON.parse(this.native().getItem(key) || 'null');
+            if (next === null)
+                this.native().removeItem(key);
+            else
+                this.native().setItem(key, JSON.stringify(next));
+            return next;
+        }
+        prefix() { return ''; }
+        value(key, next) {
+            return $mol_state_session.value(this.prefix() + '.' + key, next);
+        }
+    }
+    __decorate([
+        $mol_mem_key
+    ], $mol_state_session, "value", null);
+    $.$mol_state_session = $mol_state_session;
+})($ || ($ = {}));
 
 ;
 "use strict";
@@ -25249,6 +22155,741 @@ var $;
 })($ || ($ = {}));
 
 ;
+	($.$bog_qr) = class $bog_qr extends ($.$mol_svg_root) {
+		stop_offset(id){
+			return "0%";
+		}
+		stop_color(id){
+			return "";
+		}
+		qr_view_box(){
+			return "0 0 1 1";
+		}
+		grad_x1(){
+			return "0";
+		}
+		grad_y1(){
+			return "0";
+		}
+		grad_x2(){
+			return "1";
+		}
+		grad_y2(){
+			return "1";
+		}
+		gradient_stop_list(){
+			return [];
+		}
+		Gradient(){
+			const obj = new this.$.$mol_svg();
+			(obj.dom_name) = () => ("linearGradient");
+			(obj.attr) = () => ({
+				...(this.$.$mol_svg.prototype.attr.call(obj)), 
+				"id": (this.gradient_id()), 
+				"x1": (this.grad_x1()), 
+				"y1": (this.grad_y1()), 
+				"x2": (this.grad_x2()), 
+				"y2": (this.grad_y2())
+			});
+			(obj.sub) = () => ((this.gradient_stop_list()));
+			return obj;
+		}
+		Defs(){
+			const obj = new this.$.$mol_svg();
+			(obj.dom_name) = () => ("defs");
+			(obj.sub) = () => ([(this.Gradient())]);
+			return obj;
+		}
+		modules_d(){
+			return "";
+		}
+		Modules(){
+			const obj = new this.$.$mol_svg_path();
+			(obj.geometry) = () => ((this.modules_d()));
+			(obj.attr) = () => ({...(this.$.$mol_svg_path.prototype.attr.call(obj)), "fill": (this.gradient_fill())});
+			return obj;
+		}
+		rings_d(){
+			return "";
+		}
+		Rings(){
+			const obj = new this.$.$mol_svg_path();
+			(obj.geometry) = () => ((this.rings_d()));
+			(obj.attr) = () => ({
+				...(this.$.$mol_svg_path.prototype.attr.call(obj)), 
+				"fill": (this.gradient_fill()), 
+				"fill-rule": "evenodd"
+			});
+			return obj;
+		}
+		centers_d(){
+			return "";
+		}
+		Centers(){
+			const obj = new this.$.$mol_svg_path();
+			(obj.geometry) = () => ((this.centers_d()));
+			(obj.attr) = () => ({...(this.$.$mol_svg_path.prototype.attr.call(obj)), "fill": (this.gradient_fill())});
+			return obj;
+		}
+		center_x(){
+			return "0";
+		}
+		center_y(){
+			return "0";
+		}
+		center_size(){
+			return "0";
+		}
+		Center_body(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ((this.center()));
+			return obj;
+		}
+		Center_wrap(){
+			const obj = new this.$.$mol_svg();
+			(obj.dom_name) = () => ("foreignObject");
+			(obj.attr) = () => ({
+				...(this.$.$mol_svg.prototype.attr.call(obj)), 
+				"x": (this.center_x()), 
+				"y": (this.center_y()), 
+				"width": (this.center_size()), 
+				"height": (this.center_size())
+			});
+			(obj.sub) = () => ([(this.Center_body())]);
+			return obj;
+		}
+		uri(){
+			return "";
+		}
+		module_radius(){
+			return 0.35;
+		}
+		finder_radius(){
+			return 1.2;
+		}
+		gradient_angle(){
+			return 45;
+		}
+		error_correction(){
+			return "M";
+		}
+		quiet_zone(){
+			return 2;
+		}
+		center(){
+			return [];
+		}
+		gradient_id(){
+			return "qr-grad";
+		}
+		gradient_fill(){
+			return "url(#qr-grad)";
+		}
+		gradient_stops(){
+			return ["var(--mol_theme_special)", "var(--mol_theme_focus)"];
+		}
+		Stop(id){
+			const obj = new this.$.$mol_svg();
+			(obj.dom_name) = () => ("stop");
+			(obj.attr) = () => ({
+				...(this.$.$mol_svg.prototype.attr.call(obj)), 
+				"offset": (this.stop_offset(id)), 
+				"stop-color": (this.stop_color(id))
+			});
+			return obj;
+		}
+		view_box(){
+			return (this.qr_view_box());
+		}
+		sub(){
+			return [
+				(this.Defs()), 
+				(this.Modules()), 
+				(this.Rings()), 
+				(this.Centers()), 
+				(this.Center_wrap())
+			];
+		}
+	};
+	($mol_mem(($.$bog_qr.prototype), "Gradient"));
+	($mol_mem(($.$bog_qr.prototype), "Defs"));
+	($mol_mem(($.$bog_qr.prototype), "Modules"));
+	($mol_mem(($.$bog_qr.prototype), "Rings"));
+	($mol_mem(($.$bog_qr.prototype), "Centers"));
+	($mol_mem(($.$bog_qr.prototype), "Center_body"));
+	($mol_mem(($.$bog_qr.prototype), "Center_wrap"));
+	($mol_mem_key(($.$bog_qr.prototype), "Stop"));
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    /** Dynamic sources import. */
+    class $mol_import extends $mol_object2 {
+        static module(uri) {
+            $mol_wire_solid();
+            return $mol_wire_sync(this).module_async(uri);
+        }
+        static module_async(uri) {
+            return import(uri);
+        }
+        static script(uri) {
+            $mol_wire_solid();
+            return $mol_wire_sync(this).script_async(uri);
+        }
+        static script_async(uri) {
+            const doc = $mol_dom_context.document;
+            const script = doc.createElement('script');
+            script.src = uri;
+            doc.head.appendChild(script);
+            return new Promise((done, fail) => {
+                script.onload = () => done($mol_dom_context);
+                script.onerror = () => fail(new Error(`Can not import ${uri}`));
+            });
+        }
+        static style(uri) {
+            return $mol_wire_sync(this).style_async(uri);
+        }
+        static style_async(uri) {
+            const doc = $mol_dom_context.document;
+            const style = doc.createElement('link');
+            style.rel = 'stylesheet';
+            style.href = uri;
+            doc.head.appendChild(style);
+            return new Promise((done, fail) => {
+                style.onload = () => done(style.sheet);
+                style.onerror = () => fail(new Error(`Can not import ${uri}`));
+            });
+        }
+    }
+    __decorate([
+        $mol_mem_key
+    ], $mol_import, "module", null);
+    __decorate([
+        $mol_mem_key
+    ], $mol_import, "script", null);
+    __decorate([
+        $mol_mem_key
+    ], $mol_import, "style", null);
+    $.$mol_import = $mol_import;
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        let grad_counter = 0;
+        class $bog_qr extends $.$bog_qr {
+            gradient_id() {
+                return 'qr-grad-' + (++grad_counter);
+            }
+            gradient_fill() {
+                return `url(#${this.gradient_id()})`;
+            }
+            grad_x1() {
+                const a = this.gradient_angle() * Math.PI / 180;
+                return String(0.5 - Math.cos(a) * 0.5);
+            }
+            grad_y1() {
+                const a = this.gradient_angle() * Math.PI / 180;
+                return String(0.5 - Math.sin(a) * 0.5);
+            }
+            grad_x2() {
+                const a = this.gradient_angle() * Math.PI / 180;
+                return String(0.5 + Math.cos(a) * 0.5);
+            }
+            grad_y2() {
+                const a = this.gradient_angle() * Math.PI / 180;
+                return String(0.5 + Math.sin(a) * 0.5);
+            }
+            gradient_stop_list() {
+                const colors = this.gradient_stops();
+                return colors.map((_, i) => this.Stop(i));
+            }
+            stop_offset(index) {
+                const colors = this.gradient_stops();
+                if (colors.length <= 1)
+                    return '0%';
+                return Math.round(index / (colors.length - 1) * 100) + '%';
+            }
+            stop_color(index) {
+                return this.gradient_stops()[index];
+            }
+            qr_lib() {
+                return $mol_import.script('https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js');
+            }
+            qr_matrix() {
+                this.qr_lib();
+                const data = this.uri();
+                if (!data)
+                    return null;
+                const qr = qrcode(0, this.error_correction());
+                qr.addData(data);
+                qr.make();
+                const count = qr.getModuleCount();
+                const matrix = [];
+                for (let r = 0; r < count; r++) {
+                    matrix[r] = [];
+                    for (let c = 0; c < count; c++) {
+                        matrix[r][c] = qr.isDark(r, c);
+                    }
+                }
+                return matrix;
+            }
+            qr_view_box() {
+                const matrix = this.qr_matrix();
+                if (!matrix)
+                    return '0 0 1 1';
+                const total = matrix.length + this.quiet_zone() * 2;
+                return `0 0 ${total} ${total}`;
+            }
+            qr_paths() {
+                const matrix = this.qr_matrix();
+                if (!matrix)
+                    return { modules: '', rings: '', centers: '' };
+                const count = matrix.length;
+                const quiet = this.quiet_zone();
+                const r = this.module_radius();
+                const dark = (row, col) => row >= 0 && row < count && col >= 0 && col < count && matrix[row][col];
+                const isFinder = (row, col) => (row < 7 && col < 7) || (row < 7 && col >= count - 7) || (row >= count - 7 && col < 7);
+                const hasCenter = this.center().length > 0;
+                const centerRadius = hasCenter ? count * 0.15 : 0;
+                const centerMid = count / 2;
+                const isCenter = (row, col) => {
+                    if (!hasCenter)
+                        return false;
+                    const dx = col + 0.5 - centerMid;
+                    const dy = row + 0.5 - centerMid;
+                    return dx * dx + dy * dy < centerRadius * centerRadius;
+                };
+                let modules = '';
+                for (let row = 0; row < count; row++) {
+                    for (let col = 0; col < count; col++) {
+                        if (!matrix[row][col])
+                            continue;
+                        if (isFinder(row, col))
+                            continue;
+                        if (isCenter(row, col))
+                            continue;
+                        const x = col + quiet;
+                        const y = row + quiet;
+                        const top = dark(row - 1, col);
+                        const bottom = dark(row + 1, col);
+                        const left = dark(row, col - 1);
+                        const right = dark(row, col + 1);
+                        const alone = !top && !bottom && !left && !right;
+                        if (alone) {
+                            const cx = x + 0.5;
+                            const cy = y + 0.5;
+                            const cr = 0.5;
+                            modules += `M${cx - cr},${cy}A${cr},${cr},0,1,1,${cx + cr},${cy}A${cr},${cr},0,1,1,${cx - cr},${cy}Z`;
+                        }
+                        else {
+                            const tl = !top && !left ? r : 0;
+                            const tr = !top && !right ? r : 0;
+                            const br = !bottom && !right ? r : 0;
+                            const bl = !bottom && !left ? r : 0;
+                            modules += this.rect_path(x, y, 1, 1, tl, tr, br, bl);
+                        }
+                    }
+                }
+                const fr = this.finder_radius();
+                const finders = [
+                    [quiet, quiet],
+                    [count - 7 + quiet, quiet],
+                    [quiet, count - 7 + quiet],
+                ];
+                let rings = '';
+                let centers = '';
+                for (const [fx, fy] of finders) {
+                    rings += this.rect_path(fx, fy, 7, 7, fr, fr, fr, fr);
+                    rings += this.rect_path(fx + 1, fy + 1, 5, 5, fr * 0.7, fr * 0.7, fr * 0.7, fr * 0.7);
+                    centers += this.rect_path(fx + 2, fy + 2, 3, 3, fr * 0.5, fr * 0.5, fr * 0.5, fr * 0.5);
+                }
+                return { modules, rings, centers };
+            }
+            center_area() {
+                const matrix = this.qr_matrix();
+                if (!matrix || this.center().length === 0)
+                    return { x: 0, y: 0, size: 0 };
+                const count = matrix.length;
+                const quiet = this.quiet_zone();
+                const centerSize = count * 0.3;
+                const total = count + quiet * 2;
+                return {
+                    x: (total - centerSize) / 2,
+                    y: (total - centerSize) / 2,
+                    size: centerSize,
+                };
+            }
+            center_x() {
+                return String(this.center_area().x);
+            }
+            center_y() {
+                return String(this.center_area().y);
+            }
+            center_size() {
+                return String(this.center_area().size);
+            }
+            modules_d() {
+                return this.qr_paths().modules;
+            }
+            rings_d() {
+                return this.qr_paths().rings;
+            }
+            centers_d() {
+                return this.qr_paths().centers;
+            }
+            rect_path(x, y, w, h, tl, tr, br, bl) {
+                return [
+                    `M${x + tl},${y}`,
+                    `H${x + w - tr}`,
+                    tr ? `A${tr},${tr},0,0,1,${x + w},${y + tr}` : '',
+                    `V${y + h - br}`,
+                    br ? `A${br},${br},0,0,1,${x + w - br},${y + h}` : '',
+                    `H${x + bl}`,
+                    bl ? `A${bl},${bl},0,0,1,${x},${y + h - bl}` : '',
+                    `V${y + tl}`,
+                    tl ? `A${tl},${tl},0,0,1,${x + tl},${y}` : '',
+                    'Z',
+                ]
+                    .filter(Boolean)
+                    .join('');
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_qr.prototype, "gradient_id", null);
+        __decorate([
+            $mol_mem
+        ], $bog_qr.prototype, "gradient_fill", null);
+        __decorate([
+            $mol_mem
+        ], $bog_qr.prototype, "grad_x1", null);
+        __decorate([
+            $mol_mem
+        ], $bog_qr.prototype, "grad_y1", null);
+        __decorate([
+            $mol_mem
+        ], $bog_qr.prototype, "grad_x2", null);
+        __decorate([
+            $mol_mem
+        ], $bog_qr.prototype, "grad_y2", null);
+        __decorate([
+            $mol_mem
+        ], $bog_qr.prototype, "gradient_stop_list", null);
+        __decorate([
+            $mol_mem
+        ], $bog_qr.prototype, "qr_lib", null);
+        __decorate([
+            $mol_mem
+        ], $bog_qr.prototype, "qr_matrix", null);
+        __decorate([
+            $mol_mem
+        ], $bog_qr.prototype, "qr_view_box", null);
+        __decorate([
+            $mol_mem
+        ], $bog_qr.prototype, "qr_paths", null);
+        __decorate([
+            $mol_mem
+        ], $bog_qr.prototype, "center_area", null);
+        $$.$bog_qr = $bog_qr;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        $mol_style_define($bog_qr, {
+            width: '300px',
+            height: '300px',
+            Center_body: {
+                width: '80%',
+                height: '80%',
+                position: 'absolute',
+                top: '10%',
+                left: '10%',
+            },
+        });
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+	($.$mol_button_major) = class $mol_button_major extends ($.$mol_button_minor) {
+		theme(){
+			return "$mol_theme_base";
+		}
+	};
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/button/major/major.view.css", "[mol_button_major] {\n\tbackground-color: var(--mol_theme_back);\n\tcolor: var(--mol_theme_text);\n}\n");
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+	($.$mol_status) = class $mol_status extends ($.$mol_view) {
+		message(){
+			return "";
+		}
+		status(){
+			return (this.title());
+		}
+		minimal_height(){
+			return 24;
+		}
+		minimal_width(){
+			return 0;
+		}
+		sub(){
+			return [(this.message())];
+		}
+	};
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $mol_status extends $.$mol_status {
+            message() {
+                try {
+                    return this.status() ?? null;
+                }
+                catch (error) {
+                    if (error instanceof Promise)
+                        $mol_fail_hidden(error);
+                    $mol_fail_log(error);
+                    return error.message;
+                }
+            }
+        }
+        $$.$mol_status = $mol_status;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/status/status.view.css", "[mol_status] {\n\tpadding: var(--mol_gap_text);\n\tborder-radius: var(--mol_gap_round);\n\tdisplay: block;\n\tflex-shrink: 1;\n\tword-wrap: break-word;\n}\n\n[mol_status]:not([mol_view_error=\"Promise\"]) {\n\tcolor: var(--mol_theme_focus);\n}\n\n[mol_status]:not([mol_view_error=\"Promise\"]):empty {\n\tdisplay: none;\n}\n");
+})($ || ($ = {}));
+
+;
+	($.$mol_row) = class $mol_row extends ($.$mol_view) {};
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/row/row.view.css", "[mol_row] {\n\tdisplay: flex;\n\tflex-wrap: wrap;\n\talign-items: flex-start;\n\talign-content: flex-start;\n\tjustify-content: flex-start;\n\tpadding: var(--mol_gap_block);\n\tgap: var(--mol_gap_block);\n\tflex: 0 0 auto;\n\tbox-sizing: border-box;\n\tmax-width: 100%;\n}\n\n[mol_row] > * {\n\tmax-width: 100%;\n}\n");
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+	($.$mol_form) = class $mol_form extends ($.$mol_list) {
+		keydown(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		form_invalid(){
+			return (this.$.$mol_locale.text("$mol_form_form_invalid"));
+		}
+		form_fields(){
+			return [];
+		}
+		body(){
+			return (this.form_fields());
+		}
+		Body(){
+			const obj = new this.$.$mol_list();
+			(obj.sub) = () => ((this.body()));
+			return obj;
+		}
+		submit_title(){
+			return (this.$.$mol_locale.text("$mol_form_submit_title"));
+		}
+		submit_hint(){
+			return "";
+		}
+		submit_activate(next){
+			return (this.Submit().activate(next));
+		}
+		submit(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Submit(){
+			const obj = new this.$.$mol_button_major();
+			(obj.title) = () => ((this.submit_title()));
+			(obj.hint) = () => ((this.submit_hint()));
+			(obj.click) = (next) => ((this.submit(next)));
+			return obj;
+		}
+		result(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Result(){
+			const obj = new this.$.$mol_status();
+			(obj.message) = () => ((this.result()));
+			return obj;
+		}
+		buttons(){
+			return [(this.Submit()), (this.Result())];
+		}
+		foot(){
+			return (this.buttons());
+		}
+		Foot(){
+			const obj = new this.$.$mol_row();
+			(obj.sub) = () => ((this.foot()));
+			return obj;
+		}
+		submit_allowed(){
+			return true;
+		}
+		submit_blocked(){
+			return false;
+		}
+		event(){
+			return {...(super.event()), "keydown": (next) => (this.keydown(next))};
+		}
+		save(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		message_done(){
+			return (this.$.$mol_locale.text("$mol_form_message_done"));
+		}
+		errors(){
+			return {"Form invalid": (this.form_invalid())};
+		}
+		rows(){
+			return [(this.Body()), (this.Foot())];
+		}
+	};
+	($mol_mem(($.$mol_form.prototype), "keydown"));
+	($mol_mem(($.$mol_form.prototype), "Body"));
+	($mol_mem(($.$mol_form.prototype), "submit"));
+	($mol_mem(($.$mol_form.prototype), "Submit"));
+	($mol_mem(($.$mol_form.prototype), "result"));
+	($mol_mem(($.$mol_form.prototype), "Result"));
+	($mol_mem(($.$mol_form.prototype), "Foot"));
+	($mol_mem(($.$mol_form.prototype), "save"));
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/form/form.view.css", "[mol_form] {\r\n\tgap: var(--mol_gap_block);\r\n}\r\n\r\n[mol_form_body] {\r\n\tgap: var(--mol_gap_block);\r\n}");
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Form, that contains form fields and action buttons.
+         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_form_demo
+         */
+        class $mol_form extends $.$mol_form {
+            form_fields() {
+                return [...this.view_find(view => view instanceof $mol_form_field)]
+                    .map(path => path[path.length - 1]);
+            }
+            submit_allowed() {
+                return this.form_fields().every(field => !field.bid());
+            }
+            submit_blocked() {
+                return !this.submit_allowed();
+            }
+            keydown(next) {
+                if (next.ctrlKey && next.keyCode === $mol_keyboard_code.enter && !this.submit_blocked())
+                    this.submit(next);
+            }
+            result(next) {
+                if (next instanceof Error)
+                    next = this.errors()[next.message] || next.message || this.form_invalid();
+                return next ?? '';
+            }
+            buttons() {
+                return [
+                    this.Submit(),
+                    ...this.result() ? [this.Result()] : [],
+                ];
+            }
+            submit(next) {
+                try {
+                    if (!this.submit_allowed()) {
+                        throw new Error('Form invalid');
+                    }
+                    this.save(next);
+                }
+                catch (e) {
+                    if ($mol_promise_like(e))
+                        $mol_fail_hidden(e);
+                    $mol_fail_log(e);
+                    this.result(e);
+                    return false;
+                }
+                this.result(this.message_done());
+                return true;
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $mol_form.prototype, "form_fields", null);
+        __decorate([
+            $mol_mem
+        ], $mol_form.prototype, "submit_allowed", null);
+        __decorate([
+            $mol_mem
+        ], $mol_form.prototype, "result", null);
+        __decorate([
+            $mol_mem
+        ], $mol_form.prototype, "buttons", null);
+        __decorate([
+            $mol_action
+        ], $mol_form.prototype, "submit", null);
+        $$.$mol_form = $mol_form;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
 	($.$mol_text_list) = class $mol_text_list extends ($.$mol_text) {
 		type(){
 			return "";
@@ -25289,10 +22930,2821 @@ var $;
 
 
 ;
+	($.$bog_sert_desk_shop) = class $bog_sert_desk_shop extends ($.$bog_sert_page) {
+		shop_name(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		Name(){
+			const obj = new this.$.$mol_string();
+			(obj.hint) = () => ("Барбершоп «Бритва»");
+			(obj.value) = (next) => ((this.shop_name(next)));
+			return obj;
+		}
+		Name_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Название");
+			(obj.control) = () => ((this.Name()));
+			return obj;
+		}
+		shop_note(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		Note(){
+			const obj = new this.$.$bog_sert_area();
+			(obj.hint) = () => ("Ленина 1 · +7 900 000-00-00 · запись по телефону");
+			(obj.value) = (next) => ((this.shop_note(next)));
+			return obj;
+		}
+		Note_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Адрес, телефон, условия");
+			(obj.control) = () => ((this.Note()));
+			return obj;
+		}
+		shop_term(next){
+			if(next !== undefined) return next;
+			return 6;
+		}
+		Term(){
+			const obj = new this.$.$mol_number();
+			(obj.value_min) = () => (0);
+			(obj.value_max) = () => (60);
+			(obj.precision) = () => (1);
+			(obj.value) = (next) => ((this.shop_term(next)));
+			return obj;
+		}
+		Term_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Срок действия сертификата, месяцев");
+			(obj.control) = () => ((this.Term()));
+			return obj;
+		}
+		Form(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ([
+				(this.Name_field()), 
+				(this.Note_field()), 
+				(this.Term_field())
+			]);
+			return obj;
+		}
+		Address_title(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => (["Витрина"]);
+			return obj;
+		}
+		Address_hint(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ("Распечатайте этот код и положите на стойку. Гость сканирует его телефоном, открывает витрину и заводит карту. Ничего заполнять и никуда регистрироваться ему не придётся.");
+			return obj;
+		}
+		address(){
+			return "";
+		}
+		Address_value(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.address())]);
+			return obj;
+		}
+		address_copy(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Address_copy(){
+			const obj = new this.$.$mol_button_minor();
+			(obj.title) = () => ("Скопировать адрес");
+			(obj.click) = (next) => ((this.address_copy(next)));
+			return obj;
+		}
+		Code(){
+			const obj = new this.$.$bog_qr();
+			(obj.uri) = () => ((this.address()));
+			(obj.error_correction) = () => ("M");
+			return obj;
+		}
+		address_rows(){
+			return [
+				(this.Address_title()), 
+				(this.Address_hint()), 
+				(this.Address_value()), 
+				(this.Address_copy()), 
+				(this.Code())
+			];
+		}
+		Address_block(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ((this.address_rows()));
+			return obj;
+		}
+		Claim_title(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => (["Короткое имя"]);
+			return obj;
+		}
+		Claim_hint(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ("Имя делает адрес читаемым, но не защищает его: занять то же имя технически может кто угодно.\n\nСертификаты и карты гостей всегда ссылаются на сам салон, поэтому имя можно потерять без последствий.");
+			return obj;
+		}
+		claim_raw(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		Claim(){
+			const obj = new this.$.$mol_string();
+			(obj.hint) = () => ("coffier_shopper");
+			(obj.value) = (next) => ((this.claim_raw(next)));
+			return obj;
+		}
+		Claim_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Имя в адресе");
+			(obj.control) = () => ((this.Claim()));
+			return obj;
+		}
+		claim_allowed(){
+			return true;
+		}
+		claim_take(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Claim_take(){
+			const obj = new this.$.$mol_button_major();
+			(obj.title) = () => ("Занять имя");
+			(obj.enabled) = () => ((this.claim_allowed()));
+			(obj.click) = (next) => ((this.claim_take(next)));
+			return obj;
+		}
+		claim_status(){
+			return "";
+		}
+		Claim_status(){
+			const obj = new this.$.$mol_status();
+			(obj.message) = () => ((this.claim_status()));
+			return obj;
+		}
+		Claim_block(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ([
+				(this.Claim_title()), 
+				(this.Claim_hint()), 
+				(this.Claim_field()), 
+				(this.Claim_take()), 
+				(this.Claim_status())
+			]);
+			return obj;
+		}
+		title(){
+			return "Салон";
+		}
+		body(){
+			return [
+				(this.Form()), 
+				(this.Address_block()), 
+				(this.Claim_block())
+			];
+		}
+	};
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "shop_name"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Name"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Name_field"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "shop_note"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Note"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Note_field"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "shop_term"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Term"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Term_field"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Form"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Address_title"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Address_hint"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Address_value"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "address_copy"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Address_copy"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Code"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Address_block"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Claim_title"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Claim_hint"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "claim_raw"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Claim"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Claim_field"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "claim_take"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Claim_take"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Claim_status"));
+	($mol_mem(($.$bog_sert_desk_shop.prototype), "Claim_block"));
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    /**
+     * Общий реестр имён витрин: имя → ленд салона.
+     *
+     * Писать сюда может кто угодно с доказательством работы, потому что иначе
+     * занять имя было бы некому. Отсюда честное ограничение: **имя это удобство,
+     * а не собственность**. Время в записи ставит её же автор, так что заявку
+     * задним числом никто не запрещает, и арбитра в системе нет.
+     *
+     * Поэтому всё, что имеет ценность, ссылается на ленд, а не на имя: и
+     * сертификат, и карта гостя, и печатный код на стойке. Перехват имени
+     * ломает вход на витрину и ничего больше.
+     */
+    class $bog_sert_name extends $giper_baza_dict_to($giper_baza_atom_text) {
+        /**
+         * Ленд реестра.
+         *
+         * `land_grab` отдаёт случайный ленд, вычислить его заново нельзя, поэтому
+         * заведённый однажды он вписан сюда руками. Пустая строка означает, что
+         * реестра нет: тогда имена просто не работают, а адреса по ленду — да.
+         */
+        static land = '1ebbGWHm_Pmjwfhn4';
+        /**
+         * Имя приводится к скучному виду, чтобы адрес не зависел от регистра,
+         * пробелов и раскладки. Кириллица и знаки схлопываются в подчёркивание,
+         * поэтому «Кофе» именем стать не может, а «Coffier Shopper» может.
+         */
+        static normal(raw) {
+            return raw
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '_')
+                .slice(0, 32)
+                .replace(/^_+|_+$/g, '');
+        }
+        /**
+         * Все заявки на имя, ранняя первой.
+         *
+         * Чтение, а не запись: побеждает тот, чья запись легла раньше, при равном
+         * времени — меньший лорд. Одинаковое правило у всех, кто читает реестр,
+         * поэтому сходятся все на одном ответе.
+         */
+        static claims(dict, name) {
+            const atom = dict.key(name);
+            if (!atom)
+                return [];
+            const land = dict.land();
+            return atom.units_of(null)
+                .map(unit => ({
+                shop: String(land.sand_decode(unit) ?? ''),
+                time: unit.time(),
+                lord: unit.lord().str,
+            }))
+                .filter(claim => $giper_baza_link.check(claim.shop))
+                .sort((a, b) => (a.time - b.time) || (a.lord < b.lord ? -1 : a.lord > b.lord ? 1 : 0));
+        }
+    }
+    $.$bog_sert_name = $bog_sert_name;
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /** Реквизиты салона и адрес его витрины. */
+        class $bog_sert_desk_shop extends $.$bog_sert_desk_shop {
+            shop_name(next) {
+                return this.shop()?.title(next) ?? '';
+            }
+            shop_note(next) {
+                return this.shop()?.Note(next)?.val(next) ?? '';
+            }
+            shop_term(next) {
+                const term = next === undefined ? undefined : Math.max(0, Math.round(next));
+                return this.shop()?.Term(term)?.val(term) ?? 6;
+            }
+            /** Адрес витрины: по имени, если оно наше, иначе по самому ленду. */
+            address() {
+                const uri = this.shop_uri();
+                if (!uri)
+                    return '';
+                const name = this.name_own() ? this.shop()?.Name()?.val() ?? '' : '';
+                return name
+                    ? this.$.$mol_state_arg.link({ page: null, bz: null, bzname: name })
+                    : this.$.$mol_state_arg.link({ page: null, bzname: null, bz: uri });
+            }
+            address_copy() {
+                this.$.$mol_dom_context.navigator.clipboard.writeText(this.address());
+            }
+            /** Словарь реестра имён. Пусто, если реестр не заведён. */
+            names() {
+                const land = $bog_sert_name.land;
+                if (!this.$.$giper_baza_link.check(land))
+                    return null;
+                const dict = this.$.$giper_baza_glob.Land(new this.$.$giper_baza_link(land)).Data($bog_sert_name);
+                dict.land().sync();
+                return dict;
+            }
+            /**
+             * Что набрали в поле. Приводить к скучному виду прямо тут нельзя:
+             * тогда подчёркивание на конце срезается на каждом нажатии, и набрать
+             * `coffier_shopper` становится невозможно.
+             */
+            claim_raw(next) {
+                if (next !== undefined)
+                    return next;
+                return this.shop()?.Name()?.val() ?? '';
+            }
+            /** Имя, каким оно станет в адресе. */
+            claim() {
+                return $bog_sert_name.normal(this.claim_raw());
+            }
+            /** Заявки на введённое имя, ранняя первой. */
+            claims() {
+                const dict = this.names();
+                const name = this.claim();
+                if (!dict || !name)
+                    return [];
+                return $bog_sert_name.claims(dict, name);
+            }
+            /** Имя наше, если самая ранняя заявка ведёт на наш салон. */
+            name_own() {
+                const uri = this.shop_uri();
+                if (!uri)
+                    return false;
+                return this.claims()[0]?.shop === uri;
+            }
+            claim_status() {
+                if (!this.names())
+                    return 'Реестр имён не подключён, работает адрес по салону';
+                const name = this.claim();
+                if (!name)
+                    return '';
+                const raw = this.claim_raw().trim();
+                const shown = raw === name ? '' : ` В адресе это будет «${name}».`;
+                const claims = this.claims();
+                if (!claims.length)
+                    return 'Имя свободно.' + shown;
+                if (this.name_own()) {
+                    return claims.length > 1
+                        ? 'Имя ваше, но на него претендует кто-то ещё'
+                        : 'Имя занято вами';
+                }
+                return 'Имя уже заняли раньше вас, адрес по нему уйдёт не к вам';
+            }
+            claim_allowed() {
+                if (!this.names())
+                    return false;
+                const name = this.claim();
+                if (!name)
+                    return false;
+                return !this.claims().length || this.name_own();
+            }
+            claim_take() {
+                const dict = this.names();
+                const shop = this.shop();
+                if (!dict || !shop)
+                    return;
+                // Подвисающие чтения — до записи.
+                const name = this.claim();
+                const uri = this.shop_uri();
+                if (!name || !uri)
+                    return;
+                this.claims();
+                dict.key(name, 'auto').val(uri);
+                shop.Name('auto').val(name);
+            }
+            address_rows() {
+                if (!this.shop_uri())
+                    return [];
+                return [
+                    this.Address_title(),
+                    this.Address_hint(),
+                    this.Address_value(),
+                    this.Address_copy(),
+                    this.Code(),
+                ];
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_shop.prototype, "shop_name", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_shop.prototype, "shop_note", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_shop.prototype, "shop_term", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_desk_shop.prototype, "address_copy", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_shop.prototype, "claim_raw", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_desk_shop.prototype, "claim_take", null);
+        $$.$bog_sert_desk_shop = $bog_sert_desk_shop;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_desk_shop, {
+        Form: {
+            flex: {
+                direction: 'column',
+            },
+            gap: $mol_gap.text,
+            padding: $mol_gap.block,
+            background: {
+                color: $mol_theme.card,
+            },
+            border: {
+                radius: $mol_gap.round,
+            },
+        },
+        Address_block: {
+            flex: {
+                direction: 'column',
+            },
+            gap: $mol_gap.text,
+            padding: $mol_gap.block,
+            background: {
+                color: $mol_theme.card,
+            },
+            border: {
+                radius: $mol_gap.round,
+            },
+        },
+        Claim_block: {
+            flex: {
+                direction: 'column',
+            },
+            gap: $mol_gap.text,
+            padding: $mol_gap.block,
+            background: {
+                color: $mol_theme.card,
+            },
+            border: {
+                radius: $mol_gap.round,
+            },
+        },
+        Address_title: {
+            font: {
+                size: '1.1rem',
+                weight: 'bold',
+            },
+        },
+        Claim_title: {
+            font: {
+                size: '1.1rem',
+                weight: 'bold',
+            },
+        },
+        Address_value: {
+            fontFamily: 'monospace',
+            font: {
+                size: '.85rem',
+            },
+            wordBreak: 'break-all',
+        },
+        Address_copy: {
+            alignSelf: 'flex-start',
+        },
+        Claim_take: {
+            alignSelf: 'flex-start',
+        },
+        Code: {
+            width: '12rem',
+            height: '12rem',
+            flex: {
+                grow: 0,
+                shrink: 0,
+            },
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_sheet) = class $bog_sert_sheet extends ($.$mol_list) {
+		Empty(){
+			const obj = new this.$.$mol_status();
+			(obj.message) = () => ("Ссылка не похожа на сертификат");
+			return obj;
+		}
+		shop(){
+			return "";
+		}
+		Shop(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.shop())]);
+			return obj;
+		}
+		kind(){
+			return "Подарочный сертификат";
+		}
+		Kind(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.kind())]);
+			return obj;
+		}
+		Head(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.Shop()), (this.Kind())]);
+			return obj;
+		}
+		gift(){
+			return "";
+		}
+		Gift(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.gift())]);
+			return obj;
+		}
+		whom(){
+			return "";
+		}
+		Whom(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.whom())]);
+			return obj;
+		}
+		from(){
+			return "";
+		}
+		From(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.from())]);
+			return obj;
+		}
+		Names(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.Whom()), (this.From())]);
+			return obj;
+		}
+		wish(){
+			return "";
+		}
+		Wish(){
+			const obj = new this.$.$mol_paragraph();
+			(obj.title) = () => ((this.wish()));
+			return obj;
+		}
+		legend(){
+			return "";
+		}
+		Legend(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.legend())]);
+			return obj;
+		}
+		note(){
+			return "";
+		}
+		Note(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.note())]);
+			return obj;
+		}
+		Foot(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.Legend()), (this.Note())]);
+			return obj;
+		}
+		stamp(){
+			return "";
+		}
+		Stamp(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.stamp())]);
+			return obj;
+		}
+		sheet(){
+			return [
+				(this.Head()), 
+				(this.Gift()), 
+				(this.Names()), 
+				(this.Wish()), 
+				(this.Foot()), 
+				(this.Stamp())
+			];
+		}
+		Sheet(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ((this.sheet()));
+			return obj;
+		}
+		page_uri(){
+			return "";
+		}
+		Code(){
+			const obj = new this.$.$bog_qr();
+			(obj.uri) = () => ((this.page_uri()));
+			(obj.error_correction) = () => ("M");
+			return obj;
+		}
+		Ident_label(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => (["Номер сертификата"]);
+			return obj;
+		}
+		ident(){
+			return "";
+		}
+		Ident_value(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.ident())]);
+			return obj;
+		}
+		Ident(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.Ident_label()), (this.Ident_value())]);
+			return obj;
+		}
+		Aside(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.Code()), (this.Ident())]);
+			return obj;
+		}
+		mail_uri(){
+			return "";
+		}
+		mail_title(){
+			return "Отправить почтой";
+		}
+		Mail(){
+			const obj = new this.$.$mol_link();
+			(obj.uri) = () => ((this.mail_uri()));
+			(obj.title) = () => ((this.mail_title()));
+			(obj.hint) = () => ("Откроется почтовая программа с готовым письмом");
+			return obj;
+		}
+		copy_title(){
+			return "Скопировать ссылку";
+		}
+		copy(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Copy(){
+			const obj = new this.$.$mol_button_minor();
+			(obj.title) = () => ((this.copy_title()));
+			(obj.click) = (next) => ((this.copy(next)));
+			return obj;
+		}
+		redeem_title(){
+			return "Погасить";
+		}
+		redeem(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Redeem(){
+			const obj = new this.$.$mol_button_major();
+			(obj.title) = () => ((this.redeem_title()));
+			(obj.hint) = () => ("Отметить сертификат использованным");
+			(obj.click) = (next) => ((this.redeem(next)));
+			return obj;
+		}
+		tools(){
+			return [
+				(this.Mail()), 
+				(this.Copy()), 
+				(this.Redeem())
+			];
+		}
+		Tools(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ((this.tools()));
+			return obj;
+		}
+		card_rows(){
+			return [
+				(this.Empty()), 
+				(this.Sheet()), 
+				(this.Aside()), 
+				(this.Tools())
+			];
+		}
+		uri(){
+			return "";
+		}
+		rows(){
+			return (this.card_rows());
+		}
+	};
+	($mol_mem(($.$bog_sert_sheet.prototype), "Empty"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Shop"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Kind"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Head"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Gift"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Whom"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "From"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Names"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Wish"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Legend"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Note"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Foot"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Stamp"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Sheet"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Code"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Ident_label"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Ident_value"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Ident"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Aside"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Mail"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "copy"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Copy"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "redeem"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Redeem"));
+	($mol_mem(($.$bog_sert_sheet.prototype), "Tools"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Карточка сертификата — то, что видит получатель, открыв присланную ссылку.
+         * Всё рисуется из самого сертификата: к ленду салона тут доступа нет и не должно быть.
+         */
+        class $bog_sert_sheet extends $.$bog_sert_sheet {
+            /**
+             * Сертификат по ссылке из адресной строки.
+             *
+             * Без `@ $mol_mem`: метод отдаёт объект Базы, а $mol при сбросе ячейки
+             * дёрнул бы у него `destructor()` и уронил бы весь ленд.
+             */
+            cert() {
+                const uri = this.uri();
+                if (!this.$.$giper_baza_link.check(uri))
+                    return null;
+                const cert = this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(uri), $bog_sert_cert);
+                // Ленд чужой и сам собой не приедет: `glob.Pawn` его не синкает.
+                cert.land().sync();
+                return cert;
+            }
+            shop() {
+                return this.cert()?.Shop()?.val() ?? '';
+            }
+            note() {
+                return this.cert()?.Note()?.val() ?? '';
+            }
+            /** Номинал в рублях. Ноль означает сертификат на услугу. */
+            cost() {
+                return this.cert()?.Cost()?.val() ?? 0;
+            }
+            /** Что подарено: сумма, услуга, либо и то и другое. */
+            gift() {
+                const cert = this.cert();
+                if (!cert)
+                    return '';
+                return $bog_sert_cert.gift_text(this.cost(), cert.title());
+            }
+            whom() {
+                const whom = this.cert()?.Whom()?.val() ?? '';
+                return whom ? `Кому: ${whom}` : '';
+            }
+            from() {
+                const from = this.cert()?.From()?.val() ?? '';
+                return from ? `От кого: ${from}` : '';
+            }
+            wish() {
+                return this.cert()?.Wish()?.val() ?? '';
+            }
+            /** Годен до, в человеческом виде. Пусто — без срока. */
+            term() {
+                const till = this.cert()?.Till()?.val();
+                return till ? till.toString('DD.MM.YYYY') : '';
+            }
+            legend() {
+                const term = this.term();
+                if (!term)
+                    return 'Без срока действия';
+                return this.expired() ? `Срок вышел ${term}` : `Действует до ${term}`;
+            }
+            expired() {
+                const till = this.cert()?.Till()?.val();
+                if (!till)
+                    return false;
+                return till.valueOf() < Date.now();
+            }
+            /** Момент гашения. Пусто — сертификат ещё не использован. */
+            used() {
+                return this.cert()?.Used()?.val() ?? null;
+            }
+            stamp() {
+                const used = this.used();
+                if (used)
+                    return `Погашено ${used.toString('DD.MM.YYYY')}`;
+                return this.expired() ? 'Просрочено' : '';
+            }
+            ident() {
+                return this.uri();
+            }
+            /** Абсолютный адрес этой же карточки — он же содержимое QR-кода и тело письма. */
+            page_uri() {
+                const uri = this.uri();
+                if (!uri)
+                    return '';
+                return this.$.$mol_state_arg.link({ screen: null, cert: uri });
+            }
+            /** Готовое письмо получателю. Открывается в его почтовой программе. */
+            mail_uri() {
+                const cert = this.cert();
+                if (!cert)
+                    return '';
+                const to = cert.Mail()?.val() ?? '';
+                const subj = `Подарочный сертификат${this.shop() ? ' — ' + this.shop() : ''}`;
+                const body = $bog_sert_cert.mail_body({
+                    whom: cert.Whom()?.val() ?? '',
+                    wish: this.wish(),
+                    gift: this.gift(),
+                    legend: this.legend(),
+                    uri: this.page_uri(),
+                    note: this.note(),
+                });
+                return `mailto:${encodeURIComponent(to)}`
+                    + `?subject=${encodeURIComponent(subj)}`
+                    + `&body=${encodeURIComponent(body)}`;
+            }
+            /** Гасить может только тот, у кого есть права на запись в ленд сертификата. */
+            can_redeem() {
+                const cert = this.cert();
+                if (!cert)
+                    return false;
+                if (this.used())
+                    return false;
+                // Ранги живут в подарках ленда, а те приезжают только вместе с данными.
+                // Без чтения хоть одного поля `can_change` молча ответит «нет».
+                cert.Shop()?.val();
+                return cert.can_change();
+            }
+            redeem() {
+                const cert = this.cert();
+                if (!cert)
+                    return;
+                cert.Used('auto').val(new this.$.$mol_time_moment());
+            }
+            copy() {
+                this.$.$mol_dom_context.navigator.clipboard.writeText(this.page_uri());
+            }
+            sheet() {
+                return [
+                    this.Head(),
+                    this.Gift(),
+                    this.Names(),
+                    ...this.wish() ? [this.Wish()] : [],
+                    this.Foot(),
+                    ...this.stamp() ? [this.Stamp()] : [],
+                ];
+            }
+            tools() {
+                return [
+                    this.Mail(),
+                    this.Copy(),
+                    ...this.can_redeem() ? [this.Redeem()] : [],
+                ];
+            }
+            card_rows() {
+                if (!this.cert())
+                    return [this.Empty()];
+                return [this.Sheet(), this.Aside(), this.Tools()];
+            }
+        }
+        __decorate([
+            $mol_action
+        ], $bog_sert_sheet.prototype, "redeem", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_sheet.prototype, "copy", null);
+        $$.$bog_sert_sheet = $bog_sert_sheet;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_sheet, {
+        flex: {
+            direction: 'column',
+        },
+        gap: $mol_gap.block,
+        padding: $mol_gap.block,
+        maxWidth: '42rem',
+        width: '100%',
+        margin: {
+            left: 'auto',
+            right: 'auto',
+        },
+        Sheet: {
+            flex: {
+                direction: 'column',
+            },
+            gap: $mol_gap.text,
+            padding: [$mol_gap.block, $mol_gap.block],
+            background: {
+                color: $mol_theme.card,
+            },
+            border: {
+                radius: $mol_gap.round,
+            },
+            boxShadow: `0 0 0 1px ${$mol_theme.line}, 0 1.5rem 2.5rem -2rem ${$mol_theme.shade}`,
+            position: 'relative',
+            overflow: 'hidden',
+            // Полоса фирменного цвета по верхнему краю — единственное украшение,
+            // которое не мешает читать и не требует картинок.
+            '::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '4px',
+                background: {
+                    image: [[`linear-gradient( 90deg, ${$mol_theme.focus}, ${$mol_theme.special} )`]],
+                },
+            },
+        },
+        Head: {
+            flex: {
+                direction: 'column',
+            },
+            gap: '.25rem',
+            padding: {
+                top: $mol_gap.text,
+            },
+        },
+        Shop: {
+            font: {
+                size: '1.25rem',
+                weight: 'bold',
+            },
+        },
+        Kind: {
+            font: {
+                size: '.75rem',
+            },
+            letterSpacing: '.15em',
+            textTransform: 'uppercase',
+            color: $mol_theme.shade,
+        },
+        Gift: {
+            font: {
+                size: '2rem',
+                weight: 'bold',
+            },
+            lineHeight: '1.2',
+            padding: {
+                top: $mol_gap.text,
+                bottom: $mol_gap.text,
+            },
+        },
+        Names: {
+            flex: {
+                direction: 'column',
+            },
+            gap: '.125rem',
+            color: $mol_theme.shade,
+        },
+        Wish: {
+            fontStyle: 'italic',
+            padding: {
+                top: $mol_gap.text,
+                bottom: $mol_gap.text,
+            },
+            whiteSpace: 'pre-wrap',
+        },
+        Foot: {
+            flex: {
+                direction: 'column',
+            },
+            gap: '.125rem',
+            padding: {
+                top: $mol_gap.text,
+            },
+            border: {
+                top: {
+                    width: '1px',
+                    style: 'solid',
+                    color: $mol_theme.line,
+                },
+            },
+            font: {
+                size: '.85rem',
+            },
+            color: $mol_theme.shade,
+            whiteSpace: 'pre-wrap',
+        },
+        Stamp: {
+            alignSelf: 'flex-start',
+            margin: {
+                top: $mol_gap.text,
+            },
+            padding: ['.25rem', '.75rem'],
+            border: {
+                width: '2px',
+                style: 'solid',
+                color: 'red',
+                radius: $mol_gap.round,
+            },
+            color: 'red',
+            font: {
+                size: '.9rem',
+                weight: 'bold',
+            },
+            letterSpacing: '.05em',
+            textTransform: 'uppercase',
+            transform: 'rotate(-3deg)',
+        },
+        Aside: {
+            align: {
+                items: 'center',
+            },
+            gap: $mol_gap.block,
+            padding: [0, $mol_gap.text],
+        },
+        Code: {
+            width: '7rem',
+            height: '7rem',
+            flex: {
+                grow: 0,
+                shrink: 0,
+            },
+        },
+        Ident: {
+            flex: {
+                direction: 'column',
+            },
+            gap: '.125rem',
+            minWidth: 0,
+        },
+        Ident_label: {
+            font: {
+                size: '.75rem',
+            },
+            color: $mol_theme.shade,
+        },
+        Ident_value: {
+            fontFamily: 'monospace',
+            wordBreak: 'break-all',
+        },
+        Tools: {
+            flexWrap: 'wrap',
+            gap: $mol_gap.text,
+            padding: [0, $mol_gap.text],
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_desk_issue) = class $bog_sert_desk_issue extends ($.$bog_sert_page) {
+		gift(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		Gift(){
+			const obj = new this.$.$mol_string();
+			(obj.hint) = () => ("Стрижка и борода");
+			(obj.value) = (next) => ((this.gift(next)));
+			return obj;
+		}
+		Gift_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Услуга или повод");
+			(obj.control) = () => ((this.Gift()));
+			return obj;
+		}
+		cost(next){
+			if(next !== undefined) return next;
+			return 0;
+		}
+		Cost(){
+			const obj = new this.$.$mol_number();
+			(obj.value_min) = () => (0);
+			(obj.precision_change) = () => (100);
+			(obj.value) = (next) => ((this.cost(next)));
+			return obj;
+		}
+		Cost_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Номинал в рублях, 0 — сертификат на услугу");
+			(obj.control) = () => ((this.Cost()));
+			return obj;
+		}
+		whom(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		Whom(){
+			const obj = new this.$.$mol_string();
+			(obj.hint) = () => ("Анна");
+			(obj.value) = (next) => ((this.whom(next)));
+			return obj;
+		}
+		Whom_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Кому");
+			(obj.control) = () => ((this.Whom()));
+			return obj;
+		}
+		from(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		From(){
+			const obj = new this.$.$mol_string();
+			(obj.hint) = () => ("Мама и папа");
+			(obj.value) = (next) => ((this.from(next)));
+			return obj;
+		}
+		From_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("От кого");
+			(obj.control) = () => ((this.From()));
+			return obj;
+		}
+		mail(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		Mail(){
+			const obj = new this.$.$mol_string();
+			(obj.type) = () => ("email");
+			(obj.hint) = () => ("anna@example.com");
+			(obj.value) = (next) => ((this.mail(next)));
+			return obj;
+		}
+		Mail_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Почта получателя");
+			(obj.control) = () => ((this.Mail()));
+			return obj;
+		}
+		wish(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		Wish(){
+			const obj = new this.$.$bog_sert_area();
+			(obj.hint) = () => ("С днём рождения!");
+			(obj.value) = (next) => ((this.wish(next)));
+			return obj;
+		}
+		Wish_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Поздравление");
+			(obj.control) = () => ((this.Wish()));
+			return obj;
+		}
+		issue_allowed(){
+			return true;
+		}
+		issue(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Issue(){
+			const obj = new this.$.$mol_button_major();
+			(obj.title) = () => ("Выпустить");
+			(obj.enabled) = () => ((this.issue_allowed()));
+			(obj.click) = (next) => ((this.issue(next)));
+			return obj;
+		}
+		Form(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ([
+				(this.Gift_field()), 
+				(this.Cost_field()), 
+				(this.Whom_field()), 
+				(this.From_field()), 
+				(this.Mail_field()), 
+				(this.Wish_field()), 
+				(this.Issue())
+			]);
+			return obj;
+		}
+		Last_title(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => (["Только что выпущен"]);
+			return obj;
+		}
+		last(){
+			return "";
+		}
+		Last_sheet(){
+			const obj = new this.$.$bog_sert_sheet();
+			(obj.uri) = () => ((this.last()));
+			return obj;
+		}
+		Last_block(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ([(this.Last_title()), (this.Last_sheet())]);
+			return obj;
+		}
+		issue_body(){
+			return [(this.Form()), (this.Last_block())];
+		}
+		title(){
+			return "Выпустить сертификат";
+		}
+		body(){
+			return (this.issue_body());
+		}
+	};
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "gift"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Gift"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Gift_field"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "cost"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Cost"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Cost_field"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "whom"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Whom"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Whom_field"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "from"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "From"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "From_field"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "mail"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Mail"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Mail_field"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "wish"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Wish"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Wish_field"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "issue"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Issue"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Form"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Last_title"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Last_sheet"));
+	($mol_mem(($.$bog_sert_desk_issue.prototype), "Last_block"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /** Форма выпуска. Выпущенный сертификат сразу показывается карточкой. */
+        class $bog_sert_desk_issue extends $.$bog_sert_desk_issue {
+            gift(next) {
+                return next ?? '';
+            }
+            cost(next) {
+                return next ?? 0;
+            }
+            whom(next) {
+                return next ?? '';
+            }
+            from(next) {
+                return next ?? '';
+            }
+            mail(next) {
+                return next ?? '';
+            }
+            wish(next) {
+                return next ?? '';
+            }
+            /** Ссылка последнего выпущенного, чтобы сразу показать карточку. */
+            last(next) {
+                return next ?? '';
+            }
+            /** Пустой сертификат выпускать незачем: нужна либо услуга, либо сумма. */
+            issue_allowed() {
+                return Boolean(this.gift().trim()) || this.cost() > 0;
+            }
+            issue() {
+                const shop = this.shop();
+                if (!shop)
+                    return;
+                // Чтения из Базы могут подвиснуть промисом, и тогда фибра стартует заново.
+                // Поэтому сначала всё читаем, и только потом пишем.
+                const name = shop.title();
+                const note = shop.Note()?.val() ?? '';
+                const term = shop.Term()?.val() ?? 6;
+                const gift = this.gift().trim();
+                const cost = Math.max(0, Math.round(this.cost()));
+                const whom = this.whom().trim();
+                const from = this.from().trim();
+                const mail = this.mail().trim();
+                const wish = this.wish().trim();
+                if (!gift && !cost)
+                    return;
+                const now = new this.$.$mol_time_moment();
+                // Сертификат получает свой ленд: ссылка на него и есть предъявитель,
+                // поэтому читать его может каждый, кому эту ссылку прислали.
+                const cert = shop.List('auto').make([
+                    [null, this.$.$giper_baza_rank_read],
+                ]);
+                cert.Title('auto').val(gift);
+                cert.Shop('auto').val(name);
+                cert.Note('auto').val(note);
+                cert.Cost('auto').val(cost);
+                cert.Whom('auto').val(whom);
+                cert.From('auto').val(from);
+                cert.Mail('auto').val(mail);
+                cert.Wish('auto').val(wish);
+                cert.Made('auto').val(now);
+                if (term > 0)
+                    cert.Till('auto').val(now.shift({ month: term }));
+                // Номинал и услуга обычно повторяются от подарка к подарку, их оставляем.
+                this.whom('');
+                this.from('');
+                this.mail('');
+                this.wish('');
+                this.last(cert.link().str);
+            }
+            issue_body() {
+                if (!this.last())
+                    return [this.Form()];
+                return [this.Form(), this.Last_block()];
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_issue.prototype, "gift", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_issue.prototype, "cost", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_issue.prototype, "whom", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_issue.prototype, "from", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_issue.prototype, "mail", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_issue.prototype, "wish", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_issue.prototype, "last", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_desk_issue.prototype, "issue", null);
+        $$.$bog_sert_desk_issue = $bog_sert_desk_issue;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_desk_issue, {
+        Form: {
+            flex: {
+                direction: 'column',
+            },
+            gap: $mol_gap.text,
+            padding: $mol_gap.block,
+            background: {
+                color: $mol_theme.card,
+            },
+            border: {
+                radius: $mol_gap.round,
+            },
+        },
+        Issue: {
+            alignSelf: 'flex-start',
+            margin: {
+                top: $mol_gap.text,
+            },
+        },
+        Last_block: {
+            flex: {
+                direction: 'column',
+            },
+            gap: $mol_gap.text,
+        },
+        Last_title: {
+            font: {
+                size: '1.1rem',
+                weight: 'bold',
+            },
+        },
+        Last_sheet: {
+            padding: 0,
+        },
+        Wish: {
+            minHeight: '4rem',
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_desk_certs_row) = class $bog_sert_desk_certs_row extends ($.$mol_link) {
+		gift(){
+			return "";
+		}
+		Gift(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.gift())]);
+			return obj;
+		}
+		whom(){
+			return "";
+		}
+		Whom(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.whom())]);
+			return obj;
+		}
+		state(){
+			return "";
+		}
+		State(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.state())]);
+			return obj;
+		}
+		cert_uri(){
+			return "";
+		}
+		arg(){
+			return {"screen": null, "cert": (this.cert_uri())};
+		}
+		sub(){
+			return [
+				(this.Gift()), 
+				(this.Whom()), 
+				(this.State())
+			];
+		}
+	};
+	($mol_mem(($.$bog_sert_desk_certs_row.prototype), "Gift"));
+	($mol_mem(($.$bog_sert_desk_certs_row.prototype), "Whom"));
+	($mol_mem(($.$bog_sert_desk_certs_row.prototype), "State"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /** Строка реестра: что за сертификат, кому и в каком он состоянии. */
+        class $bog_sert_desk_certs_row extends $.$bog_sert_desk_certs_row {
+            /**
+             * Сертификат этой строки. Без `@ $mol_mem`, потому что это объект Базы.
+             *
+             * `sync()` тут не зовём: ленды своих сертификатов лежат локально,
+             * а чтение полей и так поднимает синхронизацию.
+             */
+            cert() {
+                const uri = this.cert_uri();
+                if (!this.$.$giper_baza_link.check(uri))
+                    return null;
+                return this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(uri), $bog_sert_cert);
+            }
+            gift() {
+                const cert = this.cert();
+                if (!cert)
+                    return this.cert_uri();
+                return $bog_sert_cert.gift_text(cert.Cost()?.val() ?? 0, cert.title()) || 'Без названия';
+            }
+            whom() {
+                return this.cert()?.Whom()?.val() || '—';
+            }
+            state() {
+                const cert = this.cert();
+                if (!cert)
+                    return '';
+                return $bog_sert_cert.state_text(cert.Used()?.val() ?? null, cert.Till()?.val() ?? null, Date.now());
+            }
+            /** Строка всегда ведёт на сертификат: «текущей» ссылкой она не бывает. */
+            current() {
+                return false;
+            }
+        }
+        $$.$bog_sert_desk_certs_row = $bog_sert_desk_certs_row;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_desk_certs_row, {
+        flex: {
+            direction: 'row',
+            wrap: 'wrap',
+        },
+        align: {
+            items: 'baseline',
+        },
+        gap: $mol_gap.text,
+        padding: [$mol_gap.text, $mol_gap.block],
+        background: {
+            color: $mol_theme.card,
+        },
+        Gift: {
+            flex: {
+                grow: 1,
+            },
+            minWidth: '10rem',
+            font: {
+                weight: 'bold',
+            },
+        },
+        Whom: {
+            color: $mol_theme.shade,
+        },
+        State: {
+            font: {
+                size: '.85rem',
+            },
+            color: $mol_theme.shade,
+            whiteSpace: 'nowrap',
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_desk_certs) = class $bog_sert_desk_certs extends ($.$bog_sert_page) {
+		list_title(){
+			return "Выданные";
+		}
+		Empty(){
+			const obj = new this.$.$mol_status();
+			(obj.message) = () => ("Пока ни одного сертификата");
+			return obj;
+		}
+		cert_rows(){
+			return [];
+		}
+		List(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ((this.cert_rows()));
+			return obj;
+		}
+		certs_body(){
+			return [(this.Empty()), (this.List())];
+		}
+		row_uri(id){
+			return "";
+		}
+		title(){
+			return (this.list_title());
+		}
+		body(){
+			return (this.certs_body());
+		}
+		Row(id){
+			const obj = new this.$.$bog_sert_desk_certs_row();
+			(obj.cert_uri) = () => ((this.row_uri(id)));
+			return obj;
+		}
+	};
+	($mol_mem(($.$bog_sert_desk_certs.prototype), "Empty"));
+	($mol_mem(($.$bog_sert_desk_certs.prototype), "List"));
+	($mol_mem_key(($.$bog_sert_desk_certs.prototype), "Row"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /** Реестр выпущенных сертификатов, новые сверху. */
+        class $bog_sert_desk_certs extends $.$bog_sert_desk_certs {
+            cert_uris() {
+                const items = this.shop()?.List()?.items() ?? [];
+                return items.map(link => link.str).reverse();
+            }
+            row_uri(uri) {
+                return uri;
+            }
+            cert_rows() {
+                return this.cert_uris().map(uri => this.Row(uri));
+            }
+            list_title() {
+                const count = this.cert_uris().length;
+                return count ? `Выданные — ${count}` : 'Выданные';
+            }
+            certs_body() {
+                return this.cert_uris().length ? [this.List()] : [this.Empty()];
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_certs.prototype, "cert_rows", null);
+        $$.$bog_sert_desk_certs = $bog_sert_desk_certs;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_desk_certs, {
+        List: {
+            flex: {
+                direction: 'column',
+            },
+            gap: '1px',
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_desk_loyalty) = class $bog_sert_desk_loyalty extends ($.$bog_sert_page) {
+		Hint(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ("Гость сканирует код на стойке и заводит себе карту. Само по себе это не даёт ему ничего, поэтому плодить карты бессмысленно и защищаться тут не от чего.\n\nБаллы начисляет только касса, своим ключом, в книгу операций салона. Подделать запись гость не может: писать в эту книгу он не вправе.");
+			return obj;
+		}
+		rate(next){
+			if(next !== undefined) return next;
+			return 5;
+		}
+		Rate(){
+			const obj = new this.$.$mol_number();
+			(obj.value_min) = () => (0);
+			(obj.value_max) = () => (100);
+			(obj.precision) = () => (1);
+			(obj.value) = (next) => ((this.rate(next)));
+			return obj;
+		}
+		Rate_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Возвращается баллами, % от чека");
+			(obj.control) = () => ((this.Rate()));
+			return obj;
+		}
+		bonus(next){
+			if(next !== undefined) return next;
+			return 0;
+		}
+		Bonus(){
+			const obj = new this.$.$mol_number();
+			(obj.value_min) = () => (0);
+			(obj.precision_change) = () => (10);
+			(obj.value) = (next) => ((this.bonus(next)));
+			return obj;
+		}
+		Bonus_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Приветственный бонус, баллов");
+			(obj.control) = () => ((this.Bonus()));
+			return obj;
+		}
+		price(next){
+			if(next !== undefined) return next;
+			return 1;
+		}
+		Price(){
+			const obj = new this.$.$mol_number();
+			(obj.value_min) = () => (0);
+			(obj.precision_view) = () => (.01);
+			(obj.precision_change) = () => (.1);
+			(obj.value) = (next) => ((this.price(next)));
+			return obj;
+		}
+		Price_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Сколько рублей стоит один балл при списании");
+			(obj.control) = () => ((this.Price()));
+			return obj;
+		}
+		Form(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ([
+				(this.Rate_field()), 
+				(this.Bonus_field()), 
+				(this.Price_field())
+			]);
+			return obj;
+		}
+		sample(){
+			return "";
+		}
+		Sample(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ((this.sample()));
+			return obj;
+		}
+		title(){
+			return "Лояльность";
+		}
+		body(){
+			return [
+				(this.Hint()), 
+				(this.Form()), 
+				(this.Sample())
+			];
+		}
+	};
+	($mol_mem(($.$bog_sert_desk_loyalty.prototype), "Hint"));
+	($mol_mem(($.$bog_sert_desk_loyalty.prototype), "rate"));
+	($mol_mem(($.$bog_sert_desk_loyalty.prototype), "Rate"));
+	($mol_mem(($.$bog_sert_desk_loyalty.prototype), "Rate_field"));
+	($mol_mem(($.$bog_sert_desk_loyalty.prototype), "bonus"));
+	($mol_mem(($.$bog_sert_desk_loyalty.prototype), "Bonus"));
+	($mol_mem(($.$bog_sert_desk_loyalty.prototype), "Bonus_field"));
+	($mol_mem(($.$bog_sert_desk_loyalty.prototype), "price"));
+	($mol_mem(($.$bog_sert_desk_loyalty.prototype), "Price"));
+	($mol_mem(($.$bog_sert_desk_loyalty.prototype), "Price_field"));
+	($mol_mem(($.$bog_sert_desk_loyalty.prototype), "Form"));
+	($mol_mem(($.$bog_sert_desk_loyalty.prototype), "Sample"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /** Настройки программы: сколько возвращать, сколько дарить, во что списывать. */
+        class $bog_sert_desk_loyalty extends $.$bog_sert_desk_loyalty {
+            rate(next) {
+                const val = next === undefined ? undefined : Math.max(0, Math.min(100, next));
+                return this.shop()?.Rate(val)?.val(val) ?? 0;
+            }
+            bonus(next) {
+                const val = next === undefined ? undefined : Math.max(0, Math.round(next));
+                return this.shop()?.Bonus(val)?.val(val) ?? 0;
+            }
+            price(next) {
+                const val = next === undefined ? undefined : Math.max(0, next);
+                return this.shop()?.Price(val)?.val(val) ?? 1;
+            }
+            /** Пример на круглом чеке, чтобы настройки читались без калькулятора. */
+            sample() {
+                const rate = this.rate();
+                const price = this.price();
+                const gain = $bog_sert_op.accrual(1000, rate);
+                if (!gain)
+                    return 'При нулевом проценте баллы за покупки не начисляются.';
+                const back = price > 0 ? ` Это ${Math.round(gain * price)} ₽ при списании.` : '';
+                return `С чека в 1000 ₽ гость получит ${gain} баллов.${back}`;
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_loyalty.prototype, "rate", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_loyalty.prototype, "bonus", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_loyalty.prototype, "price", null);
+        $$.$bog_sert_desk_loyalty = $bog_sert_desk_loyalty;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_desk_loyalty, {
+        Form: {
+            flex: {
+                direction: 'column',
+            },
+            gap: $mol_gap.text,
+            padding: $mol_gap.block,
+            background: {
+                color: $mol_theme.card,
+            },
+            border: {
+                radius: $mol_gap.round,
+            },
+        },
+        Hint: {
+            color: $mol_theme.shade,
+        },
+        Sample: {
+            padding: $mol_gap.block,
+            background: {
+                color: $mol_theme.card,
+            },
+            border: {
+                radius: $mol_gap.round,
+            },
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_call_qr_scan) = class $bog_call_qr_scan extends ($.$mol_view) {
+		stream(){
+			return null;
+		}
+		Video(){
+			const obj = new this.$.$mol_view();
+			(obj.dom_name) = () => ("video");
+			(obj.attr) = () => ({
+				"autoplay": true, 
+				"playsinline": true, 
+				"muted": true
+			});
+			(obj.field) = () => ({"srcObject": (this.stream())});
+			return obj;
+		}
+		hint(){
+			return (this.$.$mol_locale.text("$bog_call_qr_scan_hint"));
+		}
+		Hint(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.hint())]);
+			return obj;
+		}
+		on_decode(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		scanning(){
+			return true;
+		}
+		sub(){
+			return [(this.Video()), (this.Hint())];
+		}
+	};
+	($mol_mem(($.$bog_call_qr_scan.prototype), "Video"));
+	($mol_mem(($.$bog_call_qr_scan.prototype), "Hint"));
+	($mol_mem(($.$bog_call_qr_scan.prototype), "on_decode"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $bog_call_qr_scan extends $.$bog_call_qr_scan {
+            _loop = null;
+            _canvas = null;
+            _last_frame = '';
+            _last_at = 0;
+            on_decode(text) {
+                return null;
+            }
+            stream() {
+                const stream = $mol_wire_sync(navigator.mediaDevices).getUserMedia({
+                    video: { facingMode: { ideal: 'environment' } },
+                    audio: false,
+                });
+                return Object.assign(stream, {
+                    destructor: () => stream.getTracks().forEach(t => t.stop()),
+                });
+            }
+            detector() {
+                const ctor = window.BarcodeDetector;
+                if (!ctor)
+                    return null;
+                try {
+                    return new ctor({ formats: ['qr_code'] });
+                }
+                catch {
+                    return null;
+                }
+            }
+            /** Fallback decoder for browsers without BarcodeDetector (iOS): vendored $bog_call_jsqr sets global */
+            jsqr() {
+                if (this.detector())
+                    return null;
+                return (globalThis.jsQR ?? null);
+            }
+            Video() {
+                const v = super.Video();
+                this._ensure_loop(v.dom_node());
+                return v;
+            }
+            _ensure_loop(video) {
+                if (this._loop !== null)
+                    return;
+                const tick = async () => {
+                    if (!this.scanning() || !video.isConnected) {
+                        this._loop = null;
+                        return;
+                    }
+                    if (video.videoWidth > 0) {
+                        try {
+                            const text = await this._scan_once(video);
+                            if (text)
+                                this._on_decoded(text);
+                        }
+                        catch {
+                            /* ignore frame errors */
+                        }
+                    }
+                    this._loop = window.setTimeout(tick, 120);
+                };
+                this._loop = window.setTimeout(tick, 120);
+            }
+            async _scan_once(video) {
+                const det = this.detector();
+                if (det) {
+                    const codes = await det.detect(video);
+                    return codes[0]?.rawValue ?? null;
+                }
+                const jsqr = this.jsqr();
+                if (!jsqr)
+                    return null;
+                if (!this._canvas)
+                    this._canvas = document.createElement('canvas');
+                const c = this._canvas;
+                c.width = video.videoWidth;
+                c.height = video.videoHeight;
+                const ctx = c.getContext('2d', { willReadFrequently: true });
+                if (!ctx)
+                    return null;
+                ctx.drawImage(video, 0, 0, c.width, c.height);
+                const img = ctx.getImageData(0, 0, c.width, c.height);
+                const code = jsqr(img.data, img.width, img.height);
+                return code?.data ?? null;
+            }
+            _on_decoded(text) {
+                const now = Date.now();
+                if (text === this._last_frame && now - this._last_at < 600)
+                    return;
+                this._last_frame = text;
+                this._last_at = now;
+                $mol_wire_async(this).on_decode(text);
+            }
+            destructor() {
+                if (this._loop !== null) {
+                    clearTimeout(this._loop);
+                    this._loop = null;
+                }
+                super.destructor();
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_call_qr_scan.prototype, "stream", null);
+        __decorate([
+            $mol_mem
+        ], $bog_call_qr_scan.prototype, "detector", null);
+        __decorate([
+            $mol_mem
+        ], $bog_call_qr_scan.prototype, "jsqr", null);
+        $$.$bog_call_qr_scan = $bog_call_qr_scan;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_call_qr_scan, {
+        display: 'flex',
+        flex: { direction: 'column' },
+        align: { items: 'center' },
+        gap: $mol_gap.block,
+        Video: {
+            width: '90vmin',
+            maxWidth: '480px',
+            height: '90vmin',
+            maxHeight: '480px',
+            border: { radius: $mol_gap.round },
+            background: { color: '#000000' },
+            objectFit: 'cover',
+        },
+        Hint: {
+            color: $mol_theme.shade,
+            font: { size: '0.9rem' },
+            textAlign: 'center',
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_desk_till) = class $bog_sert_desk_till extends ($.$bog_sert_page) {
+		decoded(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		scanning(){
+			return true;
+		}
+		Scan(){
+			const obj = new this.$.$bog_call_qr_scan();
+			(obj.on_decode) = (next) => ((this.decoded(next)));
+			(obj.scanning) = () => ((this.scanning()));
+			return obj;
+		}
+		manual(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		manual_apply(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Manual(){
+			const obj = new this.$.$mol_string();
+			(obj.hint) = () => ("r7u17HFT_mY9Rf1P0");
+			(obj.value) = (next) => ((this.manual(next)));
+			(obj.submit) = (next) => ((this.manual_apply(next)));
+			return obj;
+		}
+		Manual_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Или введите номер карты");
+			(obj.control) = () => ((this.Manual()));
+			return obj;
+		}
+		manual_allowed(){
+			return true;
+		}
+		Manual_apply(){
+			const obj = new this.$.$mol_button_minor();
+			(obj.title) = () => ("Найти карту");
+			(obj.enabled) = () => ((this.manual_allowed()));
+			(obj.click) = (next) => ((this.manual_apply(next)));
+			return obj;
+		}
+		guest_title(){
+			return "";
+		}
+		Guest_head(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.guest_title())]);
+			return obj;
+		}
+		balance_text(){
+			return "";
+		}
+		Balance(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.balance_text())]);
+			return obj;
+		}
+		cost(next){
+			if(next !== undefined) return next;
+			return 0;
+		}
+		Cost(){
+			const obj = new this.$.$mol_number();
+			(obj.value_min) = () => (0);
+			(obj.precision_change) = () => (100);
+			(obj.value) = (next) => ((this.cost(next)));
+			return obj;
+		}
+		Cost_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Сумма чека, ₽");
+			(obj.control) = () => ((this.Cost()));
+			return obj;
+		}
+		accrual_text(){
+			return "";
+		}
+		Accrual(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.accrual_text())]);
+			return obj;
+		}
+		welcome_title(){
+			return "Приветственный бонус";
+		}
+		welcome(next){
+			if(next !== undefined) return next;
+			return true;
+		}
+		Welcome(){
+			const obj = new this.$.$mol_check();
+			(obj.title) = () => ((this.welcome_title()));
+			(obj.checked) = (next) => ((this.welcome(next)));
+			return obj;
+		}
+		accrue_allowed(){
+			return true;
+		}
+		accrue(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Accrue(){
+			const obj = new this.$.$mol_button_major();
+			(obj.title) = () => ("Начислить");
+			(obj.enabled) = () => ((this.accrue_allowed()));
+			(obj.click) = (next) => ((this.accrue(next)));
+			return obj;
+		}
+		writeoff(next){
+			if(next !== undefined) return next;
+			return 0;
+		}
+		Writeoff(){
+			const obj = new this.$.$mol_number();
+			(obj.value_min) = () => (0);
+			(obj.precision_change) = () => (10);
+			(obj.value) = (next) => ((this.writeoff(next)));
+			return obj;
+		}
+		Writeoff_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Списать баллов");
+			(obj.control) = () => ((this.Writeoff()));
+			return obj;
+		}
+		spend_allowed(){
+			return true;
+		}
+		spend(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Spend(){
+			const obj = new this.$.$mol_button_minor();
+			(obj.title) = () => ("Списать");
+			(obj.enabled) = () => ((this.spend_allowed()));
+			(obj.click) = (next) => ((this.spend(next)));
+			return obj;
+		}
+		reset(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Reset(){
+			const obj = new this.$.$mol_button_minor();
+			(obj.title) = () => ("Другая карта");
+			(obj.click) = (next) => ((this.reset(next)));
+			return obj;
+		}
+		guest_rows(){
+			return [
+				(this.Guest_head()), 
+				(this.Balance()), 
+				(this.Cost_field()), 
+				(this.Accrual()), 
+				(this.Welcome()), 
+				(this.Accrue()), 
+				(this.Writeoff_field()), 
+				(this.Spend()), 
+				(this.Reset())
+			];
+		}
+		Guest(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ((this.guest_rows()));
+			return obj;
+		}
+		done(){
+			return "";
+		}
+		Done(){
+			const obj = new this.$.$mol_status();
+			(obj.message) = () => ((this.done()));
+			return obj;
+		}
+		till_body(){
+			return [
+				(this.Scan()), 
+				(this.Manual_field()), 
+				(this.Manual_apply()), 
+				(this.Guest()), 
+				(this.Done())
+			];
+		}
+		title(){
+			return "Касса";
+		}
+		body(){
+			return (this.till_body());
+		}
+	};
+	($mol_mem(($.$bog_sert_desk_till.prototype), "decoded"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Scan"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "manual"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "manual_apply"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Manual"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Manual_field"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Manual_apply"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Guest_head"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Balance"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "cost"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Cost"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Cost_field"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Accrual"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "welcome"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Welcome"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "accrue"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Accrue"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "writeoff"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Writeoff"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Writeoff_field"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "spend"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Spend"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "reset"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Reset"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Guest"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "Done"));
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    /**
+     * Карта гостя. Заводится самим гостем в собственном ленде, ничего личного
+     * не спрашивает и никакой ценности сама по себе не несёт: баллы живут в
+     * книге операций салона, и пишет их только касса.
+     *
+     * Поэтому наплодить карт можно сколько угодно, и смысла в этом нет.
+     */
+    class $bog_sert_pass extends $giper_baza_entity.with({
+        // Title — имя, которым гость назвался. Необязательное.
+        /** Ленды салонов, где карту заводили. Гость пополняет этот список сам. */
+        Shops: $giper_baza_list_str,
+    }, 'Pass') {
+        /**
+         * Достаёт ссылку карты из чего угодно: полного адреса из камеры, куска
+         * пути или голой ссылки, набранной руками. Мусор отдаёт пустой строкой.
+         */
+        static uri_of(raw) {
+            const text = (raw ?? '').trim();
+            if (!text)
+                return '';
+            // Разделителем считаем любой символ, который не может быть частью
+            // имени параметра: иначе `#!pass=` мимо, а `mypass=` наоборот в цель.
+            const found = /(?:^|[^a-zA-Z0-9_-])pass=([^/?&#\s]+)/.exec(text);
+            const candidate = found ? decodeURIComponent(found[1]) : text;
+            return $giper_baza_link.check(candidate) ?? '';
+        }
+    }
+    $.$bog_sert_pass = $bog_sert_pass;
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Касса. Кассир наводит камеру на карту гостя, вводит сумму чека и начисляет.
+         *
+         * Направление сканирования выбрано так намеренно: пишет всегда салон, поэтому
+         * подделать начисление гостю нечем. Обратный порядок, когда гость сканирует
+         * код на стойке, превратил бы этот код в ферму баллов.
+         */
+        class $bog_sert_desk_till extends $.$bog_sert_desk_till {
+            /** Ссылка карты текущего гостя. */
+            pass_uri(next) {
+                return next ?? '';
+            }
+            /** Камера гасится, как только карта опознана: незачем сканировать дальше. */
+            scanning() {
+                return !this.pass_uri();
+            }
+            /** Пришло из камеры. Внутри адрес страницы, из него достаём ссылку карты. */
+            decoded(next) {
+                const uri = $bog_sert_pass.uri_of(next ?? '');
+                if (uri)
+                    this.pass_uri(uri);
+                return null;
+            }
+            manual(next) {
+                return next ?? '';
+            }
+            manual_allowed() {
+                return Boolean($bog_sert_pass.uri_of(this.manual()));
+            }
+            /**
+             * Набранное применяется по нажатию, а не по ходу набора: восемь символов
+             * это уже допустимая ссылка, и касса прыгала бы на несуществующую карту,
+             * не дождавшись остатка номера.
+             */
+            manual_apply() {
+                const uri = $bog_sert_pass.uri_of(this.manual());
+                if (uri)
+                    this.pass_uri(uri);
+            }
+            cost(next) {
+                return next ?? 0;
+            }
+            writeoff(next) {
+                return next ?? 0;
+            }
+            welcome(next) {
+                return next ?? true;
+            }
+            done(next) {
+                return next ?? '';
+            }
+            /** Операции по этой карте, старые первыми. */
+            pass_ops() {
+                const pass = this.pass_uri();
+                if (!pass)
+                    return [];
+                return this.ops().filter(op => op.Pass()?.val() === pass);
+            }
+            balance() {
+                return $bog_sert_op.balance(this.ops(), this.pass_uri());
+            }
+            guest_title() {
+                const pass = this.pass_uri();
+                if (!pass)
+                    return '';
+                const card = this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(pass), $bog_sert_pass);
+                card.land().sync();
+                return card.title() || `Карта ${pass}`;
+            }
+            balance_text() {
+                const visits = this.pass_ops().length;
+                if (!visits)
+                    return 'Первый визит, баланс 0';
+                return `Баланс ${this.balance()} баллов, операций ${visits}`;
+            }
+            /** Сколько начислим за введённый чек. */
+            gain() {
+                return $bog_sert_op.accrual(Math.max(0, Math.round(this.cost())), this.shop()?.Rate()?.val() ?? 0);
+            }
+            /** Приветственный даётся один раз и только если по карте ещё ничего не было. */
+            welcome_sum() {
+                if (this.pass_ops().length)
+                    return 0;
+                if (!this.welcome())
+                    return 0;
+                return Math.max(0, Math.round(this.shop()?.Bonus()?.val() ?? 0));
+            }
+            welcome_title() {
+                const sum = Math.round(this.shop()?.Bonus()?.val() ?? 0);
+                return `Приветственный бонус, ${sum} баллов`;
+            }
+            accrual_text() {
+                const gain = this.gain();
+                const welcome = this.welcome_sum();
+                if (!gain && !welcome)
+                    return 'Начислять нечего';
+                if (!welcome)
+                    return `Начислим ${gain} баллов`;
+                return `Начислим ${gain + welcome} баллов, из них ${welcome} приветственных`;
+            }
+            accrue_allowed() {
+                return this.gain() > 0 || this.welcome_sum() > 0;
+            }
+            accrue() {
+                const shop = this.shop();
+                if (!shop)
+                    return;
+                // Подвисающие чтения — до записи.
+                const pass = this.pass_uri();
+                const gain = this.gain();
+                const welcome = this.welcome_sum();
+                const cost = Math.max(0, Math.round(this.cost()));
+                if (!pass || (!gain && !welcome))
+                    return;
+                const now = new this.$.$mol_time_moment();
+                const list = shop.Ops('auto');
+                if (welcome)
+                    this.op_add(list, 'Приветственный', pass, 0, welcome, now);
+                if (gain)
+                    this.op_add(list, 'Покупка', pass, cost, gain, now);
+                this.cost(0);
+                this.done(`Начислено ${gain + welcome} баллов`);
+            }
+            /** Потолок списания: не больше баланса и не дороже самого чека. */
+            spend_limit() {
+                return $bog_sert_op.writeoff_limit(this.balance(), Math.max(0, Math.round(this.cost())), this.shop()?.Price()?.val() ?? 1);
+            }
+            spend_allowed() {
+                const want = Math.max(0, Math.round(this.writeoff()));
+                return want > 0 && want <= this.spend_limit();
+            }
+            spend() {
+                const shop = this.shop();
+                if (!shop)
+                    return;
+                const pass = this.pass_uri();
+                const want = Math.max(0, Math.round(this.writeoff()));
+                const limit = this.spend_limit();
+                if (!pass || !want || want > limit)
+                    return;
+                this.op_add(shop.Ops('auto'), 'Списание', pass, Math.max(0, Math.round(this.cost())), -want, new this.$.$mol_time_moment());
+                this.writeoff(0);
+                this.done(`Списано ${want} баллов`);
+            }
+            /**
+             * Операция кладётся прямо в ленд салона: `make( null )` заводит её здесь же,
+             * без отдельного ленда и без доказательства работы, иначе касса ждала бы
+             * секунды на каждом чеке.
+             */
+            op_add(list, title, pass, cost, delta, now) {
+                const op = list.make(null);
+                op.Title('auto').val(title);
+                op.Pass('auto').val(pass);
+                op.Cost('auto').val(cost);
+                op.Delta('auto').val(delta);
+                op.Made('auto').val(now);
+                return op;
+            }
+            reset() {
+                this.pass_uri('');
+                this.manual('');
+                this.cost(0);
+                this.writeoff(0);
+                this.welcome(true);
+                this.done('');
+            }
+            guest_rows() {
+                const rows = [
+                    this.Guest_head(),
+                    this.Balance(),
+                    this.Cost_field(),
+                    this.Accrual(),
+                ];
+                if (!this.pass_ops().length && (this.shop()?.Bonus()?.val() ?? 0) > 0)
+                    rows.push(this.Welcome());
+                rows.push(this.Accrue());
+                if (this.balance() > 0)
+                    rows.push(this.Writeoff_field(), this.Spend());
+                rows.push(this.Reset());
+                return rows;
+            }
+            till_body() {
+                if (this.pass_uri())
+                    return [this.Guest(), this.Done()];
+                return [this.Scan(), this.Manual_field(), this.Manual_apply()];
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_till.prototype, "pass_uri", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_till.prototype, "manual", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_desk_till.prototype, "manual_apply", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_till.prototype, "cost", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_till.prototype, "writeoff", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_till.prototype, "welcome", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_till.prototype, "done", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_desk_till.prototype, "accrue", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_desk_till.prototype, "spend", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_desk_till.prototype, "reset", null);
+        $$.$bog_sert_desk_till = $bog_sert_desk_till;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_desk_till, {
+        Scan: {
+            width: '100%',
+            maxWidth: '22rem',
+            aspectRatio: 1,
+            border: {
+                radius: $mol_gap.round,
+            },
+            overflow: 'hidden',
+            background: {
+                color: $mol_theme.field,
+            },
+        },
+        Manual_apply: {
+            alignSelf: 'flex-start',
+        },
+        Guest: {
+            flex: {
+                direction: 'column',
+            },
+            gap: $mol_gap.text,
+            padding: $mol_gap.block,
+            background: {
+                color: $mol_theme.card,
+            },
+            border: {
+                radius: $mol_gap.round,
+            },
+        },
+        Guest_head: {
+            font: {
+                size: '1.1rem',
+                weight: 'bold',
+            },
+            wordBreak: 'break-all',
+        },
+        Balance: {
+            color: $mol_theme.shade,
+        },
+        Accrual: {
+            font: {
+                weight: 'bold',
+            },
+        },
+        Accrue: {
+            alignSelf: 'flex-start',
+        },
+        Spend: {
+            alignSelf: 'flex-start',
+        },
+        Reset: {
+            alignSelf: 'flex-start',
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_desk_guests_row) = class $bog_sert_desk_guests_row extends ($.$mol_view) {
+		ident(){
+			return "";
+		}
+		Ident(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.ident())]);
+			return obj;
+		}
+		visits_text(){
+			return "";
+		}
+		Visits(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.visits_text())]);
+			return obj;
+		}
+		balance_text(){
+			return "";
+		}
+		Balance(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.balance_text())]);
+			return obj;
+		}
+		pass_uri(){
+			return "";
+		}
+		balance(){
+			return 0;
+		}
+		visits(){
+			return 0;
+		}
+		last(){
+			return "";
+		}
+		sub(){
+			return [
+				(this.Ident()), 
+				(this.Visits()), 
+				(this.Balance())
+			];
+		}
+	};
+	($mol_mem(($.$bog_sert_desk_guests_row.prototype), "Ident"));
+	($mol_mem(($.$bog_sert_desk_guests_row.prototype), "Visits"));
+	($mol_mem(($.$bog_sert_desk_guests_row.prototype), "Balance"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /** Строка гостя: номер карты, сколько раз обслужили, текущий баланс. */
+        class $bog_sert_desk_guests_row extends $.$bog_sert_desk_guests_row {
+            ident() {
+                return this.pass_uri();
+            }
+            visits_text() {
+                const visits = this.visits();
+                const last = this.last();
+                return last ? `${visits} операций, последняя ${last}` : `${visits} операций`;
+            }
+            balance_text() {
+                return `${this.balance()} баллов`;
+            }
+        }
+        $$.$bog_sert_desk_guests_row = $bog_sert_desk_guests_row;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_desk_guests_row, {
+        flex: {
+            direction: 'row',
+            wrap: 'wrap',
+        },
+        align: {
+            items: 'baseline',
+        },
+        gap: $mol_gap.text,
+        padding: [$mol_gap.text, $mol_gap.block],
+        background: {
+            color: $mol_theme.card,
+        },
+        Ident: {
+            flex: {
+                grow: 1,
+            },
+            minWidth: '10rem',
+            fontFamily: 'monospace',
+        },
+        Visits: {
+            font: {
+                size: '.85rem',
+            },
+            color: $mol_theme.shade,
+        },
+        Balance: {
+            font: {
+                weight: 'bold',
+            },
+            whiteSpace: 'nowrap',
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_desk_guests) = class $bog_sert_desk_guests extends ($.$bog_sert_page) {
+		guests_title(){
+			return "Гости";
+		}
+		Empty(){
+			const obj = new this.$.$mol_status();
+			(obj.message) = () => ("Ни одной карты пока не обслужили");
+			return obj;
+		}
+		guest_rows(){
+			return [];
+		}
+		List(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ((this.guest_rows()));
+			return obj;
+		}
+		guests_body(){
+			return [(this.Empty()), (this.List())];
+		}
+		row_uri(id){
+			return "";
+		}
+		row_balance(id){
+			return 0;
+		}
+		row_visits(id){
+			return 0;
+		}
+		row_last(id){
+			return "";
+		}
+		title(){
+			return (this.guests_title());
+		}
+		body(){
+			return (this.guests_body());
+		}
+		Row(id){
+			const obj = new this.$.$bog_sert_desk_guests_row();
+			(obj.pass_uri) = () => ((this.row_uri(id)));
+			(obj.balance) = () => ((this.row_balance(id)));
+			(obj.visits) = () => ((this.row_visits(id)));
+			(obj.last) = () => ((this.row_last(id)));
+			return obj;
+		}
+	};
+	($mol_mem(($.$bog_sert_desk_guests.prototype), "Empty"));
+	($mol_mem(($.$bog_sert_desk_guests.prototype), "List"));
+	($mol_mem_key(($.$bog_sert_desk_guests.prototype), "Row"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /** Карты, по которым в этом салоне была хоть одна операция. */
+        class $bog_sert_desk_guests extends $.$bog_sert_desk_guests {
+            /** Сводка по каждой карте, недавние сверху. */
+            summary() {
+                const rows = new Map();
+                for (const op of this.ops()) {
+                    const pass = op.Pass()?.val() ?? '';
+                    if (!pass)
+                        continue;
+                    const made = op.Made()?.val();
+                    const at = made?.valueOf() ?? 0;
+                    const row = rows.get(pass) ?? { balance: 0, visits: 0, at: 0, last: '' };
+                    row.balance += op.Delta()?.val() ?? 0;
+                    row.visits += 1;
+                    if (at >= row.at) {
+                        row.at = at;
+                        row.last = made?.toString('DD.MM.YYYY') ?? '';
+                    }
+                    rows.set(pass, row);
+                }
+                return [...rows.entries()]
+                    .sort((a, b) => b[1].at - a[1].at)
+                    .map(([pass, row]) => ({ pass, ...row, balance: Math.round(row.balance) }));
+            }
+            row_uri(pass) {
+                return pass;
+            }
+            row_balance(pass) {
+                return this.summary().find(row => row.pass === pass)?.balance ?? 0;
+            }
+            row_visits(pass) {
+                return this.summary().find(row => row.pass === pass)?.visits ?? 0;
+            }
+            row_last(pass) {
+                return this.summary().find(row => row.pass === pass)?.last ?? '';
+            }
+            guest_rows() {
+                return this.summary().map(row => this.Row(row.pass));
+            }
+            guests_title() {
+                const count = this.summary().length;
+                return count ? `Гости — ${count}` : 'Гости';
+            }
+            guests_body() {
+                return this.summary().length ? [this.List()] : [this.Empty()];
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_guests.prototype, "summary", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_guests.prototype, "guest_rows", null);
+        $$.$bog_sert_desk_guests = $bog_sert_desk_guests;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_desk_guests, {
+        List: {
+            flex: {
+                direction: 'column',
+            },
+            gap: '1px',
+        },
+    });
+})($ || ($ = {}));
+
+;
 	($.$bog_sert_key) = class $bog_sert_key extends ($.$mol_list) {
 		Intro(){
 			const obj = new this.$.$mol_text();
-			(obj.text) = () => ("## Ключ доступа\n\nАккаунта и пароля тут нет. Всё, что у вас есть — ключ, который\nбраузер завёл сам при первом открытии и держит только на этом\nустройстве. Кабинет салона и право гасить сертификаты привязаны\nименно к нему.\n\nЧтобы зайти в тот же кабинет с телефона на ресепшене, скопируйте\nключ отсюда и вставьте его там. Кто держит ключ — тот и салон,\nтак что пересылать его через общий чат не стоит.\n\nКлюч живёт в хранилище браузера. Очистите данные сайта — и кабинет\nвместе со всеми сертификатами станет недоступен. Держите копию.");
+			(obj.text) = () => ("## Ключ доступа\n\nАккаунта и пароля тут нет. Всё, что у вас есть — ключ, который браузер завёл сам при первом открытии и держит только на этом устройстве. Кабинет салона и право гасить сертификаты привязаны именно к нему.\n\nЧтобы зайти в тот же кабинет с телефона на ресепшене, скопируйте ключ отсюда и вставьте его там. Кто держит ключ, тот и салон, так что пересылать его через общий чат не стоит.\n\nКлюч живёт в хранилище браузера. Очистите данные сайта, и кабинет вместе со всеми сертификатами станет недоступен. Держите копию.");
 			return obj;
 		}
 		mine(){
@@ -25495,31 +25947,1840 @@ var $;
 })($ || ($ = {}));
 
 ;
-	($.$bog_sert_app) = class $bog_sert_app extends ($.$mol_page) {
-		page_title(){
-			return "Сертификаты";
+	($.$bog_sert_desk) = class $bog_sert_desk extends ($.$mol_book2_catalog) {
+		pass_uri(){
+			return "";
 		}
-		screen(next){
-			if(next !== undefined) return next;
-			return "desk";
-		}
-		nav_options(){
-			return {"desk": "Кабинет", "key": "Ключ"};
-		}
-		Nav(){
-			const obj = new this.$.$mol_switch();
-			(obj.value) = (next) => ((this.screen(next)));
-			(obj.options) = () => ((this.nav_options()));
+		Pass_link(){
+			const obj = new this.$.$mol_link();
+			(obj.title) = () => ("Моя карта");
+			(obj.arg) = () => ({"page": null, "pass": (this.pass_uri())});
 			return obj;
+		}
+		Shop_page(){
+			const obj = new this.$.$bog_sert_desk_shop();
+			(obj.shop_uri) = () => ((this.shop_uri()));
+			(obj.tools) = () => ([(this.Spread_close())]);
+			return obj;
+		}
+		Issue_page(){
+			const obj = new this.$.$bog_sert_desk_issue();
+			(obj.shop_uri) = () => ((this.shop_uri()));
+			(obj.tools) = () => ([(this.Spread_close())]);
+			return obj;
+		}
+		Certs_page(){
+			const obj = new this.$.$bog_sert_desk_certs();
+			(obj.shop_uri) = () => ((this.shop_uri()));
+			(obj.tools) = () => ([(this.Spread_close())]);
+			return obj;
+		}
+		Loyalty_page(){
+			const obj = new this.$.$bog_sert_desk_loyalty();
+			(obj.shop_uri) = () => ((this.shop_uri()));
+			(obj.tools) = () => ([(this.Spread_close())]);
+			return obj;
+		}
+		Till_page(){
+			const obj = new this.$.$bog_sert_desk_till();
+			(obj.shop_uri) = () => ((this.shop_uri()));
+			(obj.tools) = () => ([(this.Spread_close())]);
+			return obj;
+		}
+		Guests_page(){
+			const obj = new this.$.$bog_sert_desk_guests();
+			(obj.shop_uri) = () => ((this.shop_uri()));
+			(obj.tools) = () => ([(this.Spread_close())]);
+			return obj;
+		}
+		Key(){
+			const obj = new this.$.$bog_sert_key();
+			return obj;
+		}
+		Key_page(){
+			const obj = new this.$.$mol_page();
+			(obj.title) = () => ("Ключ доступа");
+			(obj.tools) = () => ([(this.Spread_close())]);
+			(obj.body) = () => ([(this.Key())]);
+			return obj;
+		}
+		Intro(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ("## Свой салон\n\nЗаведите салон, чтобы выпускать подарочные сертификаты и начислять бонусы. Ни почты, ни пароля не спросим: доступ держится на ключе, который браузер завёл сам.");
+			return obj;
+		}
+		shop_make(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Make(){
+			const obj = new this.$.$mol_button_major();
+			(obj.title) = () => ("Завести салон");
+			(obj.click) = (next) => ((this.shop_make(next)));
+			return obj;
+		}
+		Ready(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ("## Салон готов\n\nВыберите раздел слева. В «Салоне» лежат реквизиты и адрес витрины, в «Кассе» начисляются бонусы по карте гостя.");
+			return obj;
+		}
+		start_body(){
+			return [
+				(this.Intro()), 
+				(this.Make()), 
+				(this.Ready())
+			];
+		}
+		Start_page(){
+			const obj = new this.$.$mol_page();
+			(obj.title) = () => ("Сертификаты и бонусы");
+			(obj.body) = () => ((this.start_body()));
+			return obj;
+		}
+		param(){
+			return "page";
+		}
+		menu_title(){
+			return "Кабинет";
+		}
+		shop_uri(){
+			return "";
+		}
+		menu_tools(){
+			return [(this.Pass_link())];
+		}
+		spreads(){
+			return {
+				"shop": (this.Shop_page()), 
+				"issue": (this.Issue_page()), 
+				"certs": (this.Certs_page()), 
+				"loyalty": (this.Loyalty_page()), 
+				"till": (this.Till_page()), 
+				"guests": (this.Guests_page()), 
+				"key": (this.Key_page())
+			};
+		}
+		Spread_default(){
+			return (this.Start_page());
+		}
+	};
+	($mol_mem(($.$bog_sert_desk.prototype), "Pass_link"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Shop_page"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Issue_page"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Certs_page"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Loyalty_page"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Till_page"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Guests_page"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Key"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Key_page"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Intro"));
+	($mol_mem(($.$bog_sert_desk.prototype), "shop_make"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Make"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Ready"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Start_page"));
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    /**
+     * Указатели в домашнем ленде: что этот человек завёл как салон и как карту гостя.
+     *
+     * Рядом с каждым указателем лежит список всех заведённых лендов. Указатель —
+     * обычный атом, его перетирает запись, легшая позже, и на холодном старте
+     * второе устройство успевает решить, что ленда нет, и завести свой. Список
+     * сливается, а не перетирается, поэтому по нему форк видно и он не потеря.
+     */
+    class $bog_sert_home extends $giper_baza_entity.with({
+        /** Текущий салон владельца */
+        Shop: $giper_baza_atom_link.to(() => $bog_sert_shop),
+        /** Ссылки всех заведённых салонов */
+        Shops: $giper_baza_list_str,
+        /** Своя карта гостя */
+        Pass: $giper_baza_atom_link.to(() => $bog_sert_pass),
+        /** Ссылки всех заведённых карт */
+        Passes: $giper_baza_list_str,
+    }, 'Home') {
+    }
+    $.$bog_sert_home = $bog_sert_home;
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Кабинет владельца: реквизиты, выпуск сертификатов, касса, гости, ключ.
+         * Каждый раздел отдельной страницей, потому что кассир и бухгалтер открывают
+         * разное и им нечего листать мимо друг друга.
+         */
+        class $bog_sert_desk extends $.$bog_sert_desk {
+            /**
+             * Домашний ленд: указатели на свой салон и свою карту гостя.
+             * Без `@ $mol_mem` — объект Базы.
+             */
+            home() {
+                return this.$.$giper_baza_glob.home().land().Data($bog_sert_home);
+            }
+            /**
+             * Ссылка своего салона.
+             *
+             * Указатель читаем первым, но если он пуст, берём последний из списка
+             * заведённых. Указатель перетирается записью, легшей позже, а список
+             * сливается — на холодном старте второе устройство иначе решит, что
+             * салона нет, и заведёт себе второй.
+             */
+            shop_uri() {
+                const home = this.home();
+                const kept = home.Shops()?.items() ?? [];
+                const pointed = home.Shop()?.val()?.str ?? '';
+                return pointed || kept.at(-1) || '';
+            }
+            /** Ссылка своей карты гостя, если владелец успел её завести. */
+            pass_uri() {
+                const home = this.home();
+                const kept = home.Passes()?.items() ?? [];
+                const pointed = home.Pass()?.val()?.str ?? '';
+                return pointed || kept.at(-1) || '';
+            }
+            /**
+             * Салон заводится только по нажатию и только тут.
+             *
+             * В `auto()` этого делать нельзя: там оно случится на каждом холодном
+             * старте, пока указатель не приехал, и салоны начнут размножаться.
+             */
+            shop_make() {
+                // Подвисающие чтения — до записи, иначе первое нажатие уйдёт впустую.
+                const home = this.home();
+                home.Shops()?.items();
+                const land = this.$.$giper_baza_glob.land_grab([
+                    [null, this.$.$giper_baza_rank_read],
+                ]);
+                const shop = land.Data($bog_sert_shop);
+                shop.Term('auto').val(6);
+                shop.Rate('auto').val(5);
+                shop.Bonus('auto').val(0);
+                shop.Price('auto').val(1);
+                home.Shop('auto').remote(shop);
+                home.Shops('auto').add(shop.link().str);
+                this.spread('shop');
+            }
+            start_body() {
+                if (!this.shop_uri())
+                    return [this.Intro(), this.Make()];
+                return [this.Ready()];
+            }
+            /** Пока салона нет, разделы кабинета показывать нечего. */
+            spread_ids() {
+                return this.shop_uri() ? super.spread_ids() : [];
+            }
+            menu_tools() {
+                return this.pass_uri() ? [this.Pass_link()] : [];
+            }
+            spread_title(spread) {
+                const titles = {
+                    shop: 'Салон',
+                    issue: 'Выпустить сертификат',
+                    certs: 'Выданные',
+                    loyalty: 'Лояльность',
+                    till: 'Касса',
+                    guests: 'Гости',
+                    key: 'Ключ доступа',
+                };
+                return titles[spread] ?? super.spread_title(spread);
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk.prototype, "shop_uri", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk.prototype, "pass_uri", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_desk.prototype, "shop_make", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk.prototype, "spread_ids", null);
+        $$.$bog_sert_desk = $bog_sert_desk;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_desk, {
+        Start_page: {
+            Body_content: {
+                gap: $mol_gap.block,
+                maxWidth: '32rem',
+            },
+        },
+        Make: {
+            alignSelf: 'flex-start',
+        },
+    });
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /**
+     * Theme css variables
+     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_textarea_demo
+     */
+    $.$bog_theme = $mol_style_prop('mol_theme', [
+        'back',
+        'background',
+        'hover',
+        'card',
+        'current',
+        'special',
+        'text',
+        'control',
+        'shade',
+        'line',
+        'focus',
+        'field',
+        'image',
+        'spirit',
+    ]);
+    /**
+     * Available theme names.
+     * Add new theme to theme.css and add its name here.
+     */
+    $.$bog_theme_names = [
+        '$mol_theme_giper_smash_dark',
+        '$mol_theme_giper_smash_light',
+        '$mol_theme_light',
+        '$mol_theme_dark',
+        '$mol_theme_monefro_light',
+        '$mol_theme_monefro_dark',
+        '$mol_theme_homerent_light',
+        '$mol_theme_homerent_dark',
+        '$mol_theme_upwork',
+        '$mol_theme_ainews_light',
+        '$mol_theme_ainews_dark',
+        '$mol_theme_calm_dark',
+        '$mol_theme_calm_light',
+    ];
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("bog/theme/theme.css", ":root {\n\t--mol_theme_hue: 645deg;\n\t--mol_theme_hue_spread: 90deg;\n\t--mol_theme_background: var(--mol_theme_back);\n\n\t/* Bog theme semantic aliases */\n\t--mol_theme_primary_hue: var(--mol_theme_hue);\n\t--mol_theme_secondary_hue: calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread));\n\t--mol_theme_tertiary_hue: calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread));\n\t--mol_theme_accent_hue: calc(var(--mol_theme_hue) + 180deg);\n}\n\n:where([mol_theme]) {\n\tcolor: var(--mol_theme_text);\n\tfill: var(--mol_theme_text);\n\tbackground-color: var(--mol_theme_back);\n}\n\n:root,\n[mol_theme='$mol_theme_dark'],\n:where([mol_theme='$mol_theme_dark']) [mol_theme] {\n\t--mol_theme_luma: -1;\n\t--mol_theme_image: invert(1) hue-rotate(180deg);\n\t--mol_theme_spirit: hsl(0deg, 0%, 0%, 0.75);\n\n\t--bog_theme_back: hsl(var(--bog_theme_hue), 8%, 12%);\n\t--bog_theme_card: hsl(var(--bog_theme_hue), 15%, 18%, 0.25);\n\t--bog_theme_field: hsl(var(--bog_theme_hue), 12%, 10%, 0.25);\n\t--bog_theme_hover: hsl(var(--bog_theme_hue), 0%, 50%, 0.1);\n\n\t--bog_theme_text: hsl(var(--bog_theme_hue), 8%, 85%);\n\t--bog_theme_shade: hsl(var(--bog_theme_hue), 12%, 65%, 1);\n\t--bog_theme_line: hsl(var(--bog_theme_hue), 8%, 50%, 0.25);\n\t--bog_theme_focus: hsl(calc(var(--bog_theme_hue) + 180deg), 60%, 65%);\n\n\t--bog_theme_control: hsl(var(--bog_theme_hue), 25%, 70%);\n\t--bog_theme_current: hsl(calc(var(--bog_theme_hue) - var(--bog_theme_hue_spread)), 25%, 70%);\n\t--bog_theme_special: hsl(calc(var(--bog_theme_hue) + var(--bog_theme_hue_spread)), 25%, 70%);\n}\n@supports (color: oklch(0% 0 0deg)) {\n\t:root,\n\t[mol_theme='$mol_theme_dark'],\n\t:where([mol_theme='$mol_theme_dark']) [mol_theme] {\n\t\t--bog_theme_back: oklch(12% 0.02 var(--bog_theme_hue));\n\t\t--bog_theme_card: oklch(18% 0.03 var(--bog_theme_hue) / 0.25);\n\t\t--bog_theme_field: oklch(10% 0.015 var(--bog_theme_hue) / 0.25);\n\t\t--bog_theme_hover: oklch(70% 0 var(--bog_theme_hue) / 0.1);\n\n\t\t--bog_theme_text: oklch(85% 0.025 var(--bog_theme_hue));\n\t\t--bog_theme_shade: oklch(65% 0.035 var(--bog_theme_hue));\n\t\t--bog_theme_line: oklch(50% 0.025 var(--bog_theme_hue) / 0.25);\n\t\t--bog_theme_focus: oklch(75% 0.15 calc(var(--bog_theme_hue) + 180deg));\n\n\t\t--bog_theme_control: oklch(70% 0.06 var(--bog_theme_hue));\n\t\t--bog_theme_current: oklch(70% 0.08 calc(var(--bog_theme_hue) - var(--bog_theme_hue_spread)));\n\t\t--bog_theme_special: oklch(70% 0.08 calc(var(--bog_theme_hue) + var(--bog_theme_hue_spread)));\n\t}\n}\n\n[mol_theme='$mol_theme_light'],\n:where([mol_theme='$mol_theme_light']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: hsl(0deg, 0%, 100%, 0.75);\n\n\t--mol_theme_back: hsl(var(--mol_theme_hue), 0%, 100%);\n\t--mol_theme_card: hsl(var(--mol_theme_hue), 50%, 100%, 0.5);\n\t--mol_theme_field: hsl(var(--mol_theme_hue), 50%, 100%, 0.75);\n\t--mol_theme_hover: hsl(var(--mol_theme_hue), 0%, 50%, 0.1);\n\n\t--mol_theme_text: hsl(var(--mol_theme_hue), 0%, 0%);\n\t--mol_theme_shade: hsl(var(--mol_theme_hue), 0%, 40%, 1);\n\t--mol_theme_line: hsl(var(--mol_theme_hue), 0%, 50%, 0.25);\n\t--mol_theme_focus: hsl(calc(var(--mol_theme_hue) + 180deg), 100%, 40%);\n\n\t--mol_theme_control: hsl(var(--mol_theme_hue), 80%, 30%);\n\t--mol_theme_current: hsl(calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)), 80%, 30%);\n\t--mol_theme_special: hsl(calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)), 80%, 30%);\n}\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_light'],\n\t:where([mol_theme='$mol_theme_light']) [mol_theme] {\n\t\t--mol_theme_back: oklch(100% 0 var(--mol_theme_hue));\n\t\t--mol_theme_card: oklch(99% 0.01 var(--mol_theme_hue) / 0.5);\n\t\t--mol_theme_field: oklch(100% 0 var(--mol_theme_hue) / 0.5);\n\t\t--mol_theme_hover: oklch(70% 0 var(--mol_theme_hue) / 0.1);\n\n\t\t--mol_theme_text: oklch(20% 0 var(--mol_theme_hue));\n\t\t--mol_theme_shade: oklch(60% 0 var(--mol_theme_hue));\n\t\t--mol_theme_line: oklch(50% 0 var(--mol_theme_hue) / 0.25);\n\t\t--mol_theme_focus: oklch(60% 0.2 calc(var(--mol_theme_hue) + 180deg));\n\n\t\t--mol_theme_control: oklch(40% 0.15 var(--mol_theme_hue));\n\t\t--mol_theme_current: oklch(50% 0.2 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)));\n\t\t--mol_theme_special: oklch(50% 0.2 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)));\n\t}\n}\n\n:where(:root, [mol_theme='$mol_theme_dark']) [mol_theme='$mol_theme_base'] {\n\t--mol_theme_back: oklch(25% 0.075 var(--mol_theme_hue));\n\t--mol_theme_card: oklch(35% 0.1 var(--mol_theme_hue) / 0.25);\n}\n:where([mol_theme='$mol_theme_light']) [mol_theme='$mol_theme_base'] {\n\t--mol_theme_back: oklch(85% 0.075 var(--mol_theme_hue));\n\t--mol_theme_card: oklch(98% 0.03 var(--mol_theme_hue) / 0.25);\n}\n\n:where(:root, [mol_theme='$mol_theme_dark']) [mol_theme='$mol_theme_current'] {\n\t--mol_theme_back: oklch(25% 0.05 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)));\n\t--mol_theme_card: oklch(35% 0.1 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)) / 0.25);\n}\n:where([mol_theme='$mol_theme_light']) [mol_theme='$mol_theme_current'] {\n\t--mol_theme_back: oklch(85% 0.05 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)));\n\t--mol_theme_card: oklch(98% 0.03 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)) / 0.25);\n}\n\n:where(:root, [mol_theme='$mol_theme_dark']) [mol_theme='$mol_theme_special'] {\n\t--mol_theme_back: oklch(25% 0.05 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)));\n\t--mol_theme_card: oklch(35% 0.1 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)) / 0.25);\n}\n:where([mol_theme='$mol_theme_light']) [mol_theme='$mol_theme_special'] {\n\t--mol_theme_back: oklch(85% 0.05 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)));\n\t--mol_theme_card: oklch(98% 0.03 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)) / 0.25);\n}\n\n:where(:root, [mol_theme='$mol_theme_dark']) [mol_theme='$mol_theme_accent'] {\n\t--mol_theme_back: oklch(35% 0.1 calc(var(--mol_theme_hue) + 180deg));\n\t--mol_theme_card: oklch(45% 0.15 calc(var(--mol_theme_hue) + 180deg) / 0.25);\n}\n:where([mol_theme='$mol_theme_light']) [mol_theme='$mol_theme_accent'] {\n\t--mol_theme_back: oklch(83% 0.1 calc(var(--mol_theme_hue) + 180deg));\n\t--mol_theme_card: oklch(98% 0.03 calc(var(--mol_theme_hue) + 180deg) / 0.25);\n}\n\n/* Upwork theme - based on Upwork brand colors */\n[mol_theme='$mol_theme_upwork'],\n:where([mol_theme='$mol_theme_upwork']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: rgba(255, 255, 255, 0.75);\n\n\t/* Upwork brand colors: #73bb44 (primary green), #4fab4a (medium green), #385925 (dark green), #b5deb1 (light green) */\n\t--mol_theme_back: #ffffff;\n\t--mol_theme_card: #f9fcf7;\n\t--mol_theme_field: #ffffff;\n\t--mol_theme_hover: rgba(115, 187, 68, 0.1);\n\n\t--mol_theme_text: #4c4444;\n\t--mol_theme_shade: #6e6d7a;\n\t--mol_theme_line: rgba(115, 187, 68, 0.25);\n\t--mol_theme_focus: #73bb44;\n\n\t--mol_theme_control: #73bb44;\n\t--mol_theme_current: #4fab4a;\n\t--mol_theme_special: #385925;\n}\n\n/* Ainews dark theme - based on Ainews brand palette */\n[mol_theme='$mol_theme_ainews_dark'],\n:where([mol_theme='$mol_theme_ainews_dark']) [mol_theme] {\n\t--mol_theme_luma: -1;\n\t--mol_theme_image: invert(1) hue-rotate(180deg);\n\n\t/* ВАЖНО: mol_* — именно их читает демка */\n\t--mol_theme_back: #3e3e3e; /* paper dark */\n\t--mol_theme_card: #4a4a4a40; /* paper-2 dark 25% */\n\t--mol_theme_field: #4c4c4c40; /* chip dark 25% */\n\t--mol_theme_hover: #5a5a5a1a; /* edge dark 10% */\n\n\t--mol_theme_text: #bcbcbc; /* ink dark */\n\t--mol_theme_shade: #909090; /* ink-muted dark */\n\t--mol_theme_line: #5a5a5a40; /* edge dark 25% */\n\t--mol_theme_focus: #a8bcff; /* accent dark */\n\n\t--mol_theme_control: #a8bcff; /* accent dark */\n\t--mol_theme_current: #c7b18c; /* accent-2 dark */\n\t--mol_theme_special: #d4bf9d; /* accent-2 lighter */\n}\n\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_ainews_dark'],\n\t:where([mol_theme='$mol_theme_ainews_dark']) [mol_theme] {\n\t\t--mol_theme_back: #3e3e3e;\n\t\t--mol_theme_card: #4a4a4a40;\n\t\t--mol_theme_field: #4c4c4c40;\n\t\t--mol_theme_hover: #5a5a5a1a;\n\n\t\t--mol_theme_text: #bcbcbc;\n\t\t--mol_theme_shade: #909090;\n\t\t--mol_theme_line: #5a5a5a40;\n\t\t--mol_theme_focus: #a8bcff;\n\n\t\t--mol_theme_control: #a8bcff;\n\t\t--mol_theme_current: #c7b18c;\n\t\t--mol_theme_special: #d4bf9d;\n\t}\n}\n\n/* Ainews light theme */\n[mol_theme='$mol_theme_ainews_light'],\n:where([mol_theme='$mol_theme_ainews_light']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: #fbf8f1bf; /* 75% */\n\n\t--mol_theme_back: #f7f3e9; /* paper */\n\t--mol_theme_card: #fbf8f180; /* paper-2 50% */\n\t--mol_theme_field: #efe8d8bf; /* chip 75% */\n\t--mol_theme_hover: #ded7c81a; /* edge 10% */\n\n\t--mol_theme_text: #22211f; /* ink */\n\t--mol_theme_shade: #6e6a62; /* ink-muted */\n\t--mol_theme_line: #ded7c840; /* edge 25% */\n\t--mol_theme_focus: #3b5aad; /* accent */\n\n\t--mol_theme_control: #3b5aad; /* accent */\n\t--mol_theme_current: #92734b; /* accent-2 */\n\t--mol_theme_special: #c7b18c; /* accent-2 lighter */\n}\n\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_ainews_light'],\n\t:where([mol_theme='$mol_theme_ainews_light']) [mol_theme] {\n\t\t--mol_theme_back: #f7f3e9;\n\t\t--mol_theme_card: #fbf8f180;\n\t\t--mol_theme_field: #efe8d8bf;\n\t\t--mol_theme_hover: #ded7c81a;\n\n\t\t--mol_theme_text: #22211f;\n\t\t--mol_theme_shade: #6e6a62;\n\t\t--mol_theme_line: #ded7c840;\n\t\t--mol_theme_focus: #3b5aad;\n\n\t\t--mol_theme_control: #3b5aad;\n\t\t--mol_theme_current: #92734b;\n\t\t--mol_theme_special: #c7b18c;\n\t}\n}\n\n/* HomeRent dark theme */\n[mol_theme='$mol_theme_homerent_dark'],\n:where([mol_theme='$mol_theme_homerent_dark']) [mol_theme] {\n\t--mol_theme_luma: -1;\n\t--mol_theme_image: invert(1) hue-rotate(180deg);\n\t--mol_theme_spirit: rgba(0, 0, 0, 0.6);\n\n\t--mol_theme_back: #2f2f2f;\n\t--mol_theme_background: #f5f5f5;\n\t--mol_theme_card: #3a3a3a;\n\t--mol_theme_field: #3a3a3a;\n\t--mol_theme_hover: rgba(255, 255, 255, 0.06);\n\n\t--mol_theme_text: #f5f5f5;\n\t--mol_theme_shade: #c7c7c7;\n\t--mol_theme_line: #ffffff26;\n\t--mol_theme_focus: #8fc32b;\n\n\t--mol_theme_control: #dbe05b;\n\t--mol_theme_current: #8fc32b;\n\t--mol_theme_special: #8fc32b;\n}\n\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_homerent_dark'],\n\t:where([mol_theme='$mol_theme_homerent_dark']) [mol_theme] {\n\t\t--mol_theme_back: #2f2f2f;\n\t\t--mol_theme_background: #f5f5f5;\n\t\t--mol_theme_card: #3a3a3a;\n\t\t--mol_theme_field: #3a3a3a;\n\t\t--mol_theme_hover: rgba(255, 255, 255, 0.06);\n\n\t\t--mol_theme_text: #f5f5f5;\n\t\t--mol_theme_shade: #c7c7c7;\n\t\t--mol_theme_line: #ffffff26;\n\t\t--mol_theme_focus: #8fc32b;\n\n\t\t--mol_theme_control: #dbe05b;\n\t\t--mol_theme_current: #8fc32b;\n\t\t--mol_theme_special: #8fc32b;\n\t}\n}\n\n/* HomeRent light theme */\n[mol_theme='$mol_theme_homerent_light'],\n:where([mol_theme='$mol_theme_homerent_light']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: rgba(245, 245, 245, 0.75);\n\n\t--mol_theme_back: #ffffff;\n\t--mol_theme_background: #f5f5f5;\n\t--mol_theme_card: #ffffff;\n\t--mol_theme_field: #ffffff;\n\t--mol_theme_hover: #8fc32b1a;\n\n\t--mol_theme_text: #4c4c4c;\n\t--mol_theme_shade: #707070;\n\t--mol_theme_line: #4c4c4c26;\n\t--mol_theme_focus: #8fc32b;\n\n\t--mol_theme_control: #dbe05b;\n\t--mol_theme_current: #8fc32b;\n\t--mol_theme_special: #8fc32b;\n}\n\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_homerent_light'],\n\t:where([mol_theme='$mol_theme_homerent_light']) [mol_theme] {\n\t\t--mol_theme_back: #ffffff;\n\t\t--mol_theme_background: #f5f5f5;\n\t\t--mol_theme_card: #ffffff;\n\t\t--mol_theme_field: #ffffff;\n\t\t--mol_theme_hover: #8fc32b1a;\n\n\t\t--mol_theme_text: #4c4c4c;\n\t\t--mol_theme_shade: #707070;\n\t\t--mol_theme_line: #4c4c4c26;\n\t\t--mol_theme_focus: #8fc32b;\n\n\t\t--mol_theme_control: #dbe05b;\n\t\t--mol_theme_current: #8fc32b;\n\t\t--mol_theme_special: #8fc32b;\n\t}\n}\n\n/* Giper Smash dark theme - original game palette */\n[mol_theme='$mol_theme_giper_smash_dark'],\n:where([mol_theme='$mol_theme_giper_smash_dark']) [mol_theme] {\n\t--mol_theme_luma: -1;\n\t--mol_theme_image: invert(1) hue-rotate(180deg);\n\t--mol_theme_spirit: rgba(0, 0, 0, 0.85);\n\n\t--mol_theme_back: #1a1a2e;\n\t--mol_theme_card: #2d2d44;\n\t--mol_theme_field: #16213e;\n\t--mol_theme_hover: rgba(118, 75, 162, 0.15);\n\n\t--mol_theme_text: #ffffff;\n\t--mol_theme_shade: #b0b0cc;\n\t--mol_theme_line: rgba(255, 255, 255, 0.12);\n\t--mol_theme_focus: #f5b041;\n\n\t--mol_theme_control: #44a08d;\n\t--mol_theme_current: #0088cc;\n\t--mol_theme_special: #764ba2;\n}\n\n/* Giper Smash light theme - bright game palette */\n[mol_theme='$mol_theme_giper_smash_light'],\n:where([mol_theme='$mol_theme_giper_smash_light']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: rgba(255, 255, 255, 0.85);\n\n\t--mol_theme_back: #f0eef5;\n\t--mol_theme_card: #ffffff;\n\t--mol_theme_field: #e8e5f0;\n\t--mol_theme_hover: rgba(118, 75, 162, 0.08);\n\n\t--mol_theme_text: #1a1a2e;\n\t--mol_theme_shade: #5c5c7a;\n\t--mol_theme_line: rgba(26, 26, 46, 0.12);\n\t--mol_theme_focus: #d4941a;\n\n\t--mol_theme_control: #2e8b73;\n\t--mol_theme_current: #0077b3;\n\t--mol_theme_special: #6a3d99;\n}\n\n/* Monefro dark theme - inspired by Monefy */\n[mol_theme='$mol_theme_monefro_dark'],\n:where([mol_theme='$mol_theme_monefro_dark']) [mol_theme] {\n\t--mol_theme_luma: -1;\n\t--mol_theme_image: invert(1) hue-rotate(180deg);\n\t--mol_theme_spirit: rgba(0, 0, 0, 0.6);\n\n\t--mol_theme_back: #24201c;\n\t--mol_theme_card: #2c2722;\n\t--mol_theme_field: #29241f;\n\t--mol_theme_hover: rgba(255, 255, 255, 0.04);\n\n\t--mol_theme_text: #f0e7dc;\n\t--mol_theme_shade: #b5a99c;\n\t--mol_theme_line: rgba(255, 255, 255, 0.12);\n\t--mol_theme_focus: #56c78a;\n\n\t--mol_theme_control: #56c78a;\n\t--mol_theme_current: #f2776e;\n\t--mol_theme_special: #f6b04a;\n}\n\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_monefro_dark'],\n\t:where([mol_theme='$mol_theme_monefro_dark']) [mol_theme] {\n\t\t--mol_theme_back: #24201c;\n\t\t--mol_theme_card: #2c2722;\n\t\t--mol_theme_field: #29241f;\n\t\t--mol_theme_hover: rgba(255, 255, 255, 0.04);\n\n\t\t--mol_theme_text: #f0e7dc;\n\t\t--mol_theme_shade: #b5a99c;\n\t\t--mol_theme_line: rgba(255, 255, 255, 0.12);\n\t\t--mol_theme_focus: #56c78a;\n\n\t\t--mol_theme_control: #56c78a;\n\t\t--mol_theme_current: #f2776e;\n\t\t--mol_theme_special: #f6b04a;\n\t}\n}\n\n/* Monefro light theme - inspired by Monefy */\n[mol_theme='$mol_theme_monefro_light'],\n:where([mol_theme='$mol_theme_monefro_light']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: rgba(255, 255, 255, 0.75);\n\n\t--mol_theme_back: #f6f2ea;\n\t--mol_theme_card: #ffffff;\n\t--mol_theme_field: #fff8ef;\n\t--mol_theme_hover: rgba(0, 0, 0, 0.04);\n\n\t--mol_theme_text: #3f3b36;\n\t--mol_theme_shade: #8b8278;\n\t--mol_theme_line: rgba(64, 55, 46, 0.15);\n\t--mol_theme_focus: #2f9a6a;\n\n\t--mol_theme_control: #2f9a6a;\n\t--mol_theme_current: #e85b54;\n\t--mol_theme_special: #f3a43b;\n}\n\n@supports (color: oklch(0% 0 0deg)) {\n\t[mol_theme='$mol_theme_monefro_light'],\n\t:where([mol_theme='$mol_theme_monefro_light']) [mol_theme] {\n\t\t--mol_theme_back: #f6f2ea;\n\t\t--mol_theme_card: #ffffff;\n\t\t--mol_theme_field: #fff8ef;\n\t\t--mol_theme_hover: rgba(0, 0, 0, 0.04);\n\n\t\t--mol_theme_text: #3f3b36;\n\t\t--mol_theme_shade: #8b8278;\n\t\t--mol_theme_line: rgba(64, 55, 46, 0.15);\n\t\t--mol_theme_focus: #2f9a6a;\n\n\t\t--mol_theme_control: #2f9a6a;\n\t\t--mol_theme_current: #e85b54;\n\t\t--mol_theme_special: #f3a43b;\n\t}\n}\n\n/* ═══════════════════════════════════════════════════════════════\n   Calm theme — universal working theme (draft for review)\n   Base hue: 230° (blue-gray), spread: 90°\n   Style: quiet, professional, no noise\n   ═══════════════════════════════════════════════════════════════ */\n\n/* Calm dark theme */\n[mol_theme='$mol_theme_calm_dark'],\n:where([mol_theme='$mol_theme_calm_dark']) [mol_theme] {\n\t--mol_theme_luma: -1;\n\t--mol_theme_image: invert(1) hue-rotate(180deg);\n\t--mol_theme_spirit: #000000bf;\n\t--mol_theme_hue: 230deg;\n\t--mol_theme_hue_spread: 90deg;\n\n\t--mol_theme_back: #0d1117;\n\t--mol_theme_card: #161b2240;\n\t--mol_theme_field: #0a0e1440;\n\t--mol_theme_hover: #ffffff0c;\n\n\t--mol_theme_text: #e6edf3;\n\t--mol_theme_shade: #8b949e;\n\t--mol_theme_line: #30363d;\n\t--mol_theme_focus: #d29922;\n\n\t--mol_theme_control: #2f81f7;\n\t--mol_theme_current: #3fb950;\n\t--mol_theme_special: #a371f7;\n}\n\n/* Calm light theme */\n[mol_theme='$mol_theme_calm_light'],\n:where([mol_theme='$mol_theme_calm_light']) [mol_theme] {\n\t--mol_theme_luma: 1;\n\t--mol_theme_image: none;\n\t--mol_theme_spirit: #f7f8fabf;\n\t--mol_theme_hue: 230deg;\n\t--mol_theme_hue_spread: 90deg;\n\n\t--mol_theme_back: #f7f8fa;\n\t--mol_theme_card: #ffffff80;\n\t--mol_theme_field: #e8eaf0bf;\n\t--mol_theme_hover: #0000000a;\n\n\t--mol_theme_text: #1a1c23;\n\t--mol_theme_shade: #656a80;\n\t--mol_theme_line: #3a3e5026;\n\t--mol_theme_focus: #b87518;\n\n\t--mol_theme_control: #3560b8;\n\t--mol_theme_current: #28856e;\n\t--mol_theme_special: #8a4aad;\n}\n\n/* Calm dark sub-themes */\n:where([mol_theme='$mol_theme_calm_dark']) [mol_theme='$mol_theme_base'] {\n\t--mol_theme_back: #1a2840;\n\t--mol_theme_card: #243450;\n}\n:where([mol_theme='$mol_theme_calm_dark']) [mol_theme='$mol_theme_current'] {\n\t--mol_theme_back: #143028;\n\t--mol_theme_card: #1c3e3450;\n}\n:where([mol_theme='$mol_theme_calm_dark']) [mol_theme='$mol_theme_special'] {\n\t--mol_theme_back: #2a1c48;\n\t--mol_theme_card: #3a2a5c50;\n}\n:where([mol_theme='$mol_theme_calm_dark']) [mol_theme='$mol_theme_accent'] {\n\t--mol_theme_back: #3a1c2a;\n\t--mol_theme_card: #4c283a50;\n}\n\n:where([mol_theme='$mol_theme_calm_light']) [mol_theme='$mol_theme_base'] {\n\t--mol_theme_back: oklch(85% 0.075 var(--mol_theme_hue));\n\t--mol_theme_card: oklch(98% 0.03 var(--mol_theme_hue) / 0.25);\n}\n:where([mol_theme='$mol_theme_calm_light']) [mol_theme='$mol_theme_current'] {\n\t--mol_theme_back: oklch(85% 0.05 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)));\n\t--mol_theme_card: oklch(98% 0.03 calc(var(--mol_theme_hue) - var(--mol_theme_hue_spread)) / 0.25);\n}\n:where([mol_theme='$mol_theme_calm_light']) [mol_theme='$mol_theme_special'] {\n\t--mol_theme_back: oklch(85% 0.05 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)));\n\t--mol_theme_card: oklch(98% 0.03 calc(var(--mol_theme_hue) + var(--mol_theme_hue_spread)) / 0.25);\n}\n:where([mol_theme='$mol_theme_calm_light']) [mol_theme='$mol_theme_accent'] {\n\t--mol_theme_back: oklch(83% 0.1 calc(var(--mol_theme_hue) + 180deg));\n\t--mol_theme_card: oklch(98% 0.03 calc(var(--mol_theme_hue) + 180deg) / 0.25);\n}\n");
+})($ || ($ = {}));
+
+;
+	($.$bog_theme_auto) = class $bog_theme_auto extends ($.$mol_plugin) {
+		themes_default(){
+			return [];
+		}
+		theme(){
+			return "";
+		}
+		themes(){
+			return (this.themes_default());
+		}
+		theme_light(){
+			return "$mol_theme_light";
+		}
+		theme_dark(){
+			return "$mol_theme_dark";
+		}
+		mode(next){
+			if(next !== undefined) return next;
+			return "system";
+		}
+		mode_next(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		theme_next(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		theme_prev(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		theme_set(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		is_light_now(){
+			return false;
+		}
+		attr(){
+			return {"mol_theme": (this.theme())};
+		}
+	};
+	($mol_mem(($.$bog_theme_auto.prototype), "mode"));
+	($mol_mem(($.$bog_theme_auto.prototype), "mode_next"));
+	($mol_mem(($.$bog_theme_auto.prototype), "theme_next"));
+	($mol_mem(($.$bog_theme_auto.prototype), "theme_prev"));
+	($mol_mem(($.$bog_theme_auto.prototype), "theme_set"));
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_media extends $mol_object2 {
+        static match(query, next) {
+            if (next !== undefined)
+                return next;
+            const res = this.$.$mol_dom_context.matchMedia?.(query) ?? {};
+            res.onchange = () => this.match(query, res.matches);
+            return res.matches;
+        }
+    }
+    __decorate([
+        $mol_mem_key
+    ], $mol_media, "match", null);
+    $.$mol_media = $mol_media;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    function parse(theme) {
+        if (theme === 'true')
+            return true;
+        if (theme === 'false')
+            return false;
+        return null;
+    }
+    /**
+     * Switcher between light/dark themes (usually for `mol_theme_auto` plugin).
+     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_lights_demo
+     */
+    function $mol_lights(next) {
+        const arg = parse(this.$mol_state_arg.value('mol_lights'));
+        const base = this.$mol_media.match('(prefers-color-scheme: light)');
+        if (next === undefined) {
+            return arg ?? this.$mol_state_local.value('$mol_lights') ?? base;
+        }
+        else {
+            if (arg === null) {
+                this.$mol_state_local.value('$mol_lights', next === base ? null : next);
+            }
+            else {
+                this.$mol_state_arg.value('mol_lights', String(next));
+            }
+            return next;
+        }
+    }
+    $.$mol_lights = $mol_lights;
+})($ || ($ = {}));
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $bog_theme_auto extends $.$bog_theme_auto {
+            themes_default() {
+                return this.$.$bog_theme_names;
+            }
+            /** Stores current mode in localStorage. Defaults to 'system'.
+             *  При записи дёргает класс `.bog_theme_switching` на `<html>` —
+             *  это активирует CSS-transition'ы на цветах темы.
+             */
+            mode(next) {
+                if (next !== undefined && typeof document !== 'undefined') {
+                    const root = document.documentElement;
+                    root.classList.add('bog_theme_switching');
+                    setTimeout(() => root.classList.remove('bog_theme_switching'), 350);
+                }
+                return this.$.$mol_state_local.value(`${this}.mode()`, next) ?? 'system';
+            }
+            click_step(next) {
+                return this.$.$mol_state_session.value(`${this}.click_step()`, next) ?? 0;
+            }
+            /** 3-click cycle: opposite → back → system. */
+            mode_next() {
+                const step = (this.click_step() + 1) % 3;
+                this.click_step(step);
+                if (step === 0)
+                    this.mode('system');
+                else
+                    this.mode(this.is_light_now() ? 'dark' : 'light');
+            }
+            is_light_now() {
+                const mode = this.mode();
+                if (mode === 'light')
+                    return true;
+                if (mode === 'dark')
+                    return false;
+                if (mode === 'system')
+                    return this.$.$mol_lights();
+                return this.theme().toLowerCase().includes('light');
+            }
+            theme_index(next) {
+                const stored = this.$.$mol_state_local.value(`${this}.theme_index()`, next);
+                if (stored === null && next === undefined) {
+                    return this.system_theme_index();
+                }
+                return stored ?? 0;
+            }
+            system_theme_index() {
+                const themes = this.themes();
+                const prefersLight = this.$.$mol_lights();
+                const preferredTheme = prefersLight ? this.theme_light() : this.theme_dark();
+                const index = themes.indexOf(preferredTheme);
+                return index !== -1 ? index : 0;
+            }
+            theme() {
+                const mode = this.mode();
+                if (mode === 'light')
+                    return this.theme_light();
+                if (mode === 'dark')
+                    return this.theme_dark();
+                if (mode === 'custom') {
+                    const themes = this.themes();
+                    const index = this.theme_index();
+                    if (themes.length === 0)
+                        return this.theme_light();
+                    return themes[index % themes.length];
+                }
+                // system — follow browser preference
+                return this.$.$mol_lights() ? this.theme_light() : this.theme_dark();
+            }
+            theme_next() {
+                this.mode_next();
+            }
+            theme_prev() {
+                const cycle = ['system', 'light', 'dark'];
+                const i = cycle.indexOf(this.mode());
+                this.mode(cycle[i <= 0 ? cycle.length - 1 : i - 1]);
+            }
+            /** Called by picker. Sets mode to light/dark or custom for themed palettes. */
+            theme_set(index) {
+                const themes = this.themes();
+                if (themes.length === 0)
+                    return;
+                const theme = themes[index % themes.length];
+                if (theme === this.theme_light()) {
+                    this.mode('light');
+                }
+                else if (theme === this.theme_dark()) {
+                    this.mode('dark');
+                }
+                else {
+                    this.mode('custom');
+                    this.theme_index(index % themes.length);
+                }
+                this.click_step(0);
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_theme_auto.prototype, "mode", null);
+        __decorate([
+            $mol_mem
+        ], $bog_theme_auto.prototype, "click_step", null);
+        __decorate([
+            $mol_action
+        ], $bog_theme_auto.prototype, "mode_next", null);
+        __decorate([
+            $mol_mem
+        ], $bog_theme_auto.prototype, "is_light_now", null);
+        __decorate([
+            $mol_mem
+        ], $bog_theme_auto.prototype, "theme_index", null);
+        __decorate([
+            $mol_mem
+        ], $bog_theme_auto.prototype, "system_theme_index", null);
+        __decorate([
+            $mol_mem
+        ], $bog_theme_auto.prototype, "theme", null);
+        __decorate([
+            $mol_action
+        ], $bog_theme_auto.prototype, "theme_next", null);
+        __decorate([
+            $mol_action
+        ], $bog_theme_auto.prototype, "theme_prev", null);
+        __decorate([
+            $mol_action
+        ], $bog_theme_auto.prototype, "theme_set", null);
+        $$.$bog_theme_auto = $bog_theme_auto;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("bog/theme/auto/auto.view.css", ".bog_theme_switching,\n.bog_theme_switching * {\n\ttransition: background-color 300ms ease, color 300ms ease, border-color 300ms ease, fill 300ms ease !important;\n}\n\n@media (prefers-reduced-motion: reduce) {\n\t.bog_theme_switching,\n\t.bog_theme_switching * {\n\t\ttransition: none !important;\n\t}\n}\n");
+})($ || ($ = {}));
+
+;
+	($.$bog_theme_picker_row) = class $bog_theme_picker_row extends ($.$mol_button_minor) {
+		focused_str(){
+			return "";
+		}
+		hover(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		theme_name(){
+			return "";
+		}
+		title(){
+			return (this.theme_name());
+		}
+		attr(){
+			return {...(super.attr()), "bog_theme_picker_row_focused": (this.focused_str())};
+		}
+		event(){
+			return {...(super.event()), "pointerenter": (next) => (this.hover(next))};
+		}
+	};
+	($mol_mem(($.$bog_theme_picker_row.prototype), "hover"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $bog_theme_picker_row extends $.$bog_theme_picker_row {
+            focused_str() {
+                return this.focused() ? 'true' : '';
+            }
+        }
+        $$.$bog_theme_picker_row = $bog_theme_picker_row;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        $mol_style_define($bog_theme_picker_row, {
+            '@': {
+                bog_theme_picker_row_focused: {
+                    true: {
+                        background: {
+                            color: $mol_theme.hover,
+                        },
+                        boxShadow: `inset 0 0 0 1px #000, inset 0 0 0 2px #fff`,
+                    },
+                },
+            },
+        });
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+	($.$bog_theme_picker) = class $bog_theme_picker extends ($.$mol_scroll) {
+		theme_name(id){
+			return "";
+		}
+		theme_focused(id){
+			return false;
+		}
+		theme_select(id, next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		theme_hover(id, next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Search(){
+			const obj = new this.$.$mol_string();
+			(obj.value) = (next) => ((this.query(next)));
+			(obj.hint) = () => ((this.$.$mol_locale.text("$bog_theme_picker_Search_hint")));
+			return obj;
+		}
+		theme_rows(){
+			return [];
+		}
+		Theme_list(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ((this.theme_rows()));
+			return obj;
+		}
+		Content(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ([(this.Search()), (this.Theme_list())]);
+			return obj;
+		}
+		key_down(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		theme_auto(){
+			const obj = new this.$.$bog_theme_auto();
+			return obj;
+		}
+		close(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		query(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		focused_index(next){
+			if(next !== undefined) return next;
+			return -1;
+		}
+		Theme_row(id){
+			const obj = new this.$.$bog_theme_picker_row();
+			(obj.theme_name) = () => ((this.theme_name(id)));
+			(obj.focused) = () => ((this.theme_focused(id)));
+			(obj.click) = (next) => ((this.theme_select(id, next)));
+			(obj.hover) = (next) => ((this.theme_hover(id, next)));
+			return obj;
+		}
+		sub(){
+			return [(this.Content())];
+		}
+		event(){
+			return {...(super.event()), "keydown": (next) => (this.key_down(next))};
+		}
+	};
+	($mol_mem_key(($.$bog_theme_picker.prototype), "theme_select"));
+	($mol_mem_key(($.$bog_theme_picker.prototype), "theme_hover"));
+	($mol_mem(($.$bog_theme_picker.prototype), "Search"));
+	($mol_mem(($.$bog_theme_picker.prototype), "Theme_list"));
+	($mol_mem(($.$bog_theme_picker.prototype), "Content"));
+	($mol_mem(($.$bog_theme_picker.prototype), "key_down"));
+	($mol_mem(($.$bog_theme_picker.prototype), "theme_auto"));
+	($mol_mem(($.$bog_theme_picker.prototype), "close"));
+	($mol_mem(($.$bog_theme_picker.prototype), "query"));
+	($mol_mem(($.$bog_theme_picker.prototype), "focused_index"));
+	($mol_mem_key(($.$bog_theme_picker.prototype), "Theme_row"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Theme picker popup with search and list
+         */
+        class $bog_theme_picker extends $.$bog_theme_picker {
+            theme_rows() {
+                const themes = this.filtered_themes();
+                return themes.map((_, index) => this.Theme_row(index));
+            }
+            filtered_themes() {
+                const query = this.query().toLowerCase().trim();
+                const themes = this.$.$bog_theme_names;
+                const filtered = query ? themes.filter(name => name.toLowerCase().includes(query)) : [...themes];
+                // Reset focused index when filter changes
+                const current = this.focused_index();
+                if (current >= filtered.length) {
+                    this.focused_index(-1);
+                }
+                return filtered;
+            }
+            theme_name(index) {
+                return this.filtered_themes()[index] || '';
+            }
+            theme_focused(index) {
+                return this.focused_index() === index;
+            }
+            theme_select(index, event) {
+                if (!event)
+                    return null;
+                const themes = this.filtered_themes();
+                const theme_name = themes[index];
+                const global_index = this.$.$bog_theme_names.indexOf(theme_name);
+                if (global_index !== -1) {
+                    this.theme_auto().theme_set(global_index);
+                }
+                // Close popup
+                this.close();
+                return null;
+            }
+            theme_hover(index, event) {
+                if (!event)
+                    return null;
+                // Update focused index on hover (this will apply preview via theme_focused)
+                this.focused_index(index);
+                const themes = this.filtered_themes();
+                const theme_name = themes[index];
+                const global_index = this.$.$bog_theme_names.indexOf(theme_name);
+                if (global_index !== -1) {
+                    this.theme_auto().theme_set(global_index);
+                }
+                return null;
+            }
+            key_down(event) {
+                if (!event)
+                    return null;
+                const themes = this.filtered_themes();
+                let current = this.focused_index();
+                switch (event.key) {
+                    case 'ArrowDown':
+                        event.preventDefault();
+                        event.stopPropagation();
+                        // If focus is on search (-1), start from first item
+                        if (current === -1) {
+                            current = 0;
+                        }
+                        else {
+                            current = current < themes.length - 1 ? current + 1 : 0;
+                        }
+                        this.focused_index(current);
+                        this.preview_theme(current);
+                        break;
+                    case 'ArrowUp':
+                        event.preventDefault();
+                        event.stopPropagation();
+                        // If focus is on search (-1), start from last item
+                        if (current === -1) {
+                            current = themes.length - 1;
+                        }
+                        else {
+                            current = current > 0 ? current - 1 : themes.length - 1;
+                        }
+                        this.focused_index(current);
+                        this.preview_theme(current);
+                        break;
+                    case 'Enter':
+                        event.preventDefault();
+                        if (current >= 0 && current < themes.length) {
+                            this.select_theme(current);
+                        }
+                        break;
+                    case 'Escape':
+                        event.preventDefault();
+                        this.close();
+                        break;
+                }
+                return null;
+            }
+            select_theme(index) {
+                const themes = this.filtered_themes();
+                const theme_name = themes[index];
+                const global_index = this.$.$bog_theme_names.indexOf(theme_name);
+                if (global_index !== -1) {
+                    this.theme_auto().theme_set(global_index);
+                }
+                // Close popup
+                this.close();
+            }
+            preview_theme(index) {
+                const themes = this.filtered_themes();
+                const theme_name = themes[index];
+                const global_index = this.$.$bog_theme_names.indexOf(theme_name);
+                if (global_index !== -1) {
+                    this.theme_auto().theme_set(global_index);
+                }
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_theme_picker.prototype, "theme_rows", null);
+        __decorate([
+            $mol_mem
+        ], $bog_theme_picker.prototype, "filtered_themes", null);
+        __decorate([
+            $mol_action
+        ], $bog_theme_picker.prototype, "select_theme", null);
+        __decorate([
+            $mol_action
+        ], $bog_theme_picker.prototype, "preview_theme", null);
+        $$.$bog_theme_picker = $bog_theme_picker;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        $mol_style_define($bog_theme_picker, {
+            background: {
+                color: $mol_theme.back,
+            },
+            borderRadius: '8px',
+            overflow: 'hidden',
+            opacity: 1,
+            Search: {
+                borderRadius: '8px',
+            },
+        });
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+	($.$mol_icon_white_balance_sunny) = class $mol_icon_white_balance_sunny extends ($.$mol_icon) {
+		path(){
+			return "M3.55 19.09L4.96 20.5L6.76 18.71L5.34 17.29M12 6C8.69 6 6 8.69 6 12S8.69 18 12 18 18 15.31 18 12C18 8.68 15.31 6 12 6M20 13H23V11H20M17.24 18.71L19.04 20.5L20.45 19.09L18.66 17.29M20.45 5L19.04 3.6L17.24 5.39L18.66 6.81M13 1H11V4H13M6.76 5.39L4.96 3.6L3.55 5L5.34 6.81L6.76 5.39M1 13H4V11H1M13 20H11V23H13";
+		}
+	};
+
+
+;
+"use strict";
+
+
+;
+	($.$mol_icon_weather_night) = class $mol_icon_weather_night extends ($.$mol_icon) {
+		path(){
+			return "M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.64 6.35,17.66C9.37,20.67 14.19,20.78 17.33,17.97Z";
+		}
+	};
+
+
+;
+"use strict";
+
+
+;
+	($.$mol_icon_monitor) = class $mol_icon_monitor extends ($.$mol_icon) {
+		path(){
+			return "M21,16H3V4H21M21,2H3C1.89,2 1,2.89 1,4V16A2,2 0 0,0 3,18H10V20H8V22H16V20H14V18H21A2,2 0 0,0 23,16V4C23,2.89 22.1,2 21,2Z";
+		}
+	};
+
+
+;
+"use strict";
+
+
+;
+	($.$bog_theme_toggle) = class $bog_theme_toggle extends ($.$mol_pop) {
+		Icon(){
+			const obj = new this.$.$mol_view();
+			return obj;
+		}
+		anchor_hint(){
+			return "Переключить тему";
+		}
+		clicked(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		press_start(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		press_move(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		press_end(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		press_cancel(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		press_lost(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		backdrop_click(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Backdrop(){
+			const obj = new this.$.$mol_view();
+			(obj.event) = () => ({"click": (next) => (this.backdrop_click(next))});
+			return obj;
+		}
+		picker_close(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Picker(){
+			const obj = new this.$.$bog_theme_picker();
+			(obj.theme_auto) = () => ((this.theme_auto()));
+			(obj.close) = (next) => ((this.picker_close(next)));
+			return obj;
+		}
+		theme_auto(){
+			const obj = new this.$.$bog_theme_auto();
+			return obj;
+		}
+		showed(next){
+			if(next !== undefined) return next;
+			return false;
+		}
+		align(){
+			return "bottom_right";
+		}
+		Anchor(){
+			const obj = new this.$.$mol_button_minor();
+			(obj.sub) = () => ([(this.Icon())]);
+			(obj.hint) = () => ((this.anchor_hint()));
+			(obj.click) = (next) => ((this.clicked(next)));
+			(obj.event) = () => ({
+				...(this.$.$mol_button_minor.prototype.event.call(obj)), 
+				"pointerdown": (next) => (this.press_start(next)), 
+				"pointermove": (next) => (this.press_move(next)), 
+				"pointerup": (next) => (this.press_end(next)), 
+				"pointercancel": (next) => (this.press_cancel(next)), 
+				"lostpointercapture": (next) => (this.press_lost(next))
+			});
+			return obj;
+		}
+		Icon_light(){
+			const obj = new this.$.$mol_icon_white_balance_sunny();
+			return obj;
+		}
+		Icon_dark(){
+			const obj = new this.$.$mol_icon_weather_night();
+			return obj;
+		}
+		Icon_system(){
+			const obj = new this.$.$mol_icon_monitor();
+			return obj;
+		}
+		bubble_content(){
+			return [(this.Backdrop()), (this.Picker())];
+		}
+	};
+	($mol_mem(($.$bog_theme_toggle.prototype), "Icon"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "clicked"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "press_start"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "press_move"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "press_end"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "press_cancel"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "press_lost"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "backdrop_click"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "Backdrop"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "picker_close"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "Picker"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "theme_auto"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "showed"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "Anchor"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "Icon_light"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "Icon_dark"));
+	($mol_mem(($.$bog_theme_toggle.prototype), "Icon_system"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        class $bog_theme_toggle extends $.$bog_theme_toggle {
+            long_press_delay = 300;
+            move_threshold = 8;
+            press_timer = null;
+            press_start_x = 0;
+            press_start_y = 0;
+            is_long_press = false;
+            Icon() {
+                const mode = this.theme_auto().mode();
+                if (mode === 'light')
+                    return this.Icon_light();
+                if (mode === 'dark')
+                    return this.Icon_dark();
+                if (mode === 'custom') {
+                    const theme = this.theme_auto().theme();
+                    return theme.includes('light') ? this.Icon_light() : this.Icon_dark();
+                }
+                return this.Icon_system();
+            }
+            anchor_hint() {
+                const mode = this.theme_auto().mode();
+                if (mode === 'light')
+                    return 'Светлая тема';
+                if (mode === 'dark')
+                    return 'Тёмная тема';
+                if (mode === 'custom')
+                    return 'Пользовательская тема';
+                return 'Как в системе';
+            }
+            clicked(event) {
+                if (!event)
+                    return null;
+                if (this.is_long_press) {
+                    this.is_long_press = false;
+                    return null;
+                }
+                this.theme_auto().mode_next();
+                return null;
+            }
+            press_start(event) {
+                if (!event)
+                    return null;
+                this.clear_press_timer();
+                this.press_start_x = event.clientX;
+                this.press_start_y = event.clientY;
+                this.is_long_press = false;
+                this.press_timer = setTimeout(() => {
+                    this.is_long_press = true;
+                    this.on_long_press();
+                }, this.long_press_delay);
+                return null;
+            }
+            press_move(event) {
+                if (!event || !this.press_timer)
+                    return null;
+                const dx = Math.abs(event.clientX - this.press_start_x);
+                const dy = Math.abs(event.clientY - this.press_start_y);
+                if (dx > this.move_threshold || dy > this.move_threshold) {
+                    this.clear_press_timer();
+                }
+                return null;
+            }
+            press_end(event) {
+                if (!event)
+                    return null;
+                this.clear_press_timer();
+                return null;
+            }
+            press_cancel(event) {
+                if (!event)
+                    return null;
+                this.clear_press_timer();
+                return null;
+            }
+            press_lost(event) {
+                if (!event)
+                    return null;
+                this.clear_press_timer();
+                return null;
+            }
+            clear_press_timer() {
+                if (this.press_timer) {
+                    clearTimeout(this.press_timer);
+                    this.press_timer = null;
+                }
+            }
+            on_long_press() {
+                this.showed(true);
+                setTimeout(() => {
+                    try {
+                        const search = this.Picker().Search();
+                        search.focused(true);
+                    }
+                    catch (e) {
+                        // Ignore focus errors
+                    }
+                }, 100);
+            }
+            picker_close() {
+                this.showed(false);
+            }
+            backdrop_click(event) {
+                if (!event)
+                    return null;
+                this.showed(false);
+                return null;
+            }
+        }
+        $$.$bog_theme_toggle = $bog_theme_toggle;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        $mol_style_define($bog_theme_toggle, {
+            Bubble: {
+                position: 'fixed !important',
+                left: '0 !important',
+                top: '0 !important',
+                transform: 'none !important',
+                width: '100vw !important',
+                height: '100vh !important',
+                maxWidth: 'none !important',
+                maxHeight: 'none !important',
+                padding: '0 !important',
+                boxShadow: 'none',
+                background: 'transparent !important',
+            },
+            Backdrop: {
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                zIndex: 1,
+                opacity: 0,
+            },
+            Picker: {
+                position: 'fixed',
+                left: '50%',
+                top: '15vh',
+                transform: 'translateX(-50%)',
+                maxWidth: '400px',
+                width: '90vw',
+                maxHeight: '70vh',
+                zIndex: 2,
+            },
+        });
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_front) = class $bog_sert_front extends ($.$mol_list) {
+		Empty(){
+			const obj = new this.$.$mol_status();
+			(obj.message) = () => ("Салон по этой ссылке не найден");
+			return obj;
+		}
+		name(){
+			return "";
+		}
+		Name(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.name())]);
+			return obj;
+		}
+		note(){
+			return "";
+		}
+		Note(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.note())]);
+			return obj;
+		}
+		Head(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.Name()), (this.Note())]);
+			return obj;
+		}
+		terms(){
+			return "";
+		}
+		Terms(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ((this.terms()));
+			return obj;
+		}
+		join(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Join(){
+			const obj = new this.$.$mol_button_major();
+			(obj.title) = () => ("Завести карту");
+			(obj.click) = (next) => ((this.join(next)));
+			return obj;
+		}
+		pass_uri(){
+			return "";
+		}
+		Open(){
+			const obj = new this.$.$mol_link();
+			(obj.title) = () => ("Открыть мою карту");
+			(obj.arg) = () => ({
+				"bz": null, 
+				"bzname": null, 
+				"pass": (this.pass_uri())
+			});
+			return obj;
+		}
+		Foot(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ("Карта живёт в этом браузере и ничего о вас не спрашивает: ни имени, ни почты, ни телефона.");
+			return obj;
+		}
+		front_rows(){
+			return [
+				(this.Empty()), 
+				(this.Head()), 
+				(this.Terms()), 
+				(this.Join()), 
+				(this.Open()), 
+				(this.Foot())
+			];
+		}
+		uri(){
+			return "";
+		}
+		rows(){
+			return (this.front_rows());
+		}
+	};
+	($mol_mem(($.$bog_sert_front.prototype), "Empty"));
+	($mol_mem(($.$bog_sert_front.prototype), "Name"));
+	($mol_mem(($.$bog_sert_front.prototype), "Note"));
+	($mol_mem(($.$bog_sert_front.prototype), "Head"));
+	($mol_mem(($.$bog_sert_front.prototype), "Terms"));
+	($mol_mem(($.$bog_sert_front.prototype), "join"));
+	($mol_mem(($.$bog_sert_front.prototype), "Join"));
+	($mol_mem(($.$bog_sert_front.prototype), "Open"));
+	($mol_mem(($.$bog_sert_front.prototype), "Foot"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Витрина салона: то, что видит человек, отсканировавший код на стойке.
+         *
+         * Отсюда заводится карта. Само заведение не начисляет ничего — иначе код на
+         * стойке стал бы фермой баллов, ведь отсканировать его может кто угодно
+         * сколько угодно раз. Баллы даёт касса.
+         */
+        class $bog_sert_front extends $.$bog_sert_front {
+            /** Салон по ссылке. Без `@ $mol_mem` — объект Базы. */
+            shop() {
+                const uri = this.uri();
+                if (!this.$.$giper_baza_link.check(uri))
+                    return null;
+                const shop = this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(uri), $bog_sert_shop);
+                shop.land().sync();
+                return shop;
+            }
+            /** Домашний ленд гостя: тут лежит указатель на его карту. */
+            home() {
+                return this.$.$giper_baza_glob.home().land().Data($bog_sert_home);
+            }
+            pass_uri() {
+                const home = this.home();
+                const kept = home.Passes()?.items() ?? [];
+                const pointed = home.Pass()?.val()?.str ?? '';
+                return pointed || kept.at(-1) || '';
+            }
+            name() {
+                return this.shop()?.title() || 'Салон';
+            }
+            note() {
+                return this.shop()?.Note()?.val() ?? '';
+            }
+            terms() {
+                const shop = this.shop();
+                if (!shop)
+                    return '';
+                const rate = shop.Rate()?.val() ?? 0;
+                const bonus = Math.round(shop.Bonus()?.val() ?? 0);
+                const lines = ['## Карта гостя', ''];
+                if (rate > 0)
+                    lines.push(`Возвращаем ${rate}% от чека баллами.`);
+                if (bonus > 0)
+                    lines.push(`За первый визит начислим ${bonus} приветственных баллов.`);
+                if (!rate && !bonus)
+                    lines.push('Заведите карту, чтобы копить баллы за покупки.');
+                lines.push('', 'Баллы начисляет кассир, когда сканирует вашу карту.');
+                return lines.join('\n');
+            }
+            /**
+             * Карта заводится только по нажатию и только тут.
+             *
+             * Заведение ленда стоит доказательства работы, поэтому в `auto()` его
+             * делать нельзя: на каждом холодном старте, пока указатель не приехал,
+             * заводилась бы новая карта.
+             */
+            join() {
+                const shop_uri = this.uri();
+                if (!shop_uri)
+                    return;
+                // Подвисающие чтения — до записи.
+                const home = this.home();
+                home.Passes()?.items();
+                const own = this.pass_uri();
+                const pass = own
+                    ? this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(own), $bog_sert_pass)
+                    : this.pass_make(home);
+                // Салон в карту дописывает гость: писать в его ленд салон не вправе.
+                pass.Shops('auto').add(shop_uri);
+                this.$.$mol_state_arg.go({ bz: null, bzname: null, pass: pass.link().str });
+            }
+            pass_make(home) {
+                const land = this.$.$giper_baza_glob.land_grab([
+                    [null, this.$.$giper_baza_rank_read],
+                ]);
+                const pass = land.Data($bog_sert_pass);
+                home.Pass('auto').remote(pass);
+                home.Passes('auto').add(pass.link().str);
+                return pass;
+            }
+            front_rows() {
+                if (!this.shop())
+                    return [this.Empty()];
+                return [
+                    this.Head(),
+                    this.Terms(),
+                    this.Join(),
+                    ...this.pass_uri() ? [this.Open()] : [],
+                    this.Foot(),
+                ];
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_sert_front.prototype, "pass_uri", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_front.prototype, "join", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_front.prototype, "pass_make", null);
+        $$.$bog_sert_front = $bog_sert_front;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_front, {
+        flex: {
+            direction: 'column',
+        },
+        gap: $mol_gap.block,
+        padding: $mol_gap.block,
+        maxWidth: '32rem',
+        width: '100%',
+        margin: {
+            left: 'auto',
+            right: 'auto',
+        },
+        Head: {
+            flex: {
+                direction: 'column',
+            },
+            gap: '.25rem',
+        },
+        Name: {
+            font: {
+                size: '1.5rem',
+                weight: 'bold',
+            },
+        },
+        Note: {
+            color: $mol_theme.shade,
+            whiteSpace: 'pre-wrap',
+        },
+        Join: {
+            alignSelf: 'flex-start',
+        },
+        Foot: {
+            font: {
+                size: '.85rem',
+            },
+            color: $mol_theme.shade,
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_card_row) = class $bog_sert_card_row extends ($.$mol_view) {
+		name(){
+			return "";
+		}
+		Name(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.name())]);
+			return obj;
+		}
+		balance_text(){
+			return "";
+		}
+		Balance(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.balance_text())]);
+			return obj;
+		}
+		shop_uri(){
+			return "";
+		}
+		pass_uri(){
+			return "";
+		}
+		sub(){
+			return [(this.Name()), (this.Balance())];
+		}
+	};
+	($mol_mem(($.$bog_sert_card_row.prototype), "Name"));
+	($mol_mem(($.$bog_sert_card_row.prototype), "Balance"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /** Баланс карты в одном салоне. */
+        class $bog_sert_card_row extends $.$bog_sert_card_row {
+            /** Салон по ссылке. Без `@ $mol_mem` — объект Базы. */
+            shop() {
+                const uri = this.shop_uri();
+                if (!this.$.$giper_baza_link.check(uri))
+                    return null;
+                const shop = this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(uri), $bog_sert_shop);
+                shop.land().sync();
+                return shop;
+            }
+            name() {
+                return this.shop()?.title() || this.shop_uri();
+            }
+            balance() {
+                return $bog_sert_op.balance(this.shop()?.Ops()?.remote_list() ?? [], this.pass_uri());
+            }
+            balance_text() {
+                return `${this.balance()} баллов`;
+            }
+        }
+        $$.$bog_sert_card_row = $bog_sert_card_row;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_card_row, {
+        align: {
+            items: 'baseline',
+        },
+        gap: $mol_gap.text,
+        padding: [$mol_gap.text, $mol_gap.block],
+        background: {
+            color: $mol_theme.card,
+        },
+        Name: {
+            flex: {
+                grow: 1,
+            },
+        },
+        Balance: {
+            font: {
+                weight: 'bold',
+            },
+            whiteSpace: 'nowrap',
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_card) = class $bog_sert_card extends ($.$mol_list) {
+		Empty(){
+			const obj = new this.$.$mol_status();
+			(obj.message) = () => ("Ссылка не похожа на карту");
+			return obj;
+		}
+		Kind(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => (["Карта гостя"]);
+			return obj;
+		}
+		total(){
+			return "";
+		}
+		Total(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.total())]);
+			return obj;
+		}
+		Head(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.Kind()), (this.Total())]);
+			return obj;
+		}
+		page_uri(){
+			return "";
+		}
+		Code(){
+			const obj = new this.$.$bog_qr();
+			(obj.uri) = () => ((this.page_uri()));
+			(obj.error_correction) = () => ("M");
+			return obj;
+		}
+		Ident_label(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => (["Номер карты"]);
+			return obj;
+		}
+		ident(){
+			return "";
+		}
+		Ident_value(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.ident())]);
+			return obj;
+		}
+		Ident(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.Ident_label()), (this.Ident_value())]);
+			return obj;
+		}
+		shop_rows(){
+			return [];
+		}
+		Shops(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ((this.shop_rows()));
+			return obj;
+		}
+		Save(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ("Сохраните эту страницу в закладки или добавьте на домашний экран. Карта живёт в этом браузере: очистите данные сайта, и баллы останутся у салона, но открыть их будет нечем.");
+			return obj;
+		}
+		card_rows(){
+			return [
+				(this.Empty()), 
+				(this.Head()), 
+				(this.Code()), 
+				(this.Ident()), 
+				(this.Shops()), 
+				(this.Save())
+			];
+		}
+		row_uri(id){
+			return "";
+		}
+		uri(){
+			return "";
+		}
+		rows(){
+			return (this.card_rows());
+		}
+		Shop_row(id){
+			const obj = new this.$.$bog_sert_card_row();
+			(obj.shop_uri) = () => ((this.row_uri(id)));
+			(obj.pass_uri) = () => ((this.uri()));
+			return obj;
+		}
+	};
+	($mol_mem(($.$bog_sert_card.prototype), "Empty"));
+	($mol_mem(($.$bog_sert_card.prototype), "Kind"));
+	($mol_mem(($.$bog_sert_card.prototype), "Total"));
+	($mol_mem(($.$bog_sert_card.prototype), "Head"));
+	($mol_mem(($.$bog_sert_card.prototype), "Code"));
+	($mol_mem(($.$bog_sert_card.prototype), "Ident_label"));
+	($mol_mem(($.$bog_sert_card.prototype), "Ident_value"));
+	($mol_mem(($.$bog_sert_card.prototype), "Ident"));
+	($mol_mem(($.$bog_sert_card.prototype), "Shops"));
+	($mol_mem(($.$bog_sert_card.prototype), "Save"));
+	($mol_mem_key(($.$bog_sert_card.prototype), "Shop_row"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Карта гостя: свой QR для кассы и баланс по каждому салону.
+         *
+         * Баллы лежат не здесь, а в книгах операций салонов, подписанных их ключами.
+         * Карта только складывает то, что там записано, поэтому подделать баланс,
+         * правя свою же карту, невозможно.
+         */
+        class $bog_sert_card extends $.$bog_sert_card {
+            /** Карта по ссылке. Без `@ $mol_mem` — объект Базы. */
+            pass() {
+                const uri = this.uri();
+                if (!this.$.$giper_baza_link.check(uri))
+                    return null;
+                const pass = this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(uri), $bog_sert_pass);
+                pass.land().sync();
+                return pass;
+            }
+            /** Салоны, где карту заводили. */
+            shop_uris() {
+                return this.pass()?.Shops()?.items() ?? [];
+            }
+            ident() {
+                return this.uri();
+            }
+            /** Абсолютный адрес этой же карты — он же содержимое QR для кассы. */
+            page_uri() {
+                const uri = this.uri();
+                if (!uri)
+                    return '';
+                return this.$.$mol_state_arg.link({ page: null, bz: null, bzname: null, pass: uri });
+            }
+            row_uri(uri) {
+                return uri;
+            }
+            shop_rows() {
+                return this.shop_uris().map(uri => this.Shop_row(uri));
+            }
+            /** Сумма по всем салонам. */
+            total() {
+                // Строка считает баланс сама, но её метод объявлен в `$.$$`, куда
+                // сгенерированный из view.tree тип не заглядывает — отсюда каст.
+                const sum = this.shop_uris().reduce((acc, uri) => acc + this.Shop_row(uri).balance(), 0);
+                return `${sum} баллов`;
+            }
+            card_rows() {
+                if (!this.pass())
+                    return [this.Empty()];
+                return [
+                    this.Head(),
+                    this.Code(),
+                    this.Ident(),
+                    ...this.shop_uris().length ? [this.Shops()] : [],
+                    this.Save(),
+                ];
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_sert_card.prototype, "shop_rows", null);
+        $$.$bog_sert_card = $bog_sert_card;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_card, {
+        flex: {
+            direction: 'column',
+        },
+        align: {
+            items: 'center',
+        },
+        gap: $mol_gap.block,
+        padding: $mol_gap.block,
+        maxWidth: '32rem',
+        width: '100%',
+        margin: {
+            left: 'auto',
+            right: 'auto',
+        },
+        Head: {
+            flex: {
+                direction: 'column',
+            },
+            align: {
+                items: 'center',
+            },
+            gap: '.25rem',
+        },
+        Kind: {
+            font: {
+                size: '.75rem',
+            },
+            letterSpacing: '.15em',
+            textTransform: 'uppercase',
+            color: $mol_theme.shade,
+        },
+        Total: {
+            font: {
+                size: '2rem',
+                weight: 'bold',
+            },
+        },
+        Code: {
+            width: '14rem',
+            height: '14rem',
+            flex: {
+                grow: 0,
+                shrink: 0,
+            },
+        },
+        Ident: {
+            flex: {
+                direction: 'column',
+            },
+            align: {
+                items: 'center',
+            },
+            gap: '.125rem',
+        },
+        Ident_label: {
+            font: {
+                size: '.75rem',
+            },
+            color: $mol_theme.shade,
+        },
+        Ident_value: {
+            fontFamily: 'monospace',
+            wordBreak: 'break-all',
+        },
+        Shops: {
+            flex: {
+                direction: 'column',
+            },
+            gap: '1px',
+            width: '100%',
+        },
+        Save: {
+            font: {
+                size: '.85rem',
+            },
+            color: $mol_theme.shade,
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_app) = class $bog_sert_app extends ($.$mol_view) {
+		Desk(){
+			const obj = new this.$.$bog_sert_desk();
+			return obj;
+		}
+		sheet_title(){
+			return "Сертификат";
 		}
 		Home(){
 			const obj = new this.$.$mol_link();
 			(obj.title) = () => ("Сертификаты");
-			(obj.arg) = () => ({"cert": null, "screen": null});
-			return obj;
-		}
-		Status(){
-			const obj = new this.$.$giper_baza_status();
+			(obj.arg) = () => ({
+				"cert": null, 
+				"pass": null, 
+				"bz": null, 
+				"bzname": null, 
+				"page": null
+			});
 			return obj;
 		}
 		Theme_toggle(){
@@ -25527,13 +27788,88 @@ var $;
 			(obj.theme_auto) = () => ((this.Theme()));
 			return obj;
 		}
-		page_tools(){
+		cert_uri(){
+			return "";
+		}
+		Sheet_card(){
+			const obj = new this.$.$bog_sert_sheet();
+			(obj.uri) = () => ((this.cert_uri()));
+			return obj;
+		}
+		Sheet(){
+			const obj = new this.$.$mol_page();
+			(obj.title) = () => ((this.sheet_title()));
+			(obj.tools) = () => ([(this.Home()), (this.Theme_toggle())]);
+			(obj.body) = () => ([(this.Sheet_card())]);
+			return obj;
+		}
+		front_title(){
+			return "Салон";
+		}
+		shop_uri(){
+			return "";
+		}
+		Front_body(){
+			const obj = new this.$.$bog_sert_front();
+			(obj.uri) = () => ((this.shop_uri()));
+			return obj;
+		}
+		Front(){
+			const obj = new this.$.$mol_page();
+			(obj.title) = () => ((this.front_title()));
+			(obj.tools) = () => ([(this.Home()), (this.Theme_toggle())]);
+			(obj.body) = () => ([(this.Front_body())]);
+			return obj;
+		}
+		pass_uri(){
+			return "";
+		}
+		Card_body(){
+			const obj = new this.$.$bog_sert_card();
+			(obj.uri) = () => ((this.pass_uri()));
+			return obj;
+		}
+		Card(){
+			const obj = new this.$.$mol_page();
+			(obj.title) = () => ("Карта гостя");
+			(obj.tools) = () => ([(this.Home()), (this.Theme_toggle())]);
+			(obj.body) = () => ([(this.Card_body())]);
+			return obj;
+		}
+		Rivals_hint(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ("На это имя претендует несколько салонов. Имя в адресе не защищено, поэтому угадывать за вас мы не будем: выберите, куда идти, и дальше пользуйтесь прямой ссылкой.");
+			return obj;
+		}
+		rival_rows(){
+			return [];
+		}
+		Rivals_list(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ((this.rival_rows()));
+			return obj;
+		}
+		Rivals(){
+			const obj = new this.$.$mol_page();
+			(obj.title) = () => ("Имя занято дважды");
+			(obj.tools) = () => ([(this.Home()), (this.Theme_toggle())]);
+			(obj.body) = () => ([(this.Rivals_hint()), (this.Rivals_list())]);
+			return obj;
+		}
+		app_body(){
 			return [
-				(this.Nav()), 
-				(this.Home()), 
-				(this.Status()), 
-				(this.Theme_toggle())
+				(this.Desk()), 
+				(this.Sheet()), 
+				(this.Front()), 
+				(this.Card()), 
+				(this.Rivals())
 			];
+		}
+		rival_title(id){
+			return "";
+		}
+		rival_uri(id){
+			return "";
 		}
 		Theme(){
 			const obj = new this.$.$bog_theme_auto();
@@ -25542,51 +27878,33 @@ var $;
 			(obj.themes) = () => (["$mol_theme_calm_light", "$mol_theme_calm_dark"]);
 			return obj;
 		}
-		Desk(){
-			const obj = new this.$.$bog_sert_desk();
+		sub(){
+			return (this.app_body());
+		}
+		Rival(id){
+			const obj = new this.$.$mol_link();
+			(obj.title) = () => ((this.rival_title(id)));
+			(obj.arg) = () => ({"bzname": null, "bz": (this.rival_uri(id))});
 			return obj;
-		}
-		Key(){
-			const obj = new this.$.$bog_sert_key();
-			return obj;
-		}
-		cert_uri(){
-			return "";
-		}
-		Card(){
-			const obj = new this.$.$bog_sert_card();
-			(obj.uri) = () => ((this.cert_uri()));
-			return obj;
-		}
-		page_body(){
-			return [
-				(this.Desk()), 
-				(this.Key()), 
-				(this.Card())
-			];
-		}
-		title(){
-			return (this.page_title());
-		}
-		tools(){
-			return (this.page_tools());
 		}
 		plugins(){
 			return [(this.Theme())];
 		}
-		body(){
-			return (this.page_body());
-		}
 	};
-	($mol_mem(($.$bog_sert_app.prototype), "screen"));
-	($mol_mem(($.$bog_sert_app.prototype), "Nav"));
-	($mol_mem(($.$bog_sert_app.prototype), "Home"));
-	($mol_mem(($.$bog_sert_app.prototype), "Status"));
-	($mol_mem(($.$bog_sert_app.prototype), "Theme_toggle"));
-	($mol_mem(($.$bog_sert_app.prototype), "Theme"));
 	($mol_mem(($.$bog_sert_app.prototype), "Desk"));
-	($mol_mem(($.$bog_sert_app.prototype), "Key"));
+	($mol_mem(($.$bog_sert_app.prototype), "Home"));
+	($mol_mem(($.$bog_sert_app.prototype), "Theme_toggle"));
+	($mol_mem(($.$bog_sert_app.prototype), "Sheet_card"));
+	($mol_mem(($.$bog_sert_app.prototype), "Sheet"));
+	($mol_mem(($.$bog_sert_app.prototype), "Front_body"));
+	($mol_mem(($.$bog_sert_app.prototype), "Front"));
+	($mol_mem(($.$bog_sert_app.prototype), "Card_body"));
 	($mol_mem(($.$bog_sert_app.prototype), "Card"));
+	($mol_mem(($.$bog_sert_app.prototype), "Rivals_hint"));
+	($mol_mem(($.$bog_sert_app.prototype), "Rivals_list"));
+	($mol_mem(($.$bog_sert_app.prototype), "Rivals"));
+	($mol_mem(($.$bog_sert_app.prototype), "Theme"));
+	($mol_mem_key(($.$bog_sert_app.prototype), "Rival"));
 
 
 ;
@@ -27255,6 +29573,336 @@ var $;
 })($ || ($ = {}));
 
 ;
+	($.$mol_pick) = class $mol_pick extends ($.$mol_pop) {
+		keydown(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		trigger_enabled(){
+			return true;
+		}
+		clicks(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		trigger_content(){
+			return [(this.title())];
+		}
+		hint(){
+			return "";
+		}
+		Trigger(){
+			const obj = new this.$.$mol_check();
+			(obj.minimal_width) = () => (40);
+			(obj.minimal_height) = () => (40);
+			(obj.enabled) = () => ((this.trigger_enabled()));
+			(obj.checked) = (next) => ((this.showed(next)));
+			(obj.clicks) = (next) => ((this.clicks(next)));
+			(obj.sub) = () => ((this.trigger_content()));
+			(obj.hint) = () => ((this.hint()));
+			return obj;
+		}
+		event(){
+			return {...(super.event()), "keydown": (next) => (this.keydown(next))};
+		}
+		Anchor(){
+			return (this.Trigger());
+		}
+	};
+	($mol_mem(($.$mol_pick.prototype), "keydown"));
+	($mol_mem(($.$mol_pick.prototype), "clicks"));
+	($mol_mem(($.$mol_pick.prototype), "Trigger"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Pop-up display and hide by mouse click, also hide by unfocus.
+         * Based on [mol_pop](https://mol.hyoo.ru/#!section=demos/demo=mol_pop_demo) component.
+         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_pick_demo
+         */
+        class $mol_pick extends $.$mol_pick {
+            keydown(event) {
+                if (!this.trigger_enabled())
+                    return;
+                if (event.defaultPrevented)
+                    return;
+                if (event.keyCode === $mol_keyboard_code.escape) {
+                    if (!this.showed())
+                        return;
+                    event.preventDefault();
+                    this.showed(false);
+                }
+            }
+        }
+        $$.$mol_pick = $mol_pick;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/pick/pick.view.css", "[mol_pick_trigger] {\n\talign-items: center;\n\tflex-grow: 1;\n}\n");
+})($ || ($ = {}));
+
+;
+	($.$mol_icon_dots_vertical) = class $mol_icon_dots_vertical extends ($.$mol_icon) {
+		path(){
+			return "M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z";
+		}
+	};
+
+
+;
+"use strict";
+
+
+;
+	($.$mol_select) = class $mol_select extends ($.$mol_pick) {
+		enabled(){
+			return true;
+		}
+		event_select(id, next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		option_label(id){
+			return "";
+		}
+		filter_pattern(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		Option_label(id){
+			const obj = new this.$.$mol_dimmer();
+			(obj.haystack) = () => ((this.option_label(id)));
+			(obj.needle) = () => ((this.filter_pattern()));
+			return obj;
+		}
+		option_content(id){
+			return [(this.Option_label(id))];
+		}
+		no_options_message(){
+			return (this.$.$mol_locale.text("$mol_select_no_options_message"));
+		}
+		nav_components(){
+			return [];
+		}
+		option_focused(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		nav_cycle(next){
+			if(next !== undefined) return next;
+			return true;
+		}
+		Nav(){
+			const obj = new this.$.$mol_nav();
+			(obj.keys_y) = () => ((this.nav_components()));
+			(obj.current_y) = (next) => ((this.option_focused(next)));
+			(obj.cycle) = (next) => ((this.nav_cycle(next)));
+			return obj;
+		}
+		menu_content(){
+			return [];
+		}
+		Menu(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ((this.menu_content()));
+			return obj;
+		}
+		Bubble_pane(){
+			const obj = new this.$.$mol_scroll();
+			(obj.sub) = () => ([(this.Menu())]);
+			return obj;
+		}
+		filter_hint(){
+			return (this.$.$mol_locale.text("$mol_select_filter_hint"));
+		}
+		submit(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		dictionary(next){
+			if(next !== undefined) return next;
+			return {};
+		}
+		options(){
+			return [];
+		}
+		value(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		option_label_default(){
+			return "";
+		}
+		Option_row(id){
+			const obj = new this.$.$mol_button_minor();
+			(obj.enabled) = () => ((this.enabled()));
+			(obj.event_click) = (next) => ((this.event_select(id, next)));
+			(obj.sub) = () => ((this.option_content(id)));
+			return obj;
+		}
+		No_options(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.no_options_message())]);
+			return obj;
+		}
+		plugins(){
+			return [...(super.plugins()), (this.Nav())];
+		}
+		hint(){
+			return (this.$.$mol_locale.text("$mol_select_hint"));
+		}
+		bubble_content(){
+			return [(this.Filter()), (this.Bubble_pane())];
+		}
+		Filter(){
+			const obj = new this.$.$mol_search();
+			(obj.query) = (next) => ((this.filter_pattern(next)));
+			(obj.hint) = () => ((this.filter_hint()));
+			(obj.submit) = (next) => ((this.submit(next)));
+			(obj.enabled) = () => ((this.enabled()));
+			return obj;
+		}
+		Trigger_icon(){
+			const obj = new this.$.$mol_icon_dots_vertical();
+			return obj;
+		}
+		trigger_enabled(){
+			return (this.enabled());
+		}
+	};
+	($mol_mem_key(($.$mol_select.prototype), "event_select"));
+	($mol_mem(($.$mol_select.prototype), "filter_pattern"));
+	($mol_mem_key(($.$mol_select.prototype), "Option_label"));
+	($mol_mem(($.$mol_select.prototype), "option_focused"));
+	($mol_mem(($.$mol_select.prototype), "nav_cycle"));
+	($mol_mem(($.$mol_select.prototype), "Nav"));
+	($mol_mem(($.$mol_select.prototype), "Menu"));
+	($mol_mem(($.$mol_select.prototype), "Bubble_pane"));
+	($mol_mem(($.$mol_select.prototype), "submit"));
+	($mol_mem(($.$mol_select.prototype), "dictionary"));
+	($mol_mem(($.$mol_select.prototype), "value"));
+	($mol_mem_key(($.$mol_select.prototype), "Option_row"));
+	($mol_mem(($.$mol_select.prototype), "No_options"));
+	($mol_mem(($.$mol_select.prototype), "Filter"));
+	($mol_mem(($.$mol_select.prototype), "Trigger_icon"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Allow user to select value from various options and displays current value.
+         * @see https://mol.hyoo.ru/#!section=demos/demo=mol_select_demo_colors
+         */
+        class $mol_select extends $.$mol_select {
+            filter_pattern(next) {
+                this.focused();
+                return next || '';
+            }
+            open() {
+                this.showed(true);
+            }
+            options() {
+                return Object.keys(this.dictionary());
+            }
+            options_filtered() {
+                let options = this.options();
+                options = options.filter($mol_match_text(this.filter_pattern(), (id) => [this.option_label(id)]));
+                const index = options.indexOf(this.value());
+                if (index >= 0)
+                    options = [...options.slice(0, index), ...options.slice(index + 1)];
+                return options;
+            }
+            option_label(id) {
+                const value = this.dictionary()[id];
+                return (value == null ? id : value) || this.option_label_default();
+            }
+            option_rows() {
+                return this.options_filtered().map((option) => this.Option_row(option));
+            }
+            option_focused(component) {
+                if (component == null) {
+                    for (let comp of this.nav_components()) {
+                        if (comp && comp.focused())
+                            return comp;
+                    }
+                    return null;
+                }
+                if (this.showed()) {
+                    component.focused(true);
+                }
+                return component;
+            }
+            event_select(id, event) {
+                this.value(id);
+                this.showed(false);
+                event?.preventDefault();
+            }
+            nav_components() {
+                if (this.options().length > 1 && this.Filter()) {
+                    return [this.Filter(), ...this.option_rows()];
+                }
+                else {
+                    return this.option_rows();
+                }
+            }
+            trigger_content() {
+                return [
+                    ...this.option_content(this.value()),
+                    ...this.trigger_enabled() ? [this.Trigger_icon()] : [],
+                ];
+            }
+            menu_content() {
+                return [
+                    ...this.option_rows(),
+                    ...(this.options_filtered().length === 0) ? [this.No_options()] : []
+                ];
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $mol_select.prototype, "filter_pattern", null);
+        __decorate([
+            $mol_mem
+        ], $mol_select.prototype, "options", null);
+        __decorate([
+            $mol_mem
+        ], $mol_select.prototype, "options_filtered", null);
+        __decorate([
+            $mol_mem
+        ], $mol_select.prototype, "option_focused", null);
+        $$.$mol_select = $mol_select;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("mol/select/select.view.css", "[mol_select] {\n\tdisplay: flex;\n\tword-break: normal;\n\talign-self: flex-start;\n}\n\n[mol_select_option_row] {\n\tmin-width: 100%;\n\tpadding: 0;\n\tjustify-content: flex-start;\n}\n\n[mol_select_filter] {\n\tflex: 1 0 auto;\n\talign-self: stretch;\n}\n\n[mol_select_option_label] {\n\tpadding: var(--mol_gap_text);\n\ttext-align: start;\n\tmin-height: 1.5em;\n\tdisplay: block;\n\twhite-space: nowrap;\n}\n\n[mol_select_clear_option_content] {\n\tpadding: .5em 1rem .5rem 0;\n\ttext-align: start;\n\tbox-shadow: var(--mol_theme_line);\n\tflex: 1 0 auto;\n}\n\n[mol_select_no_options] {\n\tpadding: var(--mol_gap_text);\n\ttext-align: start;\n\tdisplay: block;\n\tcolor: var(--mol_theme_shade);\n}\n\n[mol_select_trigger] {\n\tpadding: 0;\n\tflex: 1 1 auto;\n\tdisplay: flex;\n}\n\n[mol_select_trigger] > * {\n\tmargin-inline-end: -1rem;\n}\n\n[mol_select_trigger] > *:last-child {\n\tmargin-inline-end: 0;\n}\n\n[mol_select_menu] {\n\tdisplay: flex;\n\tflex-direction: column;\n}\n\n");
+})($ || ($ = {}));
+
+;
 	($.$bog_builderui_select) = class $bog_builderui_select extends ($.$mol_select) {};
 
 
@@ -27501,42 +30149,83 @@ var $;
     var $$;
     (function ($$) {
         /**
-         * Два входа в одно приложение: кабинет салона по своему ключу
-         * и карточка сертификата по присланной ссылке.
+         * Четыре входа в одно приложение.
+         *
+         * `cert=` — карточка сертификата, `bz=` или `bzname=` — витрина салона,
+         * `pass=` — карта гостя, а без аргументов открывается кабинет владельца.
+         * Посторонний всегда приходит по ссылке и кабинета не видит.
          */
         class $bog_sert_app extends $.$bog_sert_app {
             static {
                 $bog_builderui_router.activate();
             }
-            screen(next) {
-                return this.$.$mol_state_arg.value('screen', next) ?? 'desk';
-            }
-            /** Непустая ссылка означает, что открыт сертификат, а не кабинет. */
             cert_uri(next) {
                 return this.$.$mol_state_arg.value('cert', next) ?? '';
             }
-            page_body() {
-                if (this.cert_uri())
-                    return [this.Card()];
-                if (this.screen() === 'key')
-                    return [this.Key()];
-                return [this.Desk()];
+            pass_uri(next) {
+                return this.$.$mol_state_arg.value('pass', next) ?? '';
+            }
+            /** Имя из адреса, приведённое к тому же виду, в каком его занимали. */
+            bzname(next) {
+                const raw = this.$.$mol_state_arg.value('bzname', next) ?? '';
+                return raw ? $bog_sert_name.normal(raw) : '';
+            }
+            /** Словарь реестра имён. Пусто, если реестр не заведён. */
+            names() {
+                const land = $bog_sert_name.land;
+                if (!this.$.$giper_baza_link.check(land))
+                    return null;
+                const dict = this.$.$giper_baza_glob.Land(new this.$.$giper_baza_link(land)).Data($bog_sert_name);
+                dict.land().sync();
+                return dict;
+            }
+            /** Заявки на имя из адреса, ранняя первой. */
+            claims() {
+                const dict = this.names();
+                const name = this.bzname();
+                if (!dict || !name)
+                    return [];
+                return $bog_sert_name.claims(dict, name);
             }
             /**
-             * На карточке сертификата переключателя разделов нет: её открывает
-             * получатель подарка, которому кабинет чужого салона ни к чему.
+             * Ленд салона. Прямая ссылка сильнее имени: она не перехватывается,
+             * поэтому если в адресе есть и то и другое, побеждает ссылка.
              */
-            page_tools() {
-                if (this.cert_uri())
-                    return [this.Home(), this.Theme_toggle()];
-                return [this.Nav(), this.Status(), this.Theme_toggle()];
+            shop_uri() {
+                const direct = this.$.$mol_state_arg.value('bz') ?? '';
+                if (direct)
+                    return direct;
+                return this.claims()[0]?.shop ?? '';
             }
-            page_title() {
+            rival_uri(index) {
+                return this.claims()[index]?.shop ?? '';
+            }
+            rival_title(index) {
+                const claim = this.claims()[index];
+                if (!claim)
+                    return '';
+                const moment = new this.$.$mol_time_moment(claim.time * 1000);
+                return `${claim.shop} — заявка от ${moment.toString('DD.MM.YYYY')}`;
+            }
+            rival_rows() {
+                return this.claims().map((_, index) => this.Rival(index));
+            }
+            sheet_title() {
+                return this.Sheet_card().shop() || 'Сертификат';
+            }
+            front_title() {
+                return this.Front_body().name();
+            }
+            app_body() {
                 if (this.cert_uri())
-                    return this.Card().shop() || 'Сертификат';
-                if (this.screen() === 'key')
-                    return 'Ключ доступа';
-                return 'Сертификаты';
+                    return [this.Sheet()];
+                if (this.pass_uri())
+                    return [this.Card()];
+                if (this.shop_uri())
+                    return [this.Front()];
+                if (this.bzname())
+                    return [this.claims().length > 1 ? this.Rivals() : this.Front()];
+                return [this.Desk()];
             }
             /** Домашний ленд заводится сам при первом открытии. */
             auto() {
@@ -27546,10 +30235,19 @@ var $;
         }
         __decorate([
             $mol_mem
-        ], $bog_sert_app.prototype, "screen", null);
+        ], $bog_sert_app.prototype, "cert_uri", null);
         __decorate([
             $mol_mem
-        ], $bog_sert_app.prototype, "cert_uri", null);
+        ], $bog_sert_app.prototype, "pass_uri", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_app.prototype, "bzname", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_app.prototype, "shop_uri", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_app.prototype, "rival_rows", null);
         __decorate([
             $mol_mem
         ], $bog_sert_app.prototype, "auto", null);
@@ -27562,9 +30260,10 @@ var $;
 var $;
 (function ($) {
     $mol_style_define($bog_sert_app, {
-        Body_content: {
-            padding: 0,
+        flex: {
+            direction: 'column',
         },
+        height: '100%',
     });
 })($ || ($ = {}));
 
@@ -33939,6 +36638,27 @@ var $;
 "use strict";
 var $;
 (function ($_1) {
+    $mol_test_mocks.push($ => {
+        class $mol_locale_mock extends $mol_locale {
+            lang(next = 'en') { return next; }
+            static source(lang) {
+                return {};
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $mol_locale_mock.prototype, "lang", null);
+        __decorate([
+            $mol_mem_key
+        ], $mol_locale_mock, "source", null);
+        $.$mol_locale = $mol_locale_mock;
+    });
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($_1) {
     var $$;
     (function ($$) {
         $mol_test({
@@ -33979,53 +36699,6 @@ var $;
             },
         });
     })($$ = $_1.$$ || ($_1.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_test({
-        'null by default'() {
-            const key = String(Math.random());
-            $mol_assert_equal($mol_state_session.value(key), null);
-        },
-        'storing'() {
-            const key = String(Math.random());
-            $mol_state_session.value(key, '$mol_state_session_test');
-            $mol_assert_equal($mol_state_session.value(key), '$mol_state_session_test');
-            $mol_state_session.value(key, null);
-            $mol_assert_equal($mol_state_session.value(key), null);
-        },
-    });
-})($ || ($ = {}));
-
-;
-"use strict";
-/** @jsx $mol_jsx */
-/** @jsxFrag $mol_jsx_frag */
-var $;
-(function ($) {
-    $mol_test({
-        'safe tag'() {
-            $mol_assert_equal($mol_dom_serialize($$.$mol_dom_safe([$mol_jsx("div", null, "foo")])[0]), $mol_dom_serialize($mol_jsx("div", null, "foo")));
-        },
-        'bad tag'() {
-            $mol_assert_equal($mol_dom_serialize($$.$mol_dom_safe([$mol_jsx("script", null, "alert('ahtung!')")])[0]), $mol_dom_serialize($mol_jsx($mol_jsx_frag, null, "alert('ahtung!')")));
-        },
-        'common attr'() {
-            $mol_assert_equal($mol_dom_serialize($$.$mol_dom_safe([$mol_jsx("a", { id: "foo" }, "foo")])[0]), $mol_dom_serialize($mol_jsx("a", { id: "foo" }, "foo")));
-        },
-        'safe attr'() {
-            $mol_assert_equal($mol_dom_serialize($$.$mol_dom_safe([$mol_jsx("a", { href: "https://example.org/" }, "foo")])[0]), $mol_dom_serialize($mol_jsx("a", { href: "https://example.org/" }, "foo")));
-        },
-        'bad attr'() {
-            $mol_assert_equal($mol_dom_serialize($$.$mol_dom_safe([$mol_jsx("a", { onclick: "alert('ahtung!')" }, "foo")])[0]), $mol_dom_serialize($mol_jsx("a", null, "foo")));
-        },
-        'danger attr'() {
-            $mol_assert_equal($mol_dom_serialize($$.$mol_dom_safe([$mol_jsx("a", { href: "javascript:alert('ahtung!')" }, "foo")])[0]), $mol_dom_serialize($mol_jsx("a", { href: "about:blank#javascript:alert('ahtung!')" }, "foo")));
-        },
-    });
 })($ || ($ = {}));
 
 ;
@@ -34365,22 +37038,29 @@ var $;
 
 ;
 "use strict";
+/** @jsx $mol_jsx */
+/** @jsxFrag $mol_jsx_frag */
 var $;
-(function ($_1) {
-    $mol_test_mocks.push($ => {
-        class $mol_locale_mock extends $mol_locale {
-            lang(next = 'en') { return next; }
-            static source(lang) {
-                return {};
-            }
-        }
-        __decorate([
-            $mol_mem
-        ], $mol_locale_mock.prototype, "lang", null);
-        __decorate([
-            $mol_mem_key
-        ], $mol_locale_mock, "source", null);
-        $.$mol_locale = $mol_locale_mock;
+(function ($) {
+    $mol_test({
+        'safe tag'() {
+            $mol_assert_equal($mol_dom_serialize($$.$mol_dom_safe([$mol_jsx("div", null, "foo")])[0]), $mol_dom_serialize($mol_jsx("div", null, "foo")));
+        },
+        'bad tag'() {
+            $mol_assert_equal($mol_dom_serialize($$.$mol_dom_safe([$mol_jsx("script", null, "alert('ahtung!')")])[0]), $mol_dom_serialize($mol_jsx($mol_jsx_frag, null, "alert('ahtung!')")));
+        },
+        'common attr'() {
+            $mol_assert_equal($mol_dom_serialize($$.$mol_dom_safe([$mol_jsx("a", { id: "foo" }, "foo")])[0]), $mol_dom_serialize($mol_jsx("a", { id: "foo" }, "foo")));
+        },
+        'safe attr'() {
+            $mol_assert_equal($mol_dom_serialize($$.$mol_dom_safe([$mol_jsx("a", { href: "https://example.org/" }, "foo")])[0]), $mol_dom_serialize($mol_jsx("a", { href: "https://example.org/" }, "foo")));
+        },
+        'bad attr'() {
+            $mol_assert_equal($mol_dom_serialize($$.$mol_dom_safe([$mol_jsx("a", { onclick: "alert('ahtung!')" }, "foo")])[0]), $mol_dom_serialize($mol_jsx("a", null, "foo")));
+        },
+        'danger attr'() {
+            $mol_assert_equal($mol_dom_serialize($$.$mol_dom_safe([$mol_jsx("a", { href: "javascript:alert('ahtung!')" }, "foo")])[0]), $mol_dom_serialize($mol_jsx("a", { href: "about:blank#javascript:alert('ahtung!')" }, "foo")));
+        },
     });
 })($ || ($ = {}));
 
@@ -34415,6 +37095,25 @@ var $;
                 ['table', '| header1 | header2\n|----|----\n| Cell11 | Cell12\n| Cell21 | Cell22\n\n', ['| header1 | header2\n|----|----\n| Cell11 | Cell12\n| Cell21 | Cell22\n', '\n'], 0],
                 ['table', '| Cell11 | Cell12\n| Cell21 | Cell22\n', ['| Cell11 | Cell12\n| Cell21 | Cell22\n', ''], 68],
             ]);
+        },
+    });
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_test({
+        'null by default'() {
+            const key = String(Math.random());
+            $mol_assert_equal($mol_state_session.value(key), null);
+        },
+        'storing'() {
+            const key = String(Math.random());
+            $mol_state_session.value(key, '$mol_state_session_test');
+            $mol_assert_equal($mol_state_session.value(key), '$mol_state_session_test');
+            $mol_state_session.value(key, null);
+            $mol_assert_equal($mol_state_session.value(key), null);
         },
     });
 })($ || ($ = {}));
@@ -34584,6 +37283,44 @@ var $;
             $mol_assert_ok(body.includes('Дарим вам подарочный сертификат.'));
             // Пустые куски не должны оставлять дыр в письме.
             $mol_assert_ok(!body.includes('\n\n\n'));
+        },
+        'баллы с чека округляются вниз, лишнего не дарим'() {
+            $mol_assert_equal($bog_sert_op.accrual(1000, 5), 50);
+            $mol_assert_equal($bog_sert_op.accrual(999, 5), 49);
+            $mol_assert_equal($bog_sert_op.accrual(1000, 0), 0);
+            $mol_assert_equal($bog_sert_op.accrual(0, 5), 0);
+        },
+        'баланс складывается только по своей карте'() {
+            const ops = [
+                { Pass: () => ({ val: () => 'aaaaaaaa' }), Delta: () => ({ val: () => 100 }) },
+                { Pass: () => ({ val: () => 'bbbbbbbb' }), Delta: () => ({ val: () => 500 }) },
+                { Pass: () => ({ val: () => 'aaaaaaaa' }), Delta: () => ({ val: () => -30 }) },
+            ];
+            $mol_assert_equal($bog_sert_op.balance(ops, 'aaaaaaaa'), 70);
+            $mol_assert_equal($bog_sert_op.balance(ops, 'cccccccc'), 0);
+        },
+        'списать нельзя больше баланса и дороже чека'() {
+            // Баланс 500, чек 200 ₽, балл стоит рубль — дальше чека не спишем.
+            $mol_assert_equal($bog_sert_op.writeoff_limit(500, 200, 1), 200);
+            // Баланс 50 меньше чека — упираемся в баланс.
+            $mol_assert_equal($bog_sert_op.writeoff_limit(50, 200, 1), 50);
+            // Без покупки списывать не из чего.
+            $mol_assert_equal($bog_sert_op.writeoff_limit(500, 0, 1), 0);
+            // Балл в полрубля — на 200 ₽ уходит 400 баллов.
+            $mol_assert_equal($bog_sert_op.writeoff_limit(500, 200, 0.5), 400);
+        },
+        'номер карты вынимается из адреса, набранного как угодно'() {
+            const link = 'r7u17HFT_mY9Rf1P0';
+            $mol_assert_equal($bog_sert_pass.uri_of('https://example.com/sert/pass=' + link), link);
+            $mol_assert_equal($bog_sert_pass.uri_of('#!pass=' + link), link);
+            $mol_assert_equal($bog_sert_pass.uri_of('  ' + link + '  '), link);
+            $mol_assert_equal($bog_sert_pass.uri_of('https://example.com/'), '');
+            $mol_assert_equal($bog_sert_pass.uri_of(''), '');
+        },
+        'имя витрины приводится к скучному виду'() {
+            $mol_assert_equal($bog_sert_name.normal('Coffier Shopper'), 'coffier_shopper');
+            $mol_assert_equal($bog_sert_name.normal('  --Кофе--  '), '');
+            $mol_assert_equal($bog_sert_name.normal('shop-1'), 'shop_1');
         },
         'ссылка сертификата отличается от произвольной строки'() {
             $mol_assert_equal($giper_baza_link.check('это не ссылка'), null);

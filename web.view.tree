@@ -8,113 +8,14 @@ $mol_scroll $mol_view
 		^
 		scroll? <=> event_scroll? null
 
-$mol_page $mol_view
-	dom_name \article
-	attr *
-		^
-		tabIndex <= tabindex -1
-	sub /
-		<= Head $mol_view
-			minimal_height 64
-			dom_name \header
-			sub <= head /
-				<= Title $mol_view
-					dom_name \h1
-					sub <= title_content /
-						<= Logo null
-						<= title
-				<= Tools $mol_view
-					sub <= tools /$mol_view_content
-		<= Body $mol_scroll
-			scroll_top? => body_scroll_top?
-			sub <= body_content /
-				<= Body_content $mol_view
-					sub <= body /$mol_view
-		<= Foot $mol_view
-			dom_name \footer
-			sub <= foot /$mol_view
-
-$mol_speck $mol_view
-	theme \$mol_theme_accent
-	sub /
-		<= value null
-
-$mol_button $mol_view
-	enabled true
-	click? null
-	event_click? null
-	status? /
-	event *
-		^
-		click? <=> activate? <=> event_activate? null
-		dblclick? <=> clicks? null
-		keydown? <=> key_press? <=> event_key_press? null
-	attr *
-		^
-		disabled <= disabled false
-		role \button
-		tabindex <= tab_index 0
-		title <= hint_safe <= hint \
-	sub /$mol_view_content
-		<= title
-	Speck $mol_speck
-		value <= error \
-
-$mol_button_typed $mol_button
-	minimal_height 40
-	minimal_width 40
-
-$mol_button_minor $mol_button_typed
-
-$mol_check $mol_button_minor
-	attr *
-		^
-		mol_check_checked <= checked? false
-		aria-checked <= aria_checked \false
-		role <= aria_role \checkbox
-	sub /$mol_view_content
-		<= Icon null
-		<= label /
-			<= Title $mol_view
-				sub /
-					<= title \
-
-$mol_check_list $mol_view
-	dictionary *
-	Option* $mol_check
-		checked? <=> option_checked*? false
-		label <= option_label* /
-			<= option_title* \
-		enabled <= option_enabled* <= enabled true
-		hint <= option_hint* \
-		minimal_height 24
-	options *
-	keys /string
-	sub <= items /$mol_check
-
-$mol_switch $mol_check_list
-	value? \
-
-$mol_link $mol_view
-	uri \
-	dom_name \a
-	uri_off \
-	uri_native null
-	external false
-	attr *
-		^
-		href <= uri_unsafe <= uri_toggle \
-		title <= hint_safe <= hint \
-		target <= target \_self
-		download <= file_name \
-		mol_link_current <= current false
-		rel <= relation \
-	sub /$mol_view_content
-		<= title
-	arg *
-	event *
-		^
-		click? <=> click? <=> event_click? null
+$mol_book2 $mol_scroll
+	menu_title \
+	sub /$mol_view
+		^ pages <= pages_deep /$mol_view
+		^ placeholders /$mol_view
+			<= Placeholder $mol_view
+	minimal_width 0
+	Gap* $mol_view title \
 
 $mol_ghost $mol_view
 	Sub $mol_view
@@ -165,37 +66,14 @@ $mol_pop_bubble $mol_view
 		tabindex 0
 		popover \manual
 
-$mol_pick $mol_pop
+$mol_hotkey $mol_plugin
 	event *
 		^
 		keydown? <=> keydown? null
-	Anchor <= Trigger $mol_check
-		minimal_width 40
-		minimal_height 40
-		enabled <= trigger_enabled true
-		checked? <=> showed?
-		clicks? <=> clicks? null
-		sub <= trigger_content /$mol_view_content
-			<= title
-		hint <= hint \
-
-$mol_paragraph $mol_view
-	line_height 24
-	letter_width 7
-	width_limit +Infinity
-	row_width 0
-	sub / <= title
-
-$mol_dimmer $mol_paragraph
-	haystack \
-	needle \
-	sub <= parts /$mol_view_content
-	Low* $mol_paragraph
-		sub /
-			<= string* \
-	High* $mol_paragraph
-		sub /
-			<= string* \
+	key *
+	mod_ctrl false
+	mod_alt false
+	mod_shift false
 
 $mol_nav $mol_plugin
 	cycle? false
@@ -217,29 +95,6 @@ $mol_nav $mol_plugin
 	event *
 		^
 		keydown? <=> event_key? null
-
-$mol_list $mol_view
-	render_visible_only true
-	render_over 0.1
-	sub <= rows /$mol_view
-		<= Gap_before $mol_view style * paddingTop <= gap_before 0
-		<= Empty $mol_view
-		<= Gap_after $mol_view style * paddingTop <= gap_after 0
-	item_height_min* 1
-	item_width_min* 1
-	view_window_shift? 0
-	view_window /
-		0
-		0
-
-$mol_hotkey $mol_plugin
-	event *
-		^
-		keydown? <=> keydown? null
-	key *
-	mod_ctrl false
-	mod_alt false
-	mod_shift false
 
 $mol_string $mol_view
 	dom_name \input
@@ -306,6 +161,70 @@ $mol_icon $mol_svg_root
 
 $mol_icon_close $mol_icon path \M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z
 
+$mol_speck $mol_view
+	theme \$mol_theme_accent
+	sub /
+		<= value null
+
+$mol_button $mol_view
+	enabled true
+	click? null
+	event_click? null
+	status? /
+	event *
+		^
+		click? <=> activate? <=> event_activate? null
+		dblclick? <=> clicks? null
+		keydown? <=> key_press? <=> event_key_press? null
+	attr *
+		^
+		disabled <= disabled false
+		role \button
+		tabindex <= tab_index 0
+		title <= hint_safe <= hint \
+	sub /$mol_view_content
+		<= title
+	Speck $mol_speck
+		value <= error \
+
+$mol_button_typed $mol_button
+	minimal_height 40
+	minimal_width 40
+
+$mol_button_minor $mol_button_typed
+
+$mol_list $mol_view
+	render_visible_only true
+	render_over 0.1
+	sub <= rows /$mol_view
+		<= Gap_before $mol_view style * paddingTop <= gap_before 0
+		<= Empty $mol_view
+		<= Gap_after $mol_view style * paddingTop <= gap_after 0
+	item_height_min* 1
+	item_width_min* 1
+	view_window_shift? 0
+	view_window /
+		0
+		0
+
+$mol_paragraph $mol_view
+	line_height 24
+	letter_width 7
+	width_limit +Infinity
+	row_width 0
+	sub / <= title
+
+$mol_dimmer $mol_paragraph
+	haystack \
+	needle \
+	sub <= parts /$mol_view_content
+	Low* $mol_paragraph
+		sub /
+			<= string* \
+	High* $mol_paragraph
+		sub /
+			<= string* \
+
 $mol_search $mol_pop
 	query? \
 	suggests /string
@@ -345,6 +264,134 @@ $mol_search $mol_pop
 			<= Suggest_label* $mol_dimmer
 				haystack <= suggest_label* \
 				needle <= query? \
+
+$mol_link $mol_view
+	uri \
+	dom_name \a
+	uri_off \
+	uri_native null
+	external false
+	attr *
+		^
+		href <= uri_unsafe <= uri_toggle \
+		title <= hint_safe <= hint \
+		target <= target \_self
+		download <= file_name \
+		mol_link_current <= current false
+		rel <= relation \
+	sub /$mol_view_content
+		<= title
+	arg *
+	event *
+		^
+		click? <=> click? <=> event_click? null
+
+$mol_page $mol_view
+	dom_name \article
+	attr *
+		^
+		tabIndex <= tabindex -1
+	sub /
+		<= Head $mol_view
+			minimal_height 64
+			dom_name \header
+			sub <= head /
+				<= Title $mol_view
+					dom_name \h1
+					sub <= title_content /
+						<= Logo null
+						<= title
+				<= Tools $mol_view
+					sub <= tools /$mol_view_content
+		<= Body $mol_scroll
+			scroll_top? => body_scroll_top?
+			sub <= body_content /
+				<= Body_content $mol_view
+					sub <= body /$mol_view
+		<= Foot $mol_view
+			dom_name \footer
+			sub <= foot /$mol_view
+
+$mol_book2_catalog $mol_book2
+	param \
+	spread? \
+	spreads *
+	Spread* $mol_view
+	Spread_default null
+	spread_ids /string
+	menu_filter_enabled false
+	spread_ids_filtered /string
+	spread_current null
+	menu_tools /
+	addon_tools /
+	pages /
+		<= Menu $mol_page
+			Title => Menu_title
+			title <= menu_title \
+			Tools => Menu_tools
+			Logo <= Menu_logo null
+			tools /
+				^ menu_tools
+				^ addon_tools
+			head <= menu_head /$mol_view_content
+				<= Menu_title
+				<= Menu_tools
+			body <= menu_body /$mol_view
+				<= Menu_filter $mol_search
+					query? <=> menu_filter? \
+				<= Menu_links $mol_list
+					Empty <= Menu_links_empty $mol_view
+					rows <= menu_links /$mol_view
+						<= Menu_item*0 $mol_view
+							sub <= menu_item_content* /$mol_view
+								<= Menu_link* $mol_link
+									arg <= menu_link_arg* <= arg* *
+									sub <= menu_link_content* /$mol_view_content
+										<= Menu_link_title* $mol_dimmer
+											needle <= menu_filter
+											haystack <= spread_title* \
+			foot <= menu_foot /$mol_view
+	Spread_close $mol_link
+		arg <= spread_close_arg *
+		hint @ \Close page
+		sub /
+			<= Spread_close_icon $mol_icon_close
+
+$mol_icon_script $mol_icon path \M17.8,20C17.4,21.2 16.3,22 15,22H5C3.3,22 2,20.7 2,19V18H5L14.2,18C14.6,19.2 15.7,20 17,20H17.8M19,2H8C6.3,2 5,3.3 5,5V16H16V17C16,17.6 16.4,18 17,18H18V5C18,4.4 18.4,4 19,4C19.6,4 20,4.4 20,5V6H22V5C22,3.3 20.7,2 19,2Z
+
+$mol_icon_script_text $mol_icon path \M17.8,20C17.4,21.2 16.3,22 15,22H5C3.3,22 2,20.7 2,19V18H5L14.2,18C14.6,19.2 15.7,20 17,20H17.8M19,2C20.7,2 22,3.3 22,5V6H20V5C20,4.4 19.6,4 19,4C18.4,4 18,4.4 18,5V18H17C16.4,18 16,17.6 16,17V16H5V5C5,3.3 6.3,2 8,2H19M8,6V8H15V6H8M8,10V12H14V10H8Z
+
+$mol_link_source $mol_link
+	hint @ \Source code
+	sub /
+		<= Icon $mol_icon_script_text
+
+$mol_check $mol_button_minor
+	attr *
+		^
+		mol_check_checked <= checked? false
+		aria-checked <= aria_checked \false
+		role <= aria_role \checkbox
+	sub /$mol_view_content
+		<= Icon null
+		<= label /
+			<= Title $mol_view
+				sub /
+					<= title \
+
+$mol_pick $mol_pop
+	event *
+		^
+		keydown? <=> keydown? null
+	Anchor <= Trigger $mol_check
+		minimal_width 40
+		minimal_height 40
+		enabled <= trigger_enabled true
+		checked? <=> showed?
+		clicks? <=> clicks? null
+		sub <= trigger_content /$mol_view_content
+			<= title
+		hint <= hint \
 
 $mol_icon_dots_vertical $mol_icon path \M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z
 
@@ -410,102 +457,45 @@ $giper_baza_status $mol_select
 				<= Fail $mol_icon_sync_off
 			hint <= message <= hint \Sync status
 
-$bog_theme_auto $mol_plugin
-	themes <= themes_default /
-	theme_light \$mol_theme_light
-	theme_dark \$mol_theme_dark
-	mode? \system
-	mode_next? null
-	theme_next? null
-	theme_prev? null
-	theme_set? null
-	is_light_now false
-	attr * mol_theme <= theme \
-
-$bog_theme_picker_row $mol_button_minor
-	theme_name \
-	title <= theme_name
+$mol_embed_native $mol_scroll
+	dom_name \iframe
+	window null
 	attr *
 		^
-		bog_theme_picker_row_focused <= focused_str \
-	event *
-		^
-		pointerenter?event <=> hover?event null
-
-$bog_theme_picker $mol_scroll
-	theme_auto $bog_theme_auto
-	close? null
-	query?val \
-	focused_index?val -1
-	Theme_row* $bog_theme_picker_row
-		theme_name <= theme_name* \
-		focused <= theme_focused* false
-		click?event <=> theme_select*?event null
-		hover?event <=> theme_hover*?event null
+		src <= uri? \about:config
 	sub /
-		<= Content $mol_list rows /
-			<= Search $mol_string
-				value?val <=> query?val
-				hint @ \Just start typing
-			<= Theme_list $mol_list
-				rows <= theme_rows /
-	event *
-		^
-		keydown?event <=> key_down?event null
+		<= Fallback $mol_link
+			uri <= uri
+			sub /
+				<= title \
+	message *
+		hashchange? <=> uri_change? null
 
-$mol_icon_white_balance_sunny $mol_icon path \M3.55 19.09L4.96 20.5L6.76 18.71L5.34 17.29M12 6C8.69 6 6 8.69 6 12S8.69 18 12 18 18 15.31 18 12C18 8.68 15.31 6 12 6M20 13H23V11H20M17.24 18.71L19.04 20.5L20.45 19.09L18.66 17.29M20.45 5L19.04 3.6L17.24 5.39L18.66 6.81M13 1H11V4H13M6.76 5.39L4.96 3.6L3.55 5L5.34 6.81L6.76 5.39M1 13H4V11H1M13 20H11V23H13
-
-$mol_icon_weather_night $mol_icon path \M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.64 6.35,17.66C9.37,20.67 14.19,20.78 17.33,17.97Z
-
-$mol_icon_monitor $mol_icon path \M21,16H3V4H21M21,2H3C1.89,2 1,2.89 1,4V16A2,2 0 0,0 3,18H10V20H8V22H16V20H14V18H21A2,2 0 0,0 23,16V4C23,2.89 22.1,2 21,2Z
-
-$bog_theme_toggle $mol_pop
-	theme_auto $bog_theme_auto
-	showed?val false
-	align \bottom_right
-	Anchor $mol_button_minor
-		sub /
-			<= Icon $mol_view
-		hint <= anchor_hint \Переключить тему
-		click?event <=> clicked?event null
-		event *
-			^
-			pointerdown?event <=> press_start?event null
-			pointermove?event <=> press_move?event null
-			pointerup?event <=> press_end?event null
-			pointercancel?event <=> press_cancel?event null
-			lostpointercapture?event <=> press_lost?event null
-	Icon_light $mol_icon_white_balance_sunny
-	Icon_dark $mol_icon_weather_night
-	Icon_system $mol_icon_monitor
-	bubble_content /
-		<= Backdrop $mol_view
-			event *
-				click?event <=> backdrop_click?event null
-		<= Picker $bog_theme_picker
-			theme_auto <= theme_auto
-			close? <=> picker_close? null
-
-$mol_labeler $mol_list
-	rows /
-		<= Label $mol_view
-			minimal_height 32
-			sub <= label /$mol_view_content
-				<= title
-		<= Content $mol_view
-			minimal_height 24
-			sub <= content /
-
-$mol_form_field $mol_labeler
+$mol_frame $mol_embed_native
 	attr *
-		^
-		mol_form_field_state <= state null string
-	bids /string
-	label /
-		<= name \
-		<= Bid $mol_view
-			sub / <= bid \
-	content / <= control null
+		tabindex <= tabindex
+		allow <= allow \
+		src <= uri
+		srcdoc <= html null
+	fullscreen true
+	accelerometer true
+	autoplay true
+	encription true
+	gyroscope true
+	pip true
+	clipboard_read true
+	clipboard_write true
+
+$mol_icon_account $mol_icon path \M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z
+
+$mol_icon_security $mol_icon path \M12,12H19C18.47,16.11 15.72,19.78 12,20.92V12H5V6.3L12,3.19M12,1L3,5V11C3,16.55 6.84,21.73 12,23C17.16,21.73 21,16.55 21,11V5L12,1Z
+
+$giper_baza_link_chip $mol_link
+	param \link
+	link $giper_baza_link
+	sub /
+		<= icon \
+		<= title
 
 $mol_stack $mol_view
 
@@ -583,393 +573,7 @@ $mol_text_code $mol_stack
 			hint @ \Copy whole code
 			text <= text_export \
 
-$mol_textarea $mol_stack
-	attr *
-		^
-		mol_textarea_clickable <= clickable? false
-		mol_textarea_sidebar_showed <= sidebar_showed false
-	event *
-		keydown? <=> press? null
-		pointermove? <=> hover? null
-	sub /
-		<= Edit $mol_textarea_edit
-			value? <=> value? \
-			hint <= hint \ 
-			enabled <= enabled true
-			spellcheck <= spellcheck true
-			length_max <= length_max +Infinity
-			selection? <=> selection? /number
-			bring => bring
-			submit? <=> submit? null
-			submit_with_ctrl <= submit_with_ctrl true
-		<= View $mol_text_code
-			text <= value
-			render_visible_only false
-			row_numb* <= row_numb* 0
-			sidebar_showed <= sidebar_showed
-			highlight <= highlight \
-			syntax <= syntax $mol_syntax2
-	symbols_alt *string
-		comma \<
-		period \>
-		dash \−
-		equals \≈
-		graveAccent \́
-		forwardSlash \÷
-		E \€
-		V \✔
-		X \×
-		C \©
-		P \§
-		H \₽
-		key0 \°
-		key8 \•
-		key2 \@
-		key3 \#
-		key4 \$
-		key6 \^
-		key7 \&
-		bracketOpen \[
-		bracketClose \]
-		slashBack \|
-	symbols_alt_ctrl *string
-		space \ 
-	symbols_alt_shift *string
-		V \✅
-		X \❌
-		O \⭕
-		key1 \❗
-		key4 \💲
-		key7 \❓
-		comma \«
-		period \»
-		semicolon \“
-		quoteSingle \”
-		dash \—
-		equals \≠
-		graveAccent \̱
-		bracketOpen \{
-		bracketClose \}
-
-$mol_textarea_edit $mol_string
-	dom_name \textarea
-	enter \enter
-	field *
-		^
-		scrollTop 0
-
-$bog_sert_area $mol_string
-	dom_name \textarea
-	enter \enter
-	submit_with_ctrl true
-	minimal_height 72
-
 $mol_icon_chevron $mol_icon path \M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z
-
-$mol_icon_chevron_left $mol_icon path \M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z
-
-$mol_icon_chevron_right $mol_icon path \M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z
-
-$mol_number $mol_view
-	precision_view <= precision 1
-	precision_change <= precision 1
-	boost 10
-	value_min -Infinity
-	value_max +Infinity
-	value? +NaN
-	enabled true
-	plugins /
-		<= Hotkey $mol_hotkey
-			key *
-				down? <=> event_dec? null
-				up? <=> event_inc? null
-				pageDown? <=> event_dec_boost? null
-				pageUp? <=> event_inc_boost? null
-	sub /
-		<= Dec $mol_button_minor
-			event_click? <=> event_dec? null
-			enabled <= dec_enabled <= enabled
-			sub / <= dec_icon $mol_icon_chevron_left
-		<= String $mol_string
-			- \ we don't want native number controls in mobile devices
-			- \ https://stackoverflow.com/questions/3790935/can-i-hide-the-html5-number-input-s-spin-box
-			type <= type \text
-			keyboard \decimal
-			value? <=> value_string? \
-			hint <= hint \ 
-			enabled <= string_enabled <= enabled
-			submit? <=> submit? null
-		<= Inc $mol_button_minor
-			event_click? <=> event_inc? null
-			enabled <= inc_enabled <= enabled
-			sub / <= inc_icon $mol_icon_chevron_right
-
-$mol_button_major $mol_button_minor
-	theme \$mol_theme_base
-
-$mol_status $mol_view
-	status <= title
-	minimal_height 24
-	minimal_width 0
-	sub /
-		<= message \
-
-$bog_qr $mol_svg_root
-	uri \
-	module_radius 0.35
-	finder_radius 1.2
-	gradient_angle 45
-	error_correction \M
-	quiet_zone 2
-	center /
-	gradient_id \qr-grad
-	gradient_fill \url(#qr-grad)
-	gradient_stops /
-		\var(--mol_theme_special)
-		\var(--mol_theme_focus)
-	Stop* $mol_svg
-		dom_name \stop
-		attr *
-			^
-			offset <= stop_offset* \0%
-			stop-color <= stop_color* \
-	view_box <= qr_view_box \0 0 1 1
-	sub /
-		<= Defs $mol_svg
-			dom_name \defs
-			sub /
-				<= Gradient $mol_svg
-					dom_name \linearGradient
-					attr *
-						^
-						id <= gradient_id
-						x1 <= grad_x1 \0
-						y1 <= grad_y1 \0
-						x2 <= grad_x2 \1
-						y2 <= grad_y2 \1
-					sub <= gradient_stop_list /
-		<= Modules $mol_svg_path
-			geometry <= modules_d \
-			attr *
-				^
-				fill <= gradient_fill
-		<= Rings $mol_svg_path
-			geometry <= rings_d \
-			attr *
-				^
-				fill <= gradient_fill
-				fill-rule \evenodd
-		<= Centers $mol_svg_path
-			geometry <= centers_d \
-			attr *
-				^
-				fill <= gradient_fill
-		<= Center_wrap $mol_svg
-			dom_name \foreignObject
-			attr *
-				^
-				x <= center_x \0
-				y <= center_y \0
-				width <= center_size \0
-				height <= center_size
-			sub /
-				<= Center_body $mol_view
-					sub <= center
-
-$bog_sert_card $mol_list
-	uri \
-	rows <= card_rows /
-		<= Empty $mol_status
-			message \Ссылка не похожа на сертификат
-		<= Sheet $mol_view
-			sub <= sheet /
-				<= Head $mol_view
-					sub /
-						<= Shop $mol_view
-							sub /
-								<= shop \
-						<= Kind $mol_view
-							sub /
-								<= kind \Подарочный сертификат
-				<= Gift $mol_view
-					sub /
-						<= gift \
-				<= Names $mol_view
-					sub /
-						<= Whom $mol_view
-							sub /
-								<= whom \
-						<= From $mol_view
-							sub /
-								<= from \
-				<= Wish $mol_paragraph
-					title <= wish \
-				<= Foot $mol_view
-					sub /
-						<= Legend $mol_view
-							sub /
-								<= legend \
-						<= Note $mol_view
-							sub /
-								<= note \
-				<= Stamp $mol_view
-					sub /
-						<= stamp \
-		<= Aside $mol_view
-			sub /
-				<= Code $bog_qr
-					uri <= page_uri \
-					error_correction \M
-				<= Ident $mol_view
-					sub /
-						<= Ident_label $mol_view
-							sub /
-								\Номер сертификата
-						<= Ident_value $mol_view
-							sub /
-								<= ident \
-		<= Tools $mol_view
-			sub <= tools /
-				<= Mail $mol_link
-					uri <= mail_uri \
-					title <= mail_title \Отправить почтой
-					hint \Откроется почтовая программа с готовым письмом
-				<= Copy $mol_button_minor
-					title <= copy_title \Скопировать ссылку
-					click? <=> copy? null
-				<= Redeem $mol_button_major
-					title <= redeem_title \Погасить
-					hint \Отметить сертификат использованным
-					click? <=> redeem? null
-
-$bog_sert_desk_row $mol_link
-	cert_uri \
-	arg *
-		screen null
-		cert <= cert_uri
-	sub /
-		<= Gift $mol_view
-			sub /
-				<= gift \
-		<= Whom $mol_view
-			sub /
-				<= whom \
-		<= State $mol_view
-			sub /
-				<= state \
-
-$mol_row $mol_view
-
-$mol_form $mol_list
-	submit_allowed true
-	submit_blocked false
-	event *
-		^
-		keydown? <=> keydown? null
-	save? null
-	message_done @ \Saved
-	errors *string
-		\Form invalid
-			<= form_invalid @ \Form is not valid
-	rows /
-		<= Body $mol_list
-			sub <= body <= form_fields /$mol_form_field
-		<= Foot $mol_row
-			sub <= foot <= buttons /$mol_view
-				<= Submit $mol_button_major
-					title <= submit_title @ \Save
-					hint <= submit_hint \
-					activate? => submit_activate?
-					click? <=> submit? null
-				<= Result $mol_status
-					message <= result? null
-
-$bog_sert_desk $mol_list
-	rows <= desk_rows /
-		<= Shop_block $mol_list
-			rows /
-				<= Shop_title $mol_view
-					sub /
-						\Салон
-				<= Name_field $mol_form_field
-					name \Название
-					control <= Name $mol_string
-						hint \Барбершоп «Бритва»
-						value? <=> shop_name? \
-				<= Note_field $mol_form_field
-					name \Адрес, телефон, условия
-					control <= Note $bog_sert_area
-						hint \Ленина 1 · +7 900 000-00-00 · запись по телефону
-						value? <=> shop_note? \
-				<= Term_field $mol_form_field
-					name \Срок действия, месяцев
-					control <= Term $mol_number
-						value_min 0
-						value_max 60
-						precision 1
-						value? <=> shop_term? 6
-		<= Issue_block $mol_list
-			rows /
-				<= Issue_title $mol_view
-					sub /
-						\Новый сертификат
-				<= Gift_field $mol_form_field
-					name \Услуга или повод
-					control <= Gift $mol_string
-						hint \Стрижка и борода
-						value? <=> gift? \
-				<= Cost_field $mol_form_field
-					name \Номинал в рублях, 0 — сертификат на услугу
-					control <= Cost $mol_number
-						value_min 0
-						precision 100
-						value? <=> cost? 0
-				<= Whom_field $mol_form_field
-					name \Кому
-					control <= Whom $mol_string
-						hint \Анна
-						value? <=> whom? \
-				<= From_field $mol_form_field
-					name \От кого
-					control <= From $mol_string
-						hint \Мама и папа
-						value? <=> from? \
-				<= Mail_field $mol_form_field
-					name \Почта получателя
-					control <= Mail $mol_string
-						type \email
-						hint \anna@example.com
-						value? <=> mail? \
-				<= Wish_field $mol_form_field
-					name \Поздравление
-					control <= Wish $bog_sert_area
-						hint \С днём рождения!
-						value? <=> wish? \
-				<= Issue $mol_button_major
-					title \Выпустить
-					enabled <= issue_allowed true
-					click? <=> issue? null
-		<= Last_block $mol_list
-			rows /
-				<= Last_title $mol_view
-					sub /
-						\Только что выпущен
-				<= Last_card $bog_sert_card
-					uri <= last \
-		<= List_block $mol_list
-			rows /
-				<= List_title $mol_view
-					sub /
-						<= list_title \Выпущенные
-				<= List $mol_list
-					rows <= cert_rows /
-	Row* $bog_sert_desk_row
-		cert_uri <= row_uri* \
-
-$mol_float $mol_view
-	style *
-		^
-		minHeight \auto
 
 $mol_check_expand $mol_check
 	Icon $mol_icon_chevron
@@ -980,153 +584,14 @@ $mol_check_expand $mol_check
 	checked? <=> expanded? false
 	enabled <= expandable false
 
-$mol_grid $mol_view
-	row_height 32
-	row_ids /string[]
-	row_id* null
-	col_ids /
-	records *
-	record* null
-	hierarchy null
-	hierarchy_col \
-	minimal_width 0
-	-
+$mol_dump_list $mol_view
+	values /
 	sub /
-		<= Head
-		<= Table $mol_grid_table
-			sub <= rows /$mol_view
-	Head $mol_grid_row
-		cells <= head_cells /$mol_view
-	Row* $mol_grid_row
-		minimal_height <= row_height
-		minimal_width <= minimal_width
-		cells <= cells* /$mol_view
-	-
-	Cell* $mol_view
-	cell* null
-	Cell_text* $mol_grid_cell
-		sub <= cell_content_text* <= cell_content* /$mol_view_content
-	Cell_number* $mol_grid_number
-		sub <= cell_content_number* <= cell_content* /$mol_view_content
-	Col_head* $mol_float
-		dom_name \th
-		sub <= col_head_content* /$mol_view_content
-	Cell_branch* $mol_check_expand
-		level <= cell_level* 0
-		label <= cell_content* /$mol_view_content
-		expanded? <=> cell_expanded*? false
-	Cell_content* /
-		<= Cell_dimmer* $mol_dimmer
-			needle <= needle \
-			haystack <= cell_value* \
-
-$mol_grid_table $mol_list
-	- dom_name \table
-
-$mol_grid_row $mol_view
-	- dom_name \tr
-	sub <= cells /$mol_view
-
-$mol_grid_cell $mol_view
-	- dom_name \td
-	minimal_height 40
-
-$mol_grid_number $mol_grid_cell
-
-$mol_image $mol_view
-	dom_name \img
-	attr *any
-		^
-		src <= uri \
-		title <= hint
-		alt <= title \
-		loading <= loading \lazy
-		decoding <= decoding \async
-		crossOrigin <= cors null
-		width <= natural_width 0
-		height <= natural_height 0
-	event *any
-		load? <=> load? null
-	minimal_width 16
-	minimal_height 16
-
-$mol_link_iconed $mol_link
-	sub /
-		<= Icon $mol_image
-			uri <= icon \
-			title \
-	content /
-		<= title <= uri
-	host \
-
-$mol_embed_native $mol_scroll
-	dom_name \iframe
-	window null
-	attr *
-		^
-		src <= uri? \about:config
-	sub /
-		<= Fallback $mol_link
-			uri <= uri
-			sub /
-				<= title \
-	message *
-		hashchange? <=> uri_change? null
-
-$mol_icon_youtube $mol_icon path \M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z
-
-$mol_frame $mol_embed_native
-	attr *
-		tabindex <= tabindex
-		allow <= allow \
-		src <= uri
-		srcdoc <= html null
-	fullscreen true
-	accelerometer true
-	autoplay true
-	encription true
-	gyroscope true
-	pip true
-	clipboard_read true
-	clipboard_write true
-
-$mol_embed_service $mol_check
-	uri \
-	video_preview \
-	video_id \
-	checked? <=> active? false
-	sub /
-		<= Image $mol_image
-			title <= title \
-			uri <= video_preview \
-		<= Hint $mol_icon_youtube
-		<= Frame $mol_frame
-			title <= title \
-			uri <= video_embed \
-
-
-$mol_embed_youtube $mol_embed_service
-
-$mol_embed_rutube $mol_embed_service
-
-$mol_embed_vklive $mol_embed_service
-
-$mol_embed_any $mol_view
-	Image $mol_image
-		title <= title \
-		uri <= uri \
-	Object $mol_embed_native
-		title <= title \
-		uri <= uri \
-	Youtube $mol_embed_youtube
-		title <= title \
-		uri <= uri \
-	Rutube $mol_embed_rutube
-		title <= title \
-		uri <= uri \
-	Vklive $mol_embed_vklive
-		title <= title \
-		uri <= uri \
+		<= Dump*0 $mol_dump_value
+			value <= dump_value* null
+			expanded? <=> dump_expanded*? false
+			prototypes <= prototypes false
+			preview_show <= preview_show true
 
 $mol_expander $mol_list
 	rows /
@@ -1140,242 +605,6 @@ $mol_expander $mol_list
 				<= Tools null
 		<= Content $mol_list
 			rows <= content /
-
-$mol_text $mol_list
-	uri_base \
-	text \
-	param \
-	flow_tokens /
-	block_text* \
-	auto /
-		<= auto_scroll null
-	- \Blocks
-	Paragraph* $mol_paragraph
-		sub <= block_content* /
-	Quote* $mol_text
-		uri_resolve* <= uri_resolve* \
-		text <= quote_text* \
-		highlight <= highlight \
-		auto_scroll null
-	List* $mol_text_list
-		uri_resolve* <= uri_resolve* \
-		type <= list_type* \-
-		text <= list_text* \
-		highlight <= highlight \
-	item_index* 0
-	Header* $mol_text_header
-		minimal_height 40
-		level <= header_level* 1
-		content <= block_content* /
-		arg <= header_arg* *
-	Pre* $mol_text_code
-		text <= pre_text* \
-		row_themes <= pre_themes* /string
-		highlight <= highlight \
-		uri_resolve* <= uri_resolve* \
-		sidebar_showed <= pre_sidebar_showed <= code_sidebar_showed true
-	Cut* $mol_view dom_name \hr
-	- \Table
-	Table* $mol_grid
-		head_cells <= table_head_cells* /
-		rows <= table_rows* /
-	Table_row* $mol_grid_row
-		cells <= table_cells* /
-	Table_cell* $mol_text
-		auto_scroll null
-		highlight <= highlight \
-		uri_resolve* <= uri_resolve* \
-		text <= table_cell_text* \
-	- \Grid
-	Grid* $mol_grid
-		rows <= grid_rows* /
-	Grid_row* $mol_grid_row
-		cells <= grid_cells* /
-	Grid_cell* $mol_text
-		auto_scroll null
-		highlight <= highlight \
-		uri_resolve* <= uri_resolve* \
-		text <= grid_cell_text* \
-	- \Lines
-	String* $mol_dimmer
-		dom_name \span
-		needle <= highlight \
-		haystack <= line_text* \
-	Span* $mol_text_span
-		dom_name \span
-		type <= line_type* \
-		sub <= line_content* /
-	Code_line* $mol_text_code_line
-		numb_showed false
-		highlight <= highlight \
-		text <= line_text* \
-		uri_resolve* <= uri_resolve* \
-		syntax <= code_syntax null
-	Link* $mol_link_iconed
-		uri <= link_uri* \
-		content <= line_content* /
-	Link_http* $mol_link_iconed
-		uri <= link_uri* \
-		content / <= link_host* \
-	Embed* $mol_embed_any
-		uri <= link_uri* \
-		title <= line_text* \
-	- \Spoilers
-	Spoiler* $mol_expander
-		label /
-			<= Spoiler_label* $mol_text
-				text <= spoiler_label* \
-		content /
-			<= Spoiler_content* $mol_text
-				text <= spoiler_content* \
-
-$mol_text_header $mol_paragraph
-	level 1
-	sub /
-		<= Link $mol_link
-			arg <= arg *
-			hint @ \Permalink to this section
-			sub <= content /
-
-$mol_text_span $mol_paragraph
-	dom_name \span
-	attr *
-		^
-		mol_text_type <= type \
-
-$mol_text_list $mol_text
-	auto_scroll null
-	attr *
-		^
-		mol_text_list_type <= type \
-	Paragraph* $mol_text_list_item
-		index <= item_index*
-		sub <= block_content*
-
-$mol_text_list_item $mol_paragraph
-	attr *
-		^
-		mol_text_list_item_index <= index 0
-
-$bog_sert_key $mol_list
-	rows /
-		<= Intro $mol_text
-			text \
-				\## Ключ доступа
-				\
-				\Аккаунта и пароля тут нет. Всё, что у вас есть — ключ, который
-				\браузер завёл сам при первом открытии и держит только на этом
-				\устройстве. Кабинет салона и право гасить сертификаты привязаны
-				\именно к нему.
-				\
-				\Чтобы зайти в тот же кабинет с телефона на ресепшене, скопируйте
-				\ключ отсюда и вставьте его там. Кто держит ключ — тот и салон,
-				\так что пересылать его через общий чат не стоит.
-				\
-				\Ключ живёт в хранилище браузера. Очистите данные сайта — и кабинет
-				\вместе со всеми сертификатами станет недоступен. Держите копию.
-		<= Mine_field $mol_form_field
-			name \Ваш ключ
-			control <= Mine $bog_sert_area
-				enabled false
-				value <= mine \
-		<= Copy $mol_button_minor
-			title \Скопировать ключ
-			click? <=> copy? null
-		<= Other_field $mol_form_field
-			name \Войти чужим ключом
-			control <= Other $bog_sert_area
-				hint \Вставьте сюда ключ, скопированный на другом устройстве
-				value? <=> other? \
-		<= Enter $mol_button_major
-			title \Войти этим ключом
-			enabled <= enter_allowed true
-			click? <=> enter? null
-		<= Result $mol_status
-			message <= result \
-
-$mol_book2 $mol_scroll
-	menu_title \
-	sub /$mol_view
-		^ pages <= pages_deep /$mol_view
-		^ placeholders /$mol_view
-			<= Placeholder $mol_view
-	minimal_width 0
-	Gap* $mol_view title \
-
-$mol_book2_catalog $mol_book2
-	param \
-	spread? \
-	spreads *
-	Spread* $mol_view
-	Spread_default null
-	spread_ids /string
-	menu_filter_enabled false
-	spread_ids_filtered /string
-	spread_current null
-	menu_tools /
-	addon_tools /
-	pages /
-		<= Menu $mol_page
-			Title => Menu_title
-			title <= menu_title \
-			Tools => Menu_tools
-			Logo <= Menu_logo null
-			tools /
-				^ menu_tools
-				^ addon_tools
-			head <= menu_head /$mol_view_content
-				<= Menu_title
-				<= Menu_tools
-			body <= menu_body /$mol_view
-				<= Menu_filter $mol_search
-					query? <=> menu_filter? \
-				<= Menu_links $mol_list
-					Empty <= Menu_links_empty $mol_view
-					rows <= menu_links /$mol_view
-						<= Menu_item*0 $mol_view
-							sub <= menu_item_content* /$mol_view
-								<= Menu_link* $mol_link
-									arg <= menu_link_arg* <= arg* *
-									sub <= menu_link_content* /$mol_view_content
-										<= Menu_link_title* $mol_dimmer
-											needle <= menu_filter
-											haystack <= spread_title* \
-			foot <= menu_foot /$mol_view
-	Spread_close $mol_link
-		arg <= spread_close_arg *
-		hint @ \Close page
-		sub /
-			<= Spread_close_icon $mol_icon_close
-
-$mol_icon_script $mol_icon path \M17.8,20C17.4,21.2 16.3,22 15,22H5C3.3,22 2,20.7 2,19V18H5L14.2,18C14.6,19.2 15.7,20 17,20H17.8M19,2H8C6.3,2 5,3.3 5,5V16H16V17C16,17.6 16.4,18 17,18H18V5C18,4.4 18.4,4 19,4C19.6,4 20,4.4 20,5V6H22V5C22,3.3 20.7,2 19,2Z
-
-$mol_icon_script_text $mol_icon path \M17.8,20C17.4,21.2 16.3,22 15,22H5C3.3,22 2,20.7 2,19V18H5L14.2,18C14.6,19.2 15.7,20 17,20H17.8M19,2C20.7,2 22,3.3 22,5V6H20V5C20,4.4 19.6,4 19,4C18.4,4 18,4.4 18,5V18H17C16.4,18 16,17.6 16,17V16H5V5C5,3.3 6.3,2 8,2H19M8,6V8H15V6H8M8,10V12H14V10H8Z
-
-$mol_link_source $mol_link
-	hint @ \Source code
-	sub /
-		<= Icon $mol_icon_script_text
-
-$mol_icon_account $mol_icon path \M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z
-
-$mol_icon_security $mol_icon path \M12,12H19C18.47,16.11 15.72,19.78 12,20.92V12H5V6.3L12,3.19M12,1L3,5V11C3,16.55 6.84,21.73 12,23C17.16,21.73 21,16.55 21,11V5L12,1Z
-
-$giper_baza_link_chip $mol_link
-	param \link
-	link $giper_baza_link
-	sub /
-		<= icon \
-		<= title
-
-$mol_dump_list $mol_view
-	values /
-	sub /
-		<= Dump*0 $mol_dump_value
-			value <= dump_value* null
-			expanded? <=> dump_expanded*? false
-			prototypes <= prototypes false
-			preview_show <= preview_show true
 
 $mol_dump_value $mol_view
 	value? null
@@ -1452,6 +681,119 @@ $mol_icon_tick $mol_icon path \M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z
 
 $mol_check_box $mol_check
 	Icon $mol_icon_tick
+
+$mol_icon_chevron_left $mol_icon path \M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z
+
+$mol_icon_chevron_right $mol_icon path \M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z
+
+$mol_number $mol_view
+	precision_view <= precision 1
+	precision_change <= precision 1
+	boost 10
+	value_min -Infinity
+	value_max +Infinity
+	value? +NaN
+	enabled true
+	plugins /
+		<= Hotkey $mol_hotkey
+			key *
+				down? <=> event_dec? null
+				up? <=> event_inc? null
+				pageDown? <=> event_dec_boost? null
+				pageUp? <=> event_inc_boost? null
+	sub /
+		<= Dec $mol_button_minor
+			event_click? <=> event_dec? null
+			enabled <= dec_enabled <= enabled
+			sub / <= dec_icon $mol_icon_chevron_left
+		<= String $mol_string
+			- \ we don't want native number controls in mobile devices
+			- \ https://stackoverflow.com/questions/3790935/can-i-hide-the-html5-number-input-s-spin-box
+			type <= type \text
+			keyboard \decimal
+			value? <=> value_string? \
+			hint <= hint \ 
+			enabled <= string_enabled <= enabled
+			submit? <=> submit? null
+		<= Inc $mol_button_minor
+			event_click? <=> event_inc? null
+			enabled <= inc_enabled <= enabled
+			sub / <= inc_icon $mol_icon_chevron_right
+
+$mol_textarea $mol_stack
+	attr *
+		^
+		mol_textarea_clickable <= clickable? false
+		mol_textarea_sidebar_showed <= sidebar_showed false
+	event *
+		keydown? <=> press? null
+		pointermove? <=> hover? null
+	sub /
+		<= Edit $mol_textarea_edit
+			value? <=> value? \
+			hint <= hint \ 
+			enabled <= enabled true
+			spellcheck <= spellcheck true
+			length_max <= length_max +Infinity
+			selection? <=> selection? /number
+			bring => bring
+			submit? <=> submit? null
+			submit_with_ctrl <= submit_with_ctrl true
+		<= View $mol_text_code
+			text <= value
+			render_visible_only false
+			row_numb* <= row_numb* 0
+			sidebar_showed <= sidebar_showed
+			highlight <= highlight \
+			syntax <= syntax $mol_syntax2
+	symbols_alt *string
+		comma \<
+		period \>
+		dash \−
+		equals \≈
+		graveAccent \́
+		forwardSlash \÷
+		E \€
+		V \✔
+		X \×
+		C \©
+		P \§
+		H \₽
+		key0 \°
+		key8 \•
+		key2 \@
+		key3 \#
+		key4 \$
+		key6 \^
+		key7 \&
+		bracketOpen \[
+		bracketClose \]
+		slashBack \|
+	symbols_alt_ctrl *string
+		space \ 
+	symbols_alt_shift *string
+		V \✅
+		X \❌
+		O \⭕
+		key1 \❗
+		key4 \💲
+		key7 \❓
+		comma \«
+		period \»
+		semicolon \“
+		quoteSingle \”
+		dash \—
+		equals \≠
+		graveAccent \̱
+		bracketOpen \{
+		bracketClose \}
+
+$mol_textarea_edit $mol_string
+	dom_name \textarea
+	enter \enter
+	field *
+		^
+		scrollTop 0
 
 $mol_icon_calendar $mol_icon path \M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z
 
@@ -1762,6 +1104,16 @@ $giper_baza_pawn_dump $mol_expander
 						land <= land
 						sand <= unit_value* null
 				pawn <= pawn_inner* $giper_baza_pawn
+
+$mol_labeler $mol_list
+	rows /
+		<= Label $mol_view
+			minimal_height 32
+			sub <= label /$mol_view_content
+				<= title
+		<= Content $mol_view
+			minimal_height 24
+			sub <= content /
 
 $mol_icon_source $mol_icon path \M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z
 
@@ -2544,22 +1896,978 @@ $giper_baza_app $mol_book2_catalog
 				<= Spread_close
 	placeholders /
 
-$bog_sert_app $mol_page
-	title <= page_title \Сертификаты
-	tools <= page_tools /
-		<= Nav $mol_switch
-			value? <=> screen? \desk
-			options <= nav_options *
-				desk \Кабинет
-				key \Ключ
-		<= Home $mol_link
-			title \Сертификаты
+$mol_form_field $mol_labeler
+	attr *
+		^
+		mol_form_field_state <= state null string
+	bids /string
+	label /
+		<= name \
+		<= Bid $mol_view
+			sub / <= bid \
+	content / <= control null
+
+$bog_sert_area $mol_string
+	dom_name \textarea
+	enter \enter
+	submit_with_ctrl true
+	minimal_height 72
+
+$mol_float $mol_view
+	style *
+		^
+		minHeight \auto
+
+$mol_grid $mol_view
+	row_height 32
+	row_ids /string[]
+	row_id* null
+	col_ids /
+	records *
+	record* null
+	hierarchy null
+	hierarchy_col \
+	minimal_width 0
+	-
+	sub /
+		<= Head
+		<= Table $mol_grid_table
+			sub <= rows /$mol_view
+	Head $mol_grid_row
+		cells <= head_cells /$mol_view
+	Row* $mol_grid_row
+		minimal_height <= row_height
+		minimal_width <= minimal_width
+		cells <= cells* /$mol_view
+	-
+	Cell* $mol_view
+	cell* null
+	Cell_text* $mol_grid_cell
+		sub <= cell_content_text* <= cell_content* /$mol_view_content
+	Cell_number* $mol_grid_number
+		sub <= cell_content_number* <= cell_content* /$mol_view_content
+	Col_head* $mol_float
+		dom_name \th
+		sub <= col_head_content* /$mol_view_content
+	Cell_branch* $mol_check_expand
+		level <= cell_level* 0
+		label <= cell_content* /$mol_view_content
+		expanded? <=> cell_expanded*? false
+	Cell_content* /
+		<= Cell_dimmer* $mol_dimmer
+			needle <= needle \
+			haystack <= cell_value* \
+
+$mol_grid_table $mol_list
+	- dom_name \table
+
+$mol_grid_row $mol_view
+	- dom_name \tr
+	sub <= cells /$mol_view
+
+$mol_grid_cell $mol_view
+	- dom_name \td
+	minimal_height 40
+
+$mol_grid_number $mol_grid_cell
+
+$mol_image $mol_view
+	dom_name \img
+	attr *any
+		^
+		src <= uri \
+		title <= hint
+		alt <= title \
+		loading <= loading \lazy
+		decoding <= decoding \async
+		crossOrigin <= cors null
+		width <= natural_width 0
+		height <= natural_height 0
+	event *any
+		load? <=> load? null
+	minimal_width 16
+	minimal_height 16
+
+$mol_link_iconed $mol_link
+	sub /
+		<= Icon $mol_image
+			uri <= icon \
+			title \
+	content /
+		<= title <= uri
+	host \
+
+$mol_icon_youtube $mol_icon path \M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z
+
+$mol_embed_service $mol_check
+	uri \
+	video_preview \
+	video_id \
+	checked? <=> active? false
+	sub /
+		<= Image $mol_image
+			title <= title \
+			uri <= video_preview \
+		<= Hint $mol_icon_youtube
+		<= Frame $mol_frame
+			title <= title \
+			uri <= video_embed \
+
+
+$mol_embed_youtube $mol_embed_service
+
+$mol_embed_rutube $mol_embed_service
+
+$mol_embed_vklive $mol_embed_service
+
+$mol_embed_any $mol_view
+	Image $mol_image
+		title <= title \
+		uri <= uri \
+	Object $mol_embed_native
+		title <= title \
+		uri <= uri \
+	Youtube $mol_embed_youtube
+		title <= title \
+		uri <= uri \
+	Rutube $mol_embed_rutube
+		title <= title \
+		uri <= uri \
+	Vklive $mol_embed_vklive
+		title <= title \
+		uri <= uri \
+
+$mol_text $mol_list
+	uri_base \
+	text \
+	param \
+	flow_tokens /
+	block_text* \
+	auto /
+		<= auto_scroll null
+	- \Blocks
+	Paragraph* $mol_paragraph
+		sub <= block_content* /
+	Quote* $mol_text
+		uri_resolve* <= uri_resolve* \
+		text <= quote_text* \
+		highlight <= highlight \
+		auto_scroll null
+	List* $mol_text_list
+		uri_resolve* <= uri_resolve* \
+		type <= list_type* \-
+		text <= list_text* \
+		highlight <= highlight \
+	item_index* 0
+	Header* $mol_text_header
+		minimal_height 40
+		level <= header_level* 1
+		content <= block_content* /
+		arg <= header_arg* *
+	Pre* $mol_text_code
+		text <= pre_text* \
+		row_themes <= pre_themes* /string
+		highlight <= highlight \
+		uri_resolve* <= uri_resolve* \
+		sidebar_showed <= pre_sidebar_showed <= code_sidebar_showed true
+	Cut* $mol_view dom_name \hr
+	- \Table
+	Table* $mol_grid
+		head_cells <= table_head_cells* /
+		rows <= table_rows* /
+	Table_row* $mol_grid_row
+		cells <= table_cells* /
+	Table_cell* $mol_text
+		auto_scroll null
+		highlight <= highlight \
+		uri_resolve* <= uri_resolve* \
+		text <= table_cell_text* \
+	- \Grid
+	Grid* $mol_grid
+		rows <= grid_rows* /
+	Grid_row* $mol_grid_row
+		cells <= grid_cells* /
+	Grid_cell* $mol_text
+		auto_scroll null
+		highlight <= highlight \
+		uri_resolve* <= uri_resolve* \
+		text <= grid_cell_text* \
+	- \Lines
+	String* $mol_dimmer
+		dom_name \span
+		needle <= highlight \
+		haystack <= line_text* \
+	Span* $mol_text_span
+		dom_name \span
+		type <= line_type* \
+		sub <= line_content* /
+	Code_line* $mol_text_code_line
+		numb_showed false
+		highlight <= highlight \
+		text <= line_text* \
+		uri_resolve* <= uri_resolve* \
+		syntax <= code_syntax null
+	Link* $mol_link_iconed
+		uri <= link_uri* \
+		content <= line_content* /
+	Link_http* $mol_link_iconed
+		uri <= link_uri* \
+		content / <= link_host* \
+	Embed* $mol_embed_any
+		uri <= link_uri* \
+		title <= line_text* \
+	- \Spoilers
+	Spoiler* $mol_expander
+		label /
+			<= Spoiler_label* $mol_text
+				text <= spoiler_label* \
+		content /
+			<= Spoiler_content* $mol_text
+				text <= spoiler_content* \
+
+$mol_text_header $mol_paragraph
+	level 1
+	sub /
+		<= Link $mol_link
+			arg <= arg *
+			hint @ \Permalink to this section
+			sub <= content /
+
+$mol_text_span $mol_paragraph
+	dom_name \span
+	attr *
+		^
+		mol_text_type <= type \
+
+$bog_qr $mol_svg_root
+	uri \
+	module_radius 0.35
+	finder_radius 1.2
+	gradient_angle 45
+	error_correction \M
+	quiet_zone 2
+	center /
+	gradient_id \qr-grad
+	gradient_fill \url(#qr-grad)
+	gradient_stops /
+		\var(--mol_theme_special)
+		\var(--mol_theme_focus)
+	Stop* $mol_svg
+		dom_name \stop
+		attr *
+			^
+			offset <= stop_offset* \0%
+			stop-color <= stop_color* \
+	view_box <= qr_view_box \0 0 1 1
+	sub /
+		<= Defs $mol_svg
+			dom_name \defs
+			sub /
+				<= Gradient $mol_svg
+					dom_name \linearGradient
+					attr *
+						^
+						id <= gradient_id
+						x1 <= grad_x1 \0
+						y1 <= grad_y1 \0
+						x2 <= grad_x2 \1
+						y2 <= grad_y2 \1
+					sub <= gradient_stop_list /
+		<= Modules $mol_svg_path
+			geometry <= modules_d \
+			attr *
+				^
+				fill <= gradient_fill
+		<= Rings $mol_svg_path
+			geometry <= rings_d \
+			attr *
+				^
+				fill <= gradient_fill
+				fill-rule \evenodd
+		<= Centers $mol_svg_path
+			geometry <= centers_d \
+			attr *
+				^
+				fill <= gradient_fill
+		<= Center_wrap $mol_svg
+			dom_name \foreignObject
+			attr *
+				^
+				x <= center_x \0
+				y <= center_y \0
+				width <= center_size \0
+				height <= center_size
+			sub /
+				<= Center_body $mol_view
+					sub <= center
+
+$mol_button_major $mol_button_minor
+	theme \$mol_theme_base
+
+$mol_status $mol_view
+	status <= title
+	minimal_height 24
+	minimal_width 0
+	sub /
+		<= message \
+
+$mol_row $mol_view
+
+$mol_form $mol_list
+	submit_allowed true
+	submit_blocked false
+	event *
+		^
+		keydown? <=> keydown? null
+	save? null
+	message_done @ \Saved
+	errors *string
+		\Form invalid
+			<= form_invalid @ \Form is not valid
+	rows /
+		<= Body $mol_list
+			sub <= body <= form_fields /$mol_form_field
+		<= Foot $mol_row
+			sub <= foot <= buttons /$mol_view
+				<= Submit $mol_button_major
+					title <= submit_title @ \Save
+					hint <= submit_hint \
+					activate? => submit_activate?
+					click? <=> submit? null
+				<= Result $mol_status
+					message <= result? null
+
+$mol_text_list $mol_text
+	auto_scroll null
+	attr *
+		^
+		mol_text_list_type <= type \
+	Paragraph* $mol_text_list_item
+		index <= item_index*
+		sub <= block_content*
+
+$mol_text_list_item $mol_paragraph
+	attr *
+		^
+		mol_text_list_item_index <= index 0
+
+$bog_sert_desk_shop $bog_sert_page
+	title \Салон
+	body /
+		<= Form $mol_list
+			rows /
+				<= Name_field $mol_form_field
+					name \Название
+					control <= Name $mol_string
+						hint \Барбершоп «Бритва»
+						value? <=> shop_name? \
+				<= Note_field $mol_form_field
+					name \Адрес, телефон, условия
+					control <= Note $bog_sert_area
+						hint \Ленина 1 · +7 900 000-00-00 · запись по телефону
+						value? <=> shop_note? \
+				<= Term_field $mol_form_field
+					name \Срок действия сертификата, месяцев
+					control <= Term $mol_number
+						value_min 0
+						value_max 60
+						precision 1
+						value? <=> shop_term? 6
+		<= Address_block $mol_list
+			rows <= address_rows /
+				<= Address_title $mol_view
+					sub /
+						\Витрина
+				<= Address_hint $mol_text
+					text \
+						\Распечатайте этот код и положите на стойку. Гость сканирует его телефоном, открывает витрину и заводит карту. Ничего заполнять и никуда регистрироваться ему не придётся.
+				<= Address_value $mol_view
+					sub /
+						<= address \
+				<= Address_copy $mol_button_minor
+					title \Скопировать адрес
+					click? <=> address_copy? null
+				<= Code $bog_qr
+					uri <= address \
+					error_correction \M
+		<= Claim_block $mol_list
+			rows /
+				<= Claim_title $mol_view
+					sub /
+						\Короткое имя
+				<= Claim_hint $mol_text
+					text \
+						\Имя делает адрес читаемым, но не защищает его: занять то же имя технически может кто угодно.
+						\
+						\Сертификаты и карты гостей всегда ссылаются на сам салон, поэтому имя можно потерять без последствий.
+				<= Claim_field $mol_form_field
+					name \Имя в адресе
+					control <= Claim $mol_string
+						hint \coffier_shopper
+						value? <=> claim_raw? \
+				<= Claim_take $mol_button_major
+					title \Занять имя
+					enabled <= claim_allowed true
+					click? <=> claim_take? null
+				<= Claim_status $mol_status
+					message <= claim_status \
+
+$bog_sert_sheet $mol_list
+	uri \
+	rows <= card_rows /
+		<= Empty $mol_status
+			message \Ссылка не похожа на сертификат
+		<= Sheet $mol_view
+			sub <= sheet /
+				<= Head $mol_view
+					sub /
+						<= Shop $mol_view
+							sub /
+								<= shop \
+						<= Kind $mol_view
+							sub /
+								<= kind \Подарочный сертификат
+				<= Gift $mol_view
+					sub /
+						<= gift \
+				<= Names $mol_view
+					sub /
+						<= Whom $mol_view
+							sub /
+								<= whom \
+						<= From $mol_view
+							sub /
+								<= from \
+				<= Wish $mol_paragraph
+					title <= wish \
+				<= Foot $mol_view
+					sub /
+						<= Legend $mol_view
+							sub /
+								<= legend \
+						<= Note $mol_view
+							sub /
+								<= note \
+				<= Stamp $mol_view
+					sub /
+						<= stamp \
+		<= Aside $mol_view
+			sub /
+				<= Code $bog_qr
+					uri <= page_uri \
+					error_correction \M
+				<= Ident $mol_view
+					sub /
+						<= Ident_label $mol_view
+							sub /
+								\Номер сертификата
+						<= Ident_value $mol_view
+							sub /
+								<= ident \
+		<= Tools $mol_view
+			sub <= tools /
+				<= Mail $mol_link
+					uri <= mail_uri \
+					title <= mail_title \Отправить почтой
+					hint \Откроется почтовая программа с готовым письмом
+				<= Copy $mol_button_minor
+					title <= copy_title \Скопировать ссылку
+					click? <=> copy? null
+				<= Redeem $mol_button_major
+					title <= redeem_title \Погасить
+					hint \Отметить сертификат использованным
+					click? <=> redeem? null
+
+$bog_sert_desk_issue $bog_sert_page
+	title \Выпустить сертификат
+	body <= issue_body /
+		<= Form $mol_list
+			rows /
+				<= Gift_field $mol_form_field
+					name \Услуга или повод
+					control <= Gift $mol_string
+						hint \Стрижка и борода
+						value? <=> gift? \
+				<= Cost_field $mol_form_field
+					name \Номинал в рублях, 0 — сертификат на услугу
+					control <= Cost $mol_number
+						value_min 0
+						precision_change 100
+						value? <=> cost? 0
+				<= Whom_field $mol_form_field
+					name \Кому
+					control <= Whom $mol_string
+						hint \Анна
+						value? <=> whom? \
+				<= From_field $mol_form_field
+					name \От кого
+					control <= From $mol_string
+						hint \Мама и папа
+						value? <=> from? \
+				<= Mail_field $mol_form_field
+					name \Почта получателя
+					control <= Mail $mol_string
+						type \email
+						hint \anna@example.com
+						value? <=> mail? \
+				<= Wish_field $mol_form_field
+					name \Поздравление
+					control <= Wish $bog_sert_area
+						hint \С днём рождения!
+						value? <=> wish? \
+				<= Issue $mol_button_major
+					title \Выпустить
+					enabled <= issue_allowed true
+					click? <=> issue? null
+		<= Last_block $mol_list
+			rows /
+				<= Last_title $mol_view
+					sub /
+						\Только что выпущен
+				<= Last_sheet $bog_sert_sheet
+					uri <= last \
+
+$bog_sert_desk_certs_row $mol_link
+	cert_uri \
+	arg *
+		screen null
+		cert <= cert_uri
+	sub /
+		<= Gift $mol_view
+			sub /
+				<= gift \
+		<= Whom $mol_view
+			sub /
+				<= whom \
+		<= State $mol_view
+			sub /
+				<= state \
+
+$bog_sert_desk_certs $bog_sert_page
+	title <= list_title \Выданные
+	body <= certs_body /
+		<= Empty $mol_status
+			message \Пока ни одного сертификата
+		<= List $mol_list
+			rows <= cert_rows /
+	Row* $bog_sert_desk_certs_row
+		cert_uri <= row_uri* \
+
+$bog_sert_desk_loyalty $bog_sert_page
+	title \Лояльность
+	body /
+		<= Hint $mol_text
+			text \
+				\Гость сканирует код на стойке и заводит себе карту. Само по себе это не даёт ему ничего, поэтому плодить карты бессмысленно и защищаться тут не от чего.
+				\
+				\Баллы начисляет только касса, своим ключом, в книгу операций салона. Подделать запись гость не может: писать в эту книгу он не вправе.
+		<= Form $mol_list
+			rows /
+				<= Rate_field $mol_form_field
+					name \Возвращается баллами, % от чека
+					control <= Rate $mol_number
+						value_min 0
+						value_max 100
+						precision 1
+						value? <=> rate? 5
+				<= Bonus_field $mol_form_field
+					name \Приветственный бонус, баллов
+					control <= Bonus $mol_number
+						value_min 0
+						precision_change 10
+						value? <=> bonus? 0
+				<= Price_field $mol_form_field
+					name \Сколько рублей стоит один балл при списании
+					control <= Price $mol_number
+						value_min 0
+						precision_view .01
+						precision_change .1
+						value? <=> price? 1
+		<= Sample $mol_text
+			text <= sample \
+
+$bog_call_qr_scan $mol_view
+	on_decode? null
+	scanning true
+	sub /
+		<= Video $mol_view
+			dom_name \video
+			attr *
+				autoplay true
+				playsinline true
+				muted true
+			field *
+				srcObject <= stream null
+		<= Hint $mol_view
+			sub /
+				<= hint @ \Наведите на QR-код
+
+$bog_sert_desk_till $bog_sert_page
+	title \Касса
+	body <= till_body /
+		<= Scan $bog_call_qr_scan
+			on_decode? <=> decoded? null
+			scanning <= scanning true
+		<= Manual_field $mol_form_field
+			name \Или введите номер карты
+			control <= Manual $mol_string
+				hint \r7u17HFT_mY9Rf1P0
+				value? <=> manual? \
+				submit? <=> manual_apply? null
+		<= Manual_apply $mol_button_minor
+			title \Найти карту
+			enabled <= manual_allowed true
+			click? <=> manual_apply? null
+		<= Guest $mol_list
+			rows <= guest_rows /
+				<= Guest_head $mol_view
+					sub /
+						<= guest_title \
+				<= Balance $mol_view
+					sub /
+						<= balance_text \
+				<= Cost_field $mol_form_field
+					name \Сумма чека, ₽
+					control <= Cost $mol_number
+						value_min 0
+						precision_change 100
+						value? <=> cost? 0
+				<= Accrual $mol_view
+					sub /
+						<= accrual_text \
+				<= Welcome $mol_check
+					title <= welcome_title \Приветственный бонус
+					checked? <=> welcome? true
+				<= Accrue $mol_button_major
+					title \Начислить
+					enabled <= accrue_allowed true
+					click? <=> accrue? null
+				<= Writeoff_field $mol_form_field
+					name \Списать баллов
+					control <= Writeoff $mol_number
+						value_min 0
+						precision_change 10
+						value? <=> writeoff? 0
+				<= Spend $mol_button_minor
+					title \Списать
+					enabled <= spend_allowed true
+					click? <=> spend? null
+				<= Reset $mol_button_minor
+					title \Другая карта
+					click? <=> reset? null
+		<= Done $mol_status
+			message <= done \
+
+$bog_sert_desk_guests_row $mol_view
+	pass_uri \
+	balance 0
+	visits 0
+	last \
+	sub /
+		<= Ident $mol_view
+			sub /
+				<= ident \
+		<= Visits $mol_view
+			sub /
+				<= visits_text \
+		<= Balance $mol_view
+			sub /
+				<= balance_text \
+
+$bog_sert_desk_guests $bog_sert_page
+	title <= guests_title \Гости
+	body <= guests_body /
+		<= Empty $mol_status
+			message \Ни одной карты пока не обслужили
+		<= List $mol_list
+			rows <= guest_rows /
+	Row* $bog_sert_desk_guests_row
+		pass_uri <= row_uri* \
+		balance <= row_balance* 0
+		visits <= row_visits* 0
+		last <= row_last* \
+
+$bog_sert_key $mol_list
+	rows /
+		<= Intro $mol_text
+			text \
+				\## Ключ доступа
+				\
+				\Аккаунта и пароля тут нет. Всё, что у вас есть — ключ, который браузер завёл сам при первом открытии и держит только на этом устройстве. Кабинет салона и право гасить сертификаты привязаны именно к нему.
+				\
+				\Чтобы зайти в тот же кабинет с телефона на ресепшене, скопируйте ключ отсюда и вставьте его там. Кто держит ключ, тот и салон, так что пересылать его через общий чат не стоит.
+				\
+				\Ключ живёт в хранилище браузера. Очистите данные сайта, и кабинет вместе со всеми сертификатами станет недоступен. Держите копию.
+		<= Mine_field $mol_form_field
+			name \Ваш ключ
+			control <= Mine $bog_sert_area
+				enabled false
+				value <= mine \
+		<= Copy $mol_button_minor
+			title \Скопировать ключ
+			click? <=> copy? null
+		<= Other_field $mol_form_field
+			name \Войти чужим ключом
+			control <= Other $bog_sert_area
+				hint \Вставьте сюда ключ, скопированный на другом устройстве
+				value? <=> other? \
+		<= Enter $mol_button_major
+			title \Войти этим ключом
+			enabled <= enter_allowed true
+			click? <=> enter? null
+		<= Result $mol_status
+			message <= result \
+
+$bog_sert_desk $mol_book2_catalog
+	param \page
+	menu_title \Кабинет
+	shop_uri \
+	menu_tools /
+		<= Pass_link $mol_link
+			title \Моя карта
 			arg *
-				cert null
-				screen null
-		<= Status $giper_baza_status
-		<= Theme_toggle $bog_theme_toggle
-			theme_auto <= Theme
+				page null
+				pass <= pass_uri \
+	spreads *
+		shop <= Shop_page $bog_sert_desk_shop
+			shop_uri <= shop_uri
+			tools / <= Spread_close
+		issue <= Issue_page $bog_sert_desk_issue
+			shop_uri <= shop_uri
+			tools / <= Spread_close
+		certs <= Certs_page $bog_sert_desk_certs
+			shop_uri <= shop_uri
+			tools / <= Spread_close
+		loyalty <= Loyalty_page $bog_sert_desk_loyalty
+			shop_uri <= shop_uri
+			tools / <= Spread_close
+		till <= Till_page $bog_sert_desk_till
+			shop_uri <= shop_uri
+			tools / <= Spread_close
+		guests <= Guests_page $bog_sert_desk_guests
+			shop_uri <= shop_uri
+			tools / <= Spread_close
+		key <= Key_page $mol_page
+			title \Ключ доступа
+			tools / <= Spread_close
+			body /
+				<= Key $bog_sert_key
+	Spread_default <= Start_page $mol_page
+		title \Сертификаты и бонусы
+		body <= start_body /
+			<= Intro $mol_text
+				text \
+					\## Свой салон
+					\
+					\Заведите салон, чтобы выпускать подарочные сертификаты и начислять бонусы. Ни почты, ни пароля не спросим: доступ держится на ключе, который браузер завёл сам.
+			<= Make $mol_button_major
+				title \Завести салон
+				click? <=> shop_make? null
+			<= Ready $mol_text
+				text \
+					\## Салон готов
+					\
+					\Выберите раздел слева. В «Салоне» лежат реквизиты и адрес витрины, в «Кассе» начисляются бонусы по карте гостя.
+
+$bog_theme_auto $mol_plugin
+	themes <= themes_default /
+	theme_light \$mol_theme_light
+	theme_dark \$mol_theme_dark
+	mode? \system
+	mode_next? null
+	theme_next? null
+	theme_prev? null
+	theme_set? null
+	is_light_now false
+	attr * mol_theme <= theme \
+
+$bog_theme_picker_row $mol_button_minor
+	theme_name \
+	title <= theme_name
+	attr *
+		^
+		bog_theme_picker_row_focused <= focused_str \
+	event *
+		^
+		pointerenter?event <=> hover?event null
+
+$bog_theme_picker $mol_scroll
+	theme_auto $bog_theme_auto
+	close? null
+	query?val \
+	focused_index?val -1
+	Theme_row* $bog_theme_picker_row
+		theme_name <= theme_name* \
+		focused <= theme_focused* false
+		click?event <=> theme_select*?event null
+		hover?event <=> theme_hover*?event null
+	sub /
+		<= Content $mol_list rows /
+			<= Search $mol_string
+				value?val <=> query?val
+				hint @ \Just start typing
+			<= Theme_list $mol_list
+				rows <= theme_rows /
+	event *
+		^
+		keydown?event <=> key_down?event null
+
+$mol_icon_white_balance_sunny $mol_icon path \M3.55 19.09L4.96 20.5L6.76 18.71L5.34 17.29M12 6C8.69 6 6 8.69 6 12S8.69 18 12 18 18 15.31 18 12C18 8.68 15.31 6 12 6M20 13H23V11H20M17.24 18.71L19.04 20.5L20.45 19.09L18.66 17.29M20.45 5L19.04 3.6L17.24 5.39L18.66 6.81M13 1H11V4H13M6.76 5.39L4.96 3.6L3.55 5L5.34 6.81L6.76 5.39M1 13H4V11H1M13 20H11V23H13
+
+$mol_icon_weather_night $mol_icon path \M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.64 6.35,17.66C9.37,20.67 14.19,20.78 17.33,17.97Z
+
+$mol_icon_monitor $mol_icon path \M21,16H3V4H21M21,2H3C1.89,2 1,2.89 1,4V16A2,2 0 0,0 3,18H10V20H8V22H16V20H14V18H21A2,2 0 0,0 23,16V4C23,2.89 22.1,2 21,2Z
+
+$bog_theme_toggle $mol_pop
+	theme_auto $bog_theme_auto
+	showed?val false
+	align \bottom_right
+	Anchor $mol_button_minor
+		sub /
+			<= Icon $mol_view
+		hint <= anchor_hint \Переключить тему
+		click?event <=> clicked?event null
+		event *
+			^
+			pointerdown?event <=> press_start?event null
+			pointermove?event <=> press_move?event null
+			pointerup?event <=> press_end?event null
+			pointercancel?event <=> press_cancel?event null
+			lostpointercapture?event <=> press_lost?event null
+	Icon_light $mol_icon_white_balance_sunny
+	Icon_dark $mol_icon_weather_night
+	Icon_system $mol_icon_monitor
+	bubble_content /
+		<= Backdrop $mol_view
+			event *
+				click?event <=> backdrop_click?event null
+		<= Picker $bog_theme_picker
+			theme_auto <= theme_auto
+			close? <=> picker_close? null
+
+$bog_sert_front $mol_list
+	uri \
+	rows <= front_rows /
+		<= Empty $mol_status
+			message \Салон по этой ссылке не найден
+		<= Head $mol_view
+			sub /
+				<= Name $mol_view
+					sub /
+						<= name \
+				<= Note $mol_view
+					sub /
+						<= note \
+		<= Terms $mol_text
+			text <= terms \
+		<= Join $mol_button_major
+			title \Завести карту
+			click? <=> join? null
+		<= Open $mol_link
+			title \Открыть мою карту
+			arg *
+				bz null
+				bzname null
+				pass <= pass_uri \
+		<= Foot $mol_text
+			text \
+				\Карта живёт в этом браузере и ничего о вас не спрашивает: ни имени, ни почты, ни телефона.
+
+$bog_sert_card_row $mol_view
+	shop_uri \
+	pass_uri \
+	sub /
+		<= Name $mol_view
+			sub /
+				<= name \
+		<= Balance $mol_view
+			sub /
+				<= balance_text \
+
+$bog_sert_card $mol_list
+	uri \
+	rows <= card_rows /
+		<= Empty $mol_status
+			message \Ссылка не похожа на карту
+		<= Head $mol_view
+			sub /
+				<= Kind $mol_view
+					sub /
+						\Карта гостя
+				<= Total $mol_view
+					sub /
+						<= total \
+		<= Code $bog_qr
+			uri <= page_uri \
+			error_correction \M
+		<= Ident $mol_view
+			sub /
+				<= Ident_label $mol_view
+					sub /
+						\Номер карты
+				<= Ident_value $mol_view
+					sub /
+						<= ident \
+		<= Shops $mol_list
+			rows <= shop_rows /
+		<= Save $mol_text
+			text \
+				\Сохраните эту страницу в закладки или добавьте на домашний экран. Карта живёт в этом браузере: очистите данные сайта, и баллы останутся у салона, но открыть их будет нечем.
+	Shop_row* $bog_sert_card_row
+		shop_uri <= row_uri* \
+		pass_uri <= uri
+
+$bog_sert_app $mol_view
+	sub <= app_body /
+		<= Desk $bog_sert_desk
+		<= Sheet $mol_page
+			title <= sheet_title \Сертификат
+			tools /
+				<= Home $mol_link
+					title \Сертификаты
+					arg *
+						cert null
+						pass null
+						bz null
+						bzname null
+						page null
+				<= Theme_toggle $bog_theme_toggle
+					theme_auto <= Theme
+			body /
+				<= Sheet_card $bog_sert_sheet
+					uri <= cert_uri \
+		<= Front $mol_page
+			title <= front_title \Салон
+			tools /
+				<= Home
+				<= Theme_toggle
+			body /
+				<= Front_body $bog_sert_front
+					uri <= shop_uri \
+		<= Card $mol_page
+			title \Карта гостя
+			tools /
+				<= Home
+				<= Theme_toggle
+			body /
+				<= Card_body $bog_sert_card
+					uri <= pass_uri \
+		<= Rivals $mol_page
+			title \Имя занято дважды
+			tools /
+				<= Home
+				<= Theme_toggle
+			body /
+				<= Rivals_hint $mol_text
+					text \
+						\На это имя претендует несколько салонов. Имя в адресе не защищено, поэтому угадывать за вас мы не будем: выберите, куда идти, и дальше пользуйтесь прямой ссылкой.
+				<= Rivals_list $mol_list
+					rows <= rival_rows /
+	Rival* $mol_link
+		title <= rival_title* \
+		arg *
+			bzname null
+			bz <= rival_uri* \
 	plugins /
 		<= Theme $bog_theme_auto
 			theme_light \$mol_theme_calm_light
@@ -2567,11 +2875,6 @@ $bog_sert_app $mol_page
 			themes /
 				\$mol_theme_calm_light
 				\$mol_theme_calm_dark
-	body <= page_body /
-		<= Desk $bog_sert_desk
-		<= Key $bog_sert_key
-		<= Card $bog_sert_card
-			uri <= cert_uri \
 
 $bog_builderui_div $mol_view
 
