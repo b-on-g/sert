@@ -17310,6 +17310,29 @@ var $;
 var $;
 (function ($) {
     /**
+     * Закрытая часть салона: список карт, которые тут обслуживали.
+     *
+     * Живёт в отдельном ленде без прав для `null`, поэтому База его шифрует.
+     * Прочитать может только владелец и те, кому он выдал доступ.
+     *
+     * Ради этого хранилище и заведено. Пока список карт лежал в открытом ленде
+     * витрины, любой, кто знает ссылку на салон, видел число гостей и ритм
+     * начислений. Сами операции лежат в картах гостей, а перечислить карты,
+     * не имея этого списка, нельзя.
+     */
+    class $bog_sert_vault extends $giper_baza_entity.with({
+        /** Ссылки карт, по которым была хоть одна операция */
+        Cards: $giper_baza_list_str,
+    }, 'Vault') {
+    }
+    $.$bog_sert_vault = $bog_sert_vault;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /**
      * Подарочный сертификат. Живёт отдельным лендом, ссылка на который и есть предъявитель.
      * Поэтому всё нужное для показа лежит внутри: получатель открывает карточку,
      * ничего не зная про ленд салона и не имея к нему доступа.
@@ -17394,13 +17417,18 @@ var $;
     /**
      * Операция по карте гостя: начисление, списание или приветственный бонус.
      *
-     * Лежит внутри ленда салона и подписана его ключом. Гость такую запись
-     * подделать не может — у него нет прав писать в этот ленд.
+     * Лежит в ленде карты, а не салона. Ленд карты открыт на запись всем, иначе
+     * кассир со своим ключом не смог бы туда ничего положить. Значит право
+     * записи ничего не гарантирует, и доверие держится на подписи: у каждой
+     * записи в Базе есть автор, и в зачёт идут только записи бригады салона.
+     *
+     * Гость может дописать себе хоть миллион баллов — его лорда нет в бригаде,
+     * и такая запись не считается ничем.
      */
     class $bog_sert_op extends $giper_baza_entity.with({
-        // Title — чем операция была: «покупка», «списание», «приветственный»
-        /** Ссылка ленда карты гостя */
-        Pass: $giper_baza_atom_text,
+        // Title — чем операция была: «Покупка», «Списание», «Приветственный»
+        /** Ленд салона, который начислил. Карта работает в нескольких сразу. */
+        Shop: $giper_baza_atom_text,
         /** Сумма чека в рублях. Ноль, если операция не про покупку. */
         Cost: $giper_baza_atom_real,
         /** Изменение баланса в баллах: плюс начислили, минус списали */
@@ -17408,14 +17436,72 @@ var $;
         /** Когда */
         Made: $giper_baza_atom_time,
     }, 'Op') {
-        /** Баланс карты как сумма всех операций по ней. */
-        static balance(ops, pass) {
-            let sum = 0;
-            for (const op of ops) {
-                if (op.Pass()?.val() !== pass)
+        /**
+         * Операция глазами того, кто ей верит.
+         *
+         * Читаем не `val()`, а все версии поля: `val()` отдаёт первую попавшуюся,
+         * а в карту гостя мог дописать посторонний, и его ветка легла бы раньше.
+         * Автор определяется по `Delta` — именно это поле несёт ценность, — и
+         * остальные поля берутся из записей того же автора.
+         *
+         * Возвращает `null`, если операцию не подписал никто из бригады.
+         */
+        static read(op, crew) {
+            const delta_atom = op.Delta();
+            if (!delta_atom)
+                return null;
+            const land = delta_atom.land();
+            for (const unit of delta_atom.units_of(null)) {
+                const lord = unit.lord().str;
+                const fired = crew.get(lord);
+                // Не из бригады — мимо.
+                if (fired === undefined)
                     continue;
-                sum += op.Delta()?.val() ?? 0;
+                // Уволенный сохраняет то, что записал, пока работал.
+                if (fired && unit.time() >= fired)
+                    continue;
+                const delta = land.sand_decode(unit);
+                if (typeof delta !== 'number')
+                    continue;
+                const by = (atom) => {
+                    if (!atom)
+                        return null;
+                    for (const one of atom.units_of(null)) {
+                        if (one.lord().str !== lord)
+                            continue;
+                        return land.sand_decode(one);
+                    }
+                    return null;
+                };
+                return {
+                    lord,
+                    at: unit.time(),
+                    delta,
+                    shop: String(by(op.Shop()) ?? ''),
+                    cost: Number(by(op.Cost()) ?? 0),
+                    title: String(by(op.Title()) ?? ''),
+                };
             }
+            return null;
+        }
+        /** Проверенные операции карты в одном салоне, ранние первыми. */
+        static ledger(ops, crew, shop) {
+            const out = [];
+            for (const op of ops) {
+                const read = $bog_sert_op.read(op, crew);
+                if (!read)
+                    continue;
+                if (shop && read.shop !== shop)
+                    continue;
+                out.push(read);
+            }
+            return out.sort((a, b) => a.at - b.at);
+        }
+        /** Баланс как сумма проверенных операций. */
+        static balance(ledger) {
+            let sum = 0;
+            for (const one of ledger)
+                sum += one.delta;
             return Math.round(sum);
         }
         /** Сколько баллов вернуть с чека. Округляем вниз, чтобы не дарить лишнего. */
@@ -17440,13 +17526,56 @@ var $;
 var $;
 (function ($) {
     /**
-     * Салон: витрина, реестр выпущенных сертификатов и книга операций лояльности.
+     * Сотрудник, которому разрешено начислять баллы.
+     *
+     * Список сотрудников лежит в открытом ленде витрины намеренно: по нему
+     * гость проверяет, что запись в его карте сделал кто-то из салона, а не
+     * посторонний. Секрета тут нет, публичный ключ на то и публичный.
+     */
+    class $bog_sert_hand extends $giper_baza_entity.with({
+        // Title — как зовут, для списка в кабинете
+        /** Лорд сотрудника: по нему сходится подпись записи */
+        Lord: $giper_baza_atom_text,
+        /** Когда уволен. Записи, сделанные до этого момента, остаются в силе. */
+        Fired: $giper_baza_atom_time,
+    }, 'Hand') {
+        /**
+         * Бригада салона списком «лорд → момент увольнения в секундах».
+         * Ноль означает, что человек работает.
+         *
+         * Секунды, а не миллисекунды: в этих же единицах живёт `unit.time()`,
+         * с которым бригаду и сверяют.
+         */
+        static crew(shop) {
+            const crew = new Map();
+            if (!shop)
+                return crew;
+            for (const hand of shop.Crew()?.remote_list() ?? []) {
+                const lord = hand.Lord()?.val() ?? '';
+                if (!lord)
+                    continue;
+                const fired = hand.Fired()?.val();
+                crew.set(lord, fired ? Math.floor(fired.valueOf() / 1000) : 0);
+            }
+            return crew;
+        }
+    }
+    $.$bog_sert_hand = $bog_sert_hand;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    /**
+     * Салон: витрина и всё, что гостю положено видеть до покупки.
      *
      * Живёт в собственном ленде с чтением для всех: по ссылке на него заходит
      * гость с улицы, а домашний ленд владельца для этого не годится.
      *
-     * Писать сюда может только владелец ключа. На этом и держится вся защита
-     * от накрутки баллов: гость в книгу операций не пишет ничего.
+     * Условия программы тут лежат намеренно открыто — их и надо показать на
+     * витрине. А вот кто ходит и сколько тратит, отсюда убрано: список гостей
+     * закрыт в [[$bog_sert_vault]], операции лежат в картах самих гостей.
      */
     class $bog_sert_shop extends $giper_baza_entity.with({
         /** Адрес, телефон, условия. Печатается на каждом сертификате. */
@@ -17464,11 +17593,15 @@ var $;
         /** Сколько рублей стоит один балл при списании */
         Price: $giper_baza_atom_real,
         /**
-         * Книга операций. Каждая операция лежит прямо здесь, а не отдельным
-         * лендом: отдельный ленд стоит доказательства работы, и касса ждала бы
-         * секунды на каждом начислении.
+         * Бригада: владелец и сотрудники, которым разрешено начислять.
+         *
+         * Открыта на чтение, потому что это не секрет, а список проверяющих
+         * подписей: гость по нему убеждается, что баллы в его карте записал
+         * салон, а не случайный прохожий.
          */
-        Ops: $giper_baza_list_link.to(() => $bog_sert_op),
+        Crew: $giper_baza_list_link.to(() => $bog_sert_hand),
+        /** Закрытая часть: список обслуженных карт */
+        Vault: $giper_baza_atom_link.to(() => $bog_sert_vault),
     }, 'Sert') {
     }
     $.$bog_sert_shop = $bog_sert_shop;
@@ -18686,9 +18819,23 @@ var $;
                 return null;
             return this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(uri), $bog_sert_shop);
         }
-        /** Книга операций салона. Пустая, пока салона нет. */
-        ops() {
-            return this.shop()?.Ops()?.remote_list() ?? [];
+        /**
+         * Закрытая часть салона. Без `@ $mol_mem` — объект Базы.
+         *
+         * Ленд зашифрован, поэтому у постороннего он будет пустым, а не
+         * недоступным: прав нет, значит и юниты не расшифруются.
+         */
+        vault() {
+            const shop = this.shop();
+            if (!shop)
+                return null;
+            const vault = shop.Vault()?.remote();
+            vault?.land().sync();
+            return vault ?? null;
+        }
+        /** Бригада салона: кому верим на слово в картах гостей. */
+        crew() {
+            return $bog_sert_hand.crew(this.shop());
         }
     }
     $.$bog_sert_page = $bog_sert_page;
@@ -24953,6 +25100,11 @@ var $;
 			(obj.scanning) = () => ((this.scanning()));
 			return obj;
 		}
+		No_camera(){
+			const obj = new this.$.$mol_status();
+			(obj.message) = () => ("Камера недоступна. Разрешите доступ в настройках браузера или введите номер карты руками.");
+			return obj;
+		}
 		manual(next){
 			if(next !== undefined) return next;
 			return "";
@@ -25122,6 +25274,7 @@ var $;
 		till_body(){
 			return [
 				(this.Scan()), 
+				(this.No_camera()), 
 				(this.Manual_field()), 
 				(this.Manual_apply()), 
 				(this.Guest()), 
@@ -25137,6 +25290,7 @@ var $;
 	};
 	($mol_mem(($.$bog_sert_desk_till.prototype), "decoded"));
 	($mol_mem(($.$bog_sert_desk_till.prototype), "Scan"));
+	($mol_mem(($.$bog_sert_desk_till.prototype), "No_camera"));
 	($mol_mem(($.$bog_sert_desk_till.prototype), "manual"));
 	($mol_mem(($.$bog_sert_desk_till.prototype), "manual_apply"));
 	($mol_mem(($.$bog_sert_desk_till.prototype), "Manual"));
@@ -25169,15 +25323,22 @@ var $;
 (function ($) {
     /**
      * Карта гостя. Заводится самим гостем в собственном ленде, ничего личного
-     * не спрашивает и никакой ценности сама по себе не несёт: баллы живут в
-     * книге операций салона, и пишет их только касса.
+     * не спрашивает и никакой ценности сама по себе не несёт.
      *
-     * Поэтому наплодить карт можно сколько угодно, и смысла в этом нет.
+     * Операции лежат прямо тут, а не в ленде салона. Так гость видит только
+     * своё, качает только своё, а салон не выставляет наружу список гостей.
+     *
+     * Ленд открыт на запись всем: иначе кассир, у которого свой ключ, не смог
+     * бы начислить. Дописать сюда поэтому может кто угодно, и защищает не право
+     * записи, а подпись: [[$bog_sert_op]] считает только те записи, автор
+     * которых числится в бригаде салона.
      */
     class $bog_sert_pass extends $giper_baza_entity.with({
         // Title — имя, которым гость назвался. Необязательное.
         /** Ленды салонов, где карту заводили. Гость пополняет этот список сам. */
         Shops: $giper_baza_list_str,
+        /** Начисления и списания, по всем салонам сразу */
+        Ops: $giper_baza_list_link.to(() => $bog_sert_op),
     }, 'Pass') {
         /**
          * Достаёт ссылку карты из чего угодно: полного адреса из камеры, куска
@@ -25210,14 +25371,26 @@ var $;
         /**
          * Касса. Кассир наводит камеру на карту гостя, вводит сумму чека и начисляет.
          *
-         * Направление сканирования выбрано так намеренно: пишет всегда салон, поэтому
-         * подделать начисление гостю нечем. Обратный порядок, когда гость сканирует
-         * код на стойке, превратил бы этот код в ферму баллов.
+         * Направление сканирования выбрано намеренно: код на стойке только знакомит,
+         * а баллы пишет касса. Обратный порядок превратил бы код в ферму.
+         *
+         * Запись ложится в ленд карты гостя и подписывается ключом кассира. Право
+         * писать туда есть у всех, поэтому оно ничего не значит: в зачёт идут только
+         * записи из бригады салона.
          */
         class $bog_sert_desk_till extends $.$bog_sert_desk_till {
             /** Ссылка карты текущего гостя. */
             pass_uri(next) {
                 return next ?? '';
+            }
+            /** Карта гостя. Без `@ $mol_mem` — объект Базы. */
+            pass() {
+                const uri = this.pass_uri();
+                if (!this.$.$giper_baza_link.check(uri))
+                    return null;
+                const pass = this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(uri), $bog_sert_pass);
+                pass.land().sync();
+                return pass;
             }
             /** Камера гасится, как только карта опознана: незачем сканировать дальше. */
             scanning() {
@@ -25258,26 +25431,24 @@ var $;
             done(next) {
                 return next ?? '';
             }
-            /** Операции по этой карте, старые первыми. */
-            pass_ops() {
-                const pass = this.pass_uri();
+            /** Проверенные операции этой карты в этом салоне. */
+            ledger() {
+                const pass = this.pass();
                 if (!pass)
                     return [];
-                return this.ops().filter(op => op.Pass()?.val() === pass);
+                return $bog_sert_op.ledger(pass.Ops()?.remote_list() ?? [], this.crew(), this.shop_uri());
             }
             balance() {
-                return $bog_sert_op.balance(this.ops(), this.pass_uri());
+                return $bog_sert_op.balance(this.ledger());
             }
             guest_title() {
-                const pass = this.pass_uri();
+                const pass = this.pass();
                 if (!pass)
                     return '';
-                const card = this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(pass), $bog_sert_pass);
-                card.land().sync();
-                return card.title() || `Карта ${pass}`;
+                return pass.title() || `Карта ${this.pass_uri()}`;
             }
             balance_text() {
-                const visits = this.pass_ops().length;
+                const visits = this.ledger().length;
                 if (!visits)
                     return 'Первый визит, баланс 0';
                 return `Баланс ${this.balance()} баллов, операций ${visits}`;
@@ -25288,7 +25459,7 @@ var $;
             }
             /** Приветственный даётся один раз и только если по карте ещё ничего не было. */
             welcome_sum() {
-                if (this.pass_ops().length)
+                if (this.ledger().length)
                     return 0;
                 if (!this.welcome())
                     return 0;
@@ -25311,22 +25482,28 @@ var $;
                 return this.gain() > 0 || this.welcome_sum() > 0;
             }
             accrue() {
-                const shop = this.shop();
-                if (!shop)
+                const pass = this.pass();
+                if (!pass)
                     return;
                 // Подвисающие чтения — до записи.
-                const pass = this.pass_uri();
+                const shop_uri = this.shop_uri();
                 const gain = this.gain();
                 const welcome = this.welcome_sum();
                 const cost = Math.max(0, Math.round(this.cost()));
-                if (!pass || (!gain && !welcome))
+                const vault = this.vault();
+                const known = vault?.Cards()?.items() ?? [];
+                if (!shop_uri || (!gain && !welcome))
                     return;
                 const now = new this.$.$mol_time_moment();
-                const list = shop.Ops('auto');
+                const list = pass.Ops('auto');
                 if (welcome)
-                    this.op_add(list, 'Приветственный', pass, 0, welcome, now);
+                    this.op_add(list, 'Приветственный', shop_uri, 0, welcome, now);
                 if (gain)
-                    this.op_add(list, 'Покупка', pass, cost, gain, now);
+                    this.op_add(list, 'Покупка', shop_uri, cost, gain, now);
+                // Список гостей лежит в закрытой части: наружу он не видён,
+                // а кабинету нужен, чтобы было по чему листать карты.
+                if (!known.includes(this.pass_uri()))
+                    vault?.Cards('auto').add(this.pass_uri());
                 this.cost(0);
                 this.done(`Начислено ${gain + welcome} баллов`);
             }
@@ -25339,27 +25516,26 @@ var $;
                 return want > 0 && want <= this.spend_limit();
             }
             spend() {
-                const shop = this.shop();
-                if (!shop)
+                const pass = this.pass();
+                if (!pass)
                     return;
-                const pass = this.pass_uri();
+                const shop_uri = this.shop_uri();
                 const want = Math.max(0, Math.round(this.writeoff()));
                 const limit = this.spend_limit();
-                if (!pass || !want || want > limit)
+                if (!shop_uri || !want || want > limit)
                     return;
-                this.op_add(shop.Ops('auto'), 'Списание', pass, Math.max(0, Math.round(this.cost())), -want, new this.$.$mol_time_moment());
+                this.op_add(pass.Ops('auto'), 'Списание', shop_uri, Math.max(0, Math.round(this.cost())), -want, new this.$.$mol_time_moment());
                 this.writeoff(0);
                 this.done(`Списано ${want} баллов`);
             }
             /**
-             * Операция кладётся прямо в ленд салона: `make( null )` заводит её здесь же,
-             * без отдельного ленда и без доказательства работы, иначе касса ждала бы
-             * секунды на каждом чеке.
+             * Операция кладётся прямо в ленд карты через `make( null )`: отдельный
+             * ленд стоит доказательства работы, и касса ждала бы секунды на чеке.
              */
-            op_add(list, title, pass, cost, delta, now) {
+            op_add(list, title, shop, cost, delta, now) {
                 const op = list.make(null);
                 op.Title('auto').val(title);
-                op.Pass('auto').val(pass);
+                op.Shop('auto').val(shop);
                 op.Cost('auto').val(cost);
                 op.Delta('auto').val(delta);
                 op.Made('auto').val(now);
@@ -25380,7 +25556,7 @@ var $;
                     this.Cost_field(),
                     this.Accrual(),
                 ];
-                if (!this.pass_ops().length && (this.shop()?.Bonus()?.val() ?? 0) > 0)
+                if (!this.ledger().length && (this.shop()?.Bonus()?.val() ?? 0) > 0)
                     rows.push(this.Welcome());
                 rows.push(this.Accrue());
                 if (this.balance() > 0)
@@ -25388,10 +25564,31 @@ var $;
                 rows.push(this.Reset());
                 return rows;
             }
+            /**
+             * Камеры может не быть, она может быть занята, и в доступе могут отказать.
+             * Показываем это словами: рядом ручной ввод, и касса продолжает работать.
+             * Иначе на месте сканера повисает красная плашка с текстом исключения.
+             */
+            camera_ready() {
+                try {
+                    // `stream` объявлен в `$.$$`, куда сгенерированный тип не заглядывает.
+                    this.Scan().stream();
+                    return true;
+                }
+                catch (error) {
+                    if (error instanceof Promise)
+                        $mol_fail(error);
+                    return false;
+                }
+            }
             till_body() {
                 if (this.pass_uri())
                     return [this.Guest(), this.Done()];
-                return [this.Scan(), this.Manual_field(), this.Manual_apply()];
+                return [
+                    ...this.camera_ready() ? [this.Scan()] : [this.No_camera()],
+                    this.Manual_field(),
+                    this.Manual_apply(),
+                ];
             }
         }
         __decorate([
@@ -25669,44 +25866,55 @@ var $;
 (function ($) {
     var $$;
     (function ($$) {
-        /** Карты, по которым в этом салоне была хоть одна операция. */
+        /**
+         * Карты, по которым в этом салоне была хоть одна операция.
+         *
+         * Список карт лежит в закрытой части салона, поэтому перечислить гостей
+         * может только тот, кому владелец выдал доступ. Сами операции читаются из
+         * карт: в каждой лежит только своё.
+         */
         class $bog_sert_desk_guests extends $.$bog_sert_desk_guests {
+            cards() {
+                return this.vault()?.Cards()?.items() ?? [];
+            }
+            /** Проверенные операции одной карты в этом салоне. */
+            ledger(card) {
+                if (!this.$.$giper_baza_link.check(card))
+                    return [];
+                const pass = this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(card), $bog_sert_pass);
+                pass.land().sync();
+                return $bog_sert_op.ledger(pass.Ops()?.remote_list() ?? [], this.crew(), this.shop_uri());
+            }
             /** Сводка по каждой карте, недавние сверху. */
             summary() {
-                const rows = new Map();
-                for (const op of this.ops()) {
-                    const pass = op.Pass()?.val() ?? '';
-                    if (!pass)
-                        continue;
-                    const made = op.Made()?.val();
-                    const at = made?.valueOf() ?? 0;
-                    const row = rows.get(pass) ?? { balance: 0, visits: 0, at: 0, last: '' };
-                    row.balance += op.Delta()?.val() ?? 0;
-                    row.visits += 1;
-                    if (at >= row.at) {
-                        row.at = at;
-                        row.last = made?.toString('DD.MM.YYYY') ?? '';
-                    }
-                    rows.set(pass, row);
-                }
-                return [...rows.entries()]
-                    .sort((a, b) => b[1].at - a[1].at)
-                    .map(([pass, row]) => ({ pass, ...row, balance: Math.round(row.balance) }));
+                return this.cards()
+                    .map(card => {
+                    const ledger = this.ledger(card);
+                    const last = ledger[ledger.length - 1];
+                    return {
+                        card,
+                        balance: $bog_sert_op.balance(ledger),
+                        visits: ledger.length,
+                        at: last?.at ?? 0,
+                        last: last ? new this.$.$mol_time_moment(last.at * 1000).toString('DD.MM.YYYY') : '',
+                    };
+                })
+                    .sort((a, b) => b.at - a.at);
             }
-            row_uri(pass) {
-                return pass;
+            row_uri(card) {
+                return card;
             }
-            row_balance(pass) {
-                return this.summary().find(row => row.pass === pass)?.balance ?? 0;
+            row_balance(card) {
+                return this.summary().find(row => row.card === card)?.balance ?? 0;
             }
-            row_visits(pass) {
-                return this.summary().find(row => row.pass === pass)?.visits ?? 0;
+            row_visits(card) {
+                return this.summary().find(row => row.card === card)?.visits ?? 0;
             }
-            row_last(pass) {
-                return this.summary().find(row => row.pass === pass)?.last ?? '';
+            row_last(card) {
+                return this.summary().find(row => row.card === card)?.last ?? '';
             }
             guest_rows() {
-                return this.summary().map(row => this.Row(row.pass));
+                return this.summary().map(row => this.Row(row.card));
             }
             guests_title() {
                 const count = this.summary().length;
@@ -25741,10 +25949,457 @@ var $;
 })($ || ($ = {}));
 
 ;
+	($.$bog_sert_desk_crew_row) = class $bog_sert_desk_crew_row extends ($.$mol_view) {
+		Title(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.title())]);
+			return obj;
+		}
+		Lord(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.lord())]);
+			return obj;
+		}
+		State(){
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this.fired())]);
+			return obj;
+		}
+		fire(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Fire(){
+			const obj = new this.$.$mol_button_minor();
+			(obj.title) = () => ("Уволить");
+			(obj.click) = (next) => ((this.fire(next)));
+			return obj;
+		}
+		row_sub(){
+			return [
+				(this.Title()), 
+				(this.Lord()), 
+				(this.State()), 
+				(this.Fire())
+			];
+		}
+		lord(){
+			return "";
+		}
+		title(){
+			return "";
+		}
+		fired(){
+			return "";
+		}
+		sub(){
+			return (this.row_sub());
+		}
+	};
+	($mol_mem(($.$bog_sert_desk_crew_row.prototype), "Title"));
+	($mol_mem(($.$bog_sert_desk_crew_row.prototype), "Lord"));
+	($mol_mem(($.$bog_sert_desk_crew_row.prototype), "State"));
+	($mol_mem(($.$bog_sert_desk_crew_row.prototype), "fire"));
+	($mol_mem(($.$bog_sert_desk_crew_row.prototype), "Fire"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /** Строка бригады: кто, какой лорд, работает или уволен. */
+        class $bog_sert_desk_crew_row extends $.$bog_sert_desk_crew_row {
+            row_sub() {
+                return [
+                    this.Title(),
+                    this.Lord(),
+                    ...this.fired() ? [this.State()] : [this.Fire()],
+                ];
+            }
+        }
+        $$.$bog_sert_desk_crew_row = $bog_sert_desk_crew_row;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_desk_crew_row, {
+        flex: {
+            direction: 'row',
+            wrap: 'wrap',
+        },
+        align: {
+            items: 'baseline',
+        },
+        gap: $mol_gap.text,
+        padding: [$mol_gap.text, $mol_gap.block],
+        background: {
+            color: $mol_theme.card,
+        },
+        Title: {
+            font: {
+                weight: 'bold',
+            },
+        },
+        Lord: {
+            flex: {
+                grow: 1,
+            },
+            minWidth: '8rem',
+            fontFamily: 'monospace',
+            font: {
+                size: '.8rem',
+            },
+            color: $mol_theme.shade,
+        },
+        State: {
+            font: {
+                size: '.85rem',
+            },
+            color: $mol_theme.shade,
+            whiteSpace: 'nowrap',
+        },
+    });
+})($ || ($ = {}));
+
+;
+	($.$bog_sert_desk_crew) = class $bog_sert_desk_crew extends ($.$bog_sert_page) {
+		Hint(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ("Сотрудник открывает приложение у себя, копирует свой публичный ключ в разделе «Ключ доступа» и присылает вам. Это не секрет: по нему нельзя ни войти, ни что-то подписать.\n\nДобавленный сотрудник получает доступ к закрытой части салона и право начислять баллы. Гость по этому же списку проверяет, что баллы в его карте записал салон, а не посторонний.\n\nУволенный перестаёт начислять, но всё, что он записал до увольнения, остаётся в силе.");
+			return obj;
+		}
+		name(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		Name(){
+			const obj = new this.$.$mol_string();
+			(obj.hint) = () => ("Марина");
+			(obj.value) = (next) => ((this.name(next)));
+			return obj;
+		}
+		Name_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Как зовут");
+			(obj.control) = () => ((this.Name()));
+			return obj;
+		}
+		key(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		Key(){
+			const obj = new this.$.$bog_sert_area();
+			(obj.hint) = () => ("Вставьте сюда ключ, который прислал сотрудник");
+			(obj.value) = (next) => ((this.key(next)));
+			return obj;
+		}
+		Key_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Публичный ключ сотрудника");
+			(obj.control) = () => ((this.Key()));
+			return obj;
+		}
+		add_allowed(){
+			return true;
+		}
+		add(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Add(){
+			const obj = new this.$.$mol_button_major();
+			(obj.title) = () => ("Добавить");
+			(obj.enabled) = () => ((this.add_allowed()));
+			(obj.click) = (next) => ((this.add(next)));
+			return obj;
+		}
+		result(){
+			return "";
+		}
+		Result(){
+			const obj = new this.$.$mol_status();
+			(obj.message) = () => ((this.result()));
+			return obj;
+		}
+		Add_block(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ([
+				(this.Name_field()), 
+				(this.Key_field()), 
+				(this.Add()), 
+				(this.Result())
+			]);
+			return obj;
+		}
+		crew_rows(){
+			return [];
+		}
+		List(){
+			const obj = new this.$.$mol_list();
+			(obj.rows) = () => ((this.crew_rows()));
+			return obj;
+		}
+		row_lord(id){
+			return "";
+		}
+		row_title(id){
+			return "";
+		}
+		row_fired(id){
+			return "";
+		}
+		row_fire(id, next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		title(){
+			return "Сотрудники";
+		}
+		body(){
+			return [
+				(this.Hint()), 
+				(this.Add_block()), 
+				(this.List())
+			];
+		}
+		Row(id){
+			const obj = new this.$.$bog_sert_desk_crew_row();
+			(obj.lord) = () => ((this.row_lord(id)));
+			(obj.title) = () => ((this.row_title(id)));
+			(obj.fired) = () => ((this.row_fired(id)));
+			(obj.fire) = (next) => ((this.row_fire(id, next)));
+			return obj;
+		}
+	};
+	($mol_mem(($.$bog_sert_desk_crew.prototype), "Hint"));
+	($mol_mem(($.$bog_sert_desk_crew.prototype), "name"));
+	($mol_mem(($.$bog_sert_desk_crew.prototype), "Name"));
+	($mol_mem(($.$bog_sert_desk_crew.prototype), "Name_field"));
+	($mol_mem(($.$bog_sert_desk_crew.prototype), "key"));
+	($mol_mem(($.$bog_sert_desk_crew.prototype), "Key"));
+	($mol_mem(($.$bog_sert_desk_crew.prototype), "Key_field"));
+	($mol_mem(($.$bog_sert_desk_crew.prototype), "add"));
+	($mol_mem(($.$bog_sert_desk_crew.prototype), "Add"));
+	($mol_mem(($.$bog_sert_desk_crew.prototype), "Result"));
+	($mol_mem(($.$bog_sert_desk_crew.prototype), "Add_block"));
+	($mol_mem(($.$bog_sert_desk_crew.prototype), "List"));
+	($mol_mem_key(($.$bog_sert_desk_crew.prototype), "row_fire"));
+	($mol_mem_key(($.$bog_sert_desk_crew.prototype), "Row"));
+
+
+;
+"use strict";
+
+
+;
+"use strict";
+var $;
+(function ($) {
+    var $$;
+    (function ($$) {
+        /**
+         * Бригада салона: кто имеет право начислять баллы.
+         *
+         * Добавление делает две вещи сразу. Лорд сотрудника попадает в открытый
+         * список на витрине — по нему любой читатель карты убеждается, что запись
+         * сделал салон. А его ключу выдаются права на закрытую часть салона, чтобы
+         * касса видела список гостей.
+         */
+        class $bog_sert_desk_crew extends $.$bog_sert_desk_crew {
+            name(next) {
+                return next ?? '';
+            }
+            key(next) {
+                return next ?? '';
+            }
+            result(next) {
+                return next ?? '';
+            }
+            /** Разбор присланного ключа. Мусор возвращает `null`, а не бросает. */
+            pass_of(raw) {
+                const key = raw.trim();
+                if (!key)
+                    return null;
+                try {
+                    const pass = this.$.$giper_baza_auth_pass.from(key);
+                    return pass.byteLength === 64 && pass.uint8(0) === 0xFF ? pass : null;
+                }
+                catch (error) {
+                    if (error instanceof Promise)
+                        $mol_fail(error);
+                    return null;
+                }
+            }
+            add_allowed() {
+                return Boolean(this.name().trim()) && Boolean(this.pass_of(this.key()));
+            }
+            hands() {
+                return this.shop()?.Crew()?.remote_list() ?? [];
+            }
+            add() {
+                const shop = this.shop();
+                const vault = this.vault();
+                if (!shop)
+                    return;
+                // Подвисающие чтения — до записи.
+                const name = this.name().trim();
+                const pass = this.pass_of(this.key());
+                const known = this.hands().map(hand => hand.Lord()?.val() ?? '');
+                if (!name || !pass)
+                    return;
+                const lord = pass.lord().str;
+                if (known.includes(lord)) {
+                    this.result('Этот сотрудник уже в списке');
+                    return;
+                }
+                // Право писать в закрытую часть. На карты гостей права не нужны:
+                // туда пишут все, а верят подписи из списка ниже.
+                vault?.land().give(pass, this.$.$giper_baza_rank_post('just'));
+                const hand = shop.Crew('auto').make(null);
+                hand.Title('auto').val(name);
+                hand.Lord('auto').val(lord);
+                this.name('');
+                this.key('');
+                this.result(`${name} добавлен`);
+            }
+            row_fire(lord) {
+                const vault = this.vault();
+                const hand = this.hands().find(one => one.Lord()?.val() === lord);
+                if (!hand)
+                    return;
+                // Дата увольнения важнее отзыва прав: по ней читатель отсекает
+                // то, что уволенный мог бы записать задним числом.
+                hand.Fired('auto').val(new this.$.$mol_time_moment());
+                const pass = this.pass_of(this.key());
+                if (pass && pass.lord().str === lord)
+                    vault?.land().give(pass, this.$.$giper_baza_rank_deny);
+                this.result('Уволен. Записанное им до этого дня осталось в силе.');
+                return null;
+            }
+            row_lord(lord) {
+                return lord;
+            }
+            row_title(lord) {
+                return this.hands().find(one => one.Lord()?.val() === lord)?.title() || 'Без имени';
+            }
+            row_fired(lord) {
+                const fired = this.hands().find(one => one.Lord()?.val() === lord)?.Fired()?.val();
+                return fired ? `Уволен ${fired.toString('DD.MM.YYYY')}` : '';
+            }
+            crew_rows() {
+                return this.hands()
+                    .map(hand => hand.Lord()?.val() ?? '')
+                    .filter(Boolean)
+                    .map(lord => this.Row(lord));
+            }
+        }
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_crew.prototype, "name", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_crew.prototype, "key", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_crew.prototype, "result", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_desk_crew.prototype, "add", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_desk_crew.prototype, "row_fire", null);
+        __decorate([
+            $mol_mem
+        ], $bog_sert_desk_crew.prototype, "crew_rows", null);
+        $$.$bog_sert_desk_crew = $bog_sert_desk_crew;
+    })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_define($bog_sert_desk_crew, {
+        Hint: {
+            color: $mol_theme.shade,
+        },
+        Add_block: {
+            flex: {
+                direction: 'column',
+            },
+            gap: $mol_gap.text,
+            padding: $mol_gap.block,
+            background: {
+                color: $mol_theme.card,
+            },
+            border: {
+                radius: $mol_gap.round,
+            },
+        },
+        Key: {
+            minHeight: '4rem',
+            fontFamily: 'monospace',
+            font: {
+                size: '.8rem',
+            },
+        },
+        Add: {
+            alignSelf: 'flex-start',
+        },
+        List: {
+            flex: {
+                direction: 'column',
+            },
+            gap: '1px',
+        },
+    });
+})($ || ($ = {}));
+
+;
 	($.$bog_sert_key) = class $bog_sert_key extends ($.$mol_list) {
 		Intro(){
 			const obj = new this.$.$mol_text();
 			(obj.text) = () => ("## Ключ доступа\n\nАккаунта и пароля тут нет. Всё, что у вас есть — ключ, который браузер завёл сам при первом открытии и держит только на этом устройстве. Кабинет салона и право гасить сертификаты привязаны именно к нему.\n\nЧтобы зайти в тот же кабинет с телефона на ресепшене, скопируйте ключ отсюда и вставьте его там. Кто держит ключ, тот и салон, так что пересылать его через общий чат не стоит.\n\nКлюч живёт в хранилище браузера. Очистите данные сайта, и кабинет вместе со всеми сертификатами станет недоступен. Держите копию.");
+			return obj;
+		}
+		public(){
+			return "";
+		}
+		Public(){
+			const obj = new this.$.$bog_sert_area();
+			(obj.enabled) = () => (false);
+			(obj.value) = () => ((this.public()));
+			return obj;
+		}
+		Public_field(){
+			const obj = new this.$.$mol_form_field();
+			(obj.name) = () => ("Публичный ключ");
+			(obj.control) = () => ((this.Public()));
+			return obj;
+		}
+		public_copy(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Public_copy(){
+			const obj = new this.$.$mol_button_minor();
+			(obj.title) = () => ("Скопировать публичный ключ");
+			(obj.click) = (next) => ((this.public_copy(next)));
+			return obj;
+		}
+		Public_hint(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ("Этот ключ не секрет: войти по нему нельзя и подписать им ничего нельзя. Его отправляют владельцу салона, чтобы тот добавил вас в сотрудники.");
 			return obj;
 		}
 		mine(){
@@ -25758,7 +26413,7 @@ var $;
 		}
 		Mine_field(){
 			const obj = new this.$.$mol_form_field();
-			(obj.name) = () => ("Ваш ключ");
+			(obj.name) = () => ("Личный ключ");
 			(obj.control) = () => ((this.Mine()));
 			return obj;
 		}
@@ -25813,6 +26468,9 @@ var $;
 		rows(){
 			return [
 				(this.Intro()), 
+				(this.Public_field()), 
+				(this.Public_copy()), 
+				(this.Public_hint()), 
 				(this.Mine_field()), 
 				(this.Copy()), 
 				(this.Other_field()), 
@@ -25822,6 +26480,11 @@ var $;
 		}
 	};
 	($mol_mem(($.$bog_sert_key.prototype), "Intro"));
+	($mol_mem(($.$bog_sert_key.prototype), "Public"));
+	($mol_mem(($.$bog_sert_key.prototype), "Public_field"));
+	($mol_mem(($.$bog_sert_key.prototype), "public_copy"));
+	($mol_mem(($.$bog_sert_key.prototype), "Public_copy"));
+	($mol_mem(($.$bog_sert_key.prototype), "Public_hint"));
 	($mol_mem(($.$bog_sert_key.prototype), "Mine"));
 	($mol_mem(($.$bog_sert_key.prototype), "Mine_field"));
 	($mol_mem(($.$bog_sert_key.prototype), "copy"));
@@ -25850,6 +26513,17 @@ var $;
             mine() {
                 const auth = this.$.$giper_baza_auth.current();
                 return auth.toString() + auth.toStringPrivate();
+            }
+            /**
+             * Публичный ключ. Его отдают владельцу салона, чтобы попасть в бригаду.
+             * Ничего секретного в нём нет, в отличие от строки выше.
+             */
+            public() {
+                return this.$.$giper_baza_auth.current().pass().toString();
+            }
+            public_copy() {
+                this.$.$mol_dom_context.navigator.clipboard.writeText(this.public());
+                this.result('Публичный ключ скопирован');
             }
             other(next) {
                 return next ?? '';
@@ -25892,6 +26566,9 @@ var $;
             }
         }
         __decorate([
+            $mol_action
+        ], $bog_sert_key.prototype, "public_copy", null);
+        __decorate([
             $mol_mem
         ], $bog_sert_key.prototype, "other", null);
         __decorate([
@@ -25922,6 +26599,22 @@ var $;
         margin: {
             left: 'auto',
             right: 'auto',
+        },
+        Public: {
+            fontFamily: 'monospace',
+            font: {
+                size: '.8rem',
+            },
+            minHeight: '4rem',
+        },
+        Public_copy: {
+            alignSelf: 'flex-start',
+        },
+        Public_hint: {
+            color: $mol_theme.shade,
+            font: {
+                size: '.85rem',
+            },
         },
         Mine: {
             fontFamily: 'monospace',
@@ -25993,6 +26686,12 @@ var $;
 			(obj.tools) = () => ([(this.Spread_close())]);
 			return obj;
 		}
+		Crew_page(){
+			const obj = new this.$.$bog_sert_desk_crew();
+			(obj.shop_uri) = () => ((this.shop_uri()));
+			(obj.tools) = () => ([(this.Spread_close())]);
+			return obj;
+		}
 		Key(){
 			const obj = new this.$.$bog_sert_key();
 			return obj;
@@ -26024,11 +26723,17 @@ var $;
 			(obj.text) = () => ("## Салон готов\n\nВыберите раздел слева. В «Салоне» лежат реквизиты и адрес витрины, в «Кассе» начисляются бонусы по карте гостя.");
 			return obj;
 		}
+		Hired(){
+			const obj = new this.$.$mol_text();
+			(obj.text) = () => ("## Вы в бригаде\n\nОткрыт чужой салон: начислять баллы и смотреть гостей можно, менять реквизиты и условия — нет.");
+			return obj;
+		}
 		start_body(){
 			return [
 				(this.Intro()), 
 				(this.Make()), 
-				(this.Ready())
+				(this.Ready()), 
+				(this.Hired())
 			];
 		}
 		Start_page(){
@@ -26057,6 +26762,7 @@ var $;
 				"loyalty": (this.Loyalty_page()), 
 				"till": (this.Till_page()), 
 				"guests": (this.Guests_page()), 
+				"crew": (this.Crew_page()), 
 				"key": (this.Key_page())
 			};
 		}
@@ -26071,12 +26777,14 @@ var $;
 	($mol_mem(($.$bog_sert_desk.prototype), "Loyalty_page"));
 	($mol_mem(($.$bog_sert_desk.prototype), "Till_page"));
 	($mol_mem(($.$bog_sert_desk.prototype), "Guests_page"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Crew_page"));
 	($mol_mem(($.$bog_sert_desk.prototype), "Key"));
 	($mol_mem(($.$bog_sert_desk.prototype), "Key_page"));
 	($mol_mem(($.$bog_sert_desk.prototype), "Intro"));
 	($mol_mem(($.$bog_sert_desk.prototype), "shop_make"));
 	($mol_mem(($.$bog_sert_desk.prototype), "Make"));
 	($mol_mem(($.$bog_sert_desk.prototype), "Ready"));
+	($mol_mem(($.$bog_sert_desk.prototype), "Hired"));
 	($mol_mem(($.$bog_sert_desk.prototype), "Start_page"));
 
 
@@ -26168,6 +26876,14 @@ var $;
                 shop.Rate('auto').val(5);
                 shop.Bonus('auto').val(0);
                 shop.Price('auto').val(1);
+                // Пустой пресет означает, что прав для `null` нет, и База шифрует ленд.
+                // Стоит ей увидеть хоть какие-то права для всех, и шифрование выключается.
+                const vault = this.$.$giper_baza_glob.land_grab([]).Data($bog_sert_vault);
+                shop.Vault('auto').remote(vault);
+                // Владелец — первый в бригаде, иначе его же записи никто не зачтёт.
+                const owner = shop.Crew('auto').make(null);
+                owner.Title('auto').val('Владелец');
+                owner.Lord('auto').val(this.$.$giper_baza_auth.current().pass().lord().str);
                 home.Shop('auto').remote(shop);
                 home.Shops('auto').add(shop.link().str);
                 this.spread('shop');
@@ -26175,11 +26891,32 @@ var $;
             start_body() {
                 if (!this.shop_uri())
                     return [this.Intro(), this.Make()];
-                return [this.Ready()];
+                return [this.owner() ? this.Ready() : this.Hired()];
+            }
+            /**
+             * Я владелец этого салона или наёмный работник?
+             *
+             * У сотрудника прав на ленд витрины нет: ему выдали доступ к закрытой
+             * части и место в бригаде, а править реквизиты и условия он не должен.
+             */
+            owner() {
+                const uri = this.shop_uri();
+                if (!uri)
+                    return false;
+                const shop = this.$.$giper_baza_glob.Pawn(new this.$.$giper_baza_link(uri), $bog_sert_shop);
+                // Ранги живут в подарках ленда, а те приезжают только вместе с данными.
+                // Без чтения хоть одного поля `can_change` молча ответит «нет».
+                shop.Title()?.val();
+                return shop.can_change();
             }
             /** Пока салона нет, разделы кабинета показывать нечего. */
             spread_ids() {
-                return this.shop_uri() ? super.spread_ids() : [];
+                if (!this.shop_uri())
+                    return [];
+                const all = super.spread_ids();
+                if (this.owner())
+                    return all;
+                return all.filter(id => ['till', 'guests', 'key'].includes(id));
             }
             menu_tools() {
                 return this.pass_uri() ? [this.Pass_link()] : [];
@@ -26192,6 +26929,7 @@ var $;
                     loyalty: 'Лояльность',
                     till: 'Касса',
                     guests: 'Гости',
+                    crew: 'Сотрудники',
                     key: 'Ключ доступа',
                 };
                 return titles[spread] ?? super.spread_title(spread);
@@ -27201,6 +27939,16 @@ var $;
 			(obj.click) = (next) => ((this.join(next)));
 			return obj;
 		}
+		work(next){
+			if(next !== undefined) return next;
+			return null;
+		}
+		Work(){
+			const obj = new this.$.$mol_button_minor();
+			(obj.title) = () => ("Здесь я работаю");
+			(obj.click) = (next) => ((this.work(next)));
+			return obj;
+		}
 		pass_uri(){
 			return "";
 		}
@@ -27225,6 +27973,7 @@ var $;
 				(this.Head()), 
 				(this.Terms()), 
 				(this.Join()), 
+				(this.Work()), 
 				(this.Open()), 
 				(this.Foot())
 			];
@@ -27243,6 +27992,8 @@ var $;
 	($mol_mem(($.$bog_sert_front.prototype), "Terms"));
 	($mol_mem(($.$bog_sert_front.prototype), "join"));
 	($mol_mem(($.$bog_sert_front.prototype), "Join"));
+	($mol_mem(($.$bog_sert_front.prototype), "work"));
+	($mol_mem(($.$bog_sert_front.prototype), "Work"));
 	($mol_mem(($.$bog_sert_front.prototype), "Open"));
 	($mol_mem(($.$bog_sert_front.prototype), "Foot"));
 
@@ -27329,13 +28080,45 @@ var $;
                 this.$.$mol_state_arg.go({ bz: null, bzname: null, pass: pass.link().str });
             }
             pass_make(home) {
+                // Писать может кто угодно: у кассира свой ключ, и иначе он не положил
+                // бы сюда начисление. Право записи тут поэтому ничего не решает —
+                // решает подпись, которую сверяют с бригадой салона.
                 const land = this.$.$giper_baza_glob.land_grab([
-                    [null, this.$.$giper_baza_rank_read],
+                    [null, this.$.$giper_baza_rank_post('fast')],
                 ]);
                 const pass = land.Data($bog_sert_pass);
                 home.Pass('auto').remote(pass);
                 home.Passes('auto').add(pass.link().str);
                 return pass;
+            }
+            /**
+             * Меня добавили в бригаду этого салона?
+             *
+             * Сотрудник приходит сюда по той же ссылке, что и гость, и по этому
+             * признаку получает кнопку в кабинет. Отдельного приглашения не нужно:
+             * владелец уже назвал его своим, когда добавлял ключ.
+             */
+            crew_member() {
+                const shop = this.shop();
+                if (!shop)
+                    return false;
+                const me = this.$.$giper_baza_auth.current().pass().lord().str;
+                return $bog_sert_hand.crew(shop).has(me);
+            }
+            /** Кабинет сотрудника указывает на чужой салон, свой ему не нужен. */
+            work() {
+                const shop = this.shop();
+                if (!shop)
+                    return;
+                const home = this.home();
+                home.Shops()?.items();
+                home.Shop('auto').remote(shop);
+                home.Shops('auto').add(shop.link().str);
+                this.$.$mol_state_arg.go({ bz: null, bzname: null, page: 'till' });
+            }
+            /** Уже открыт как рабочий? Тогда кнопка ни к чему. */
+            working() {
+                return this.home().Shop()?.val()?.str === this.uri();
             }
             front_rows() {
                 if (!this.shop())
@@ -27344,6 +28127,7 @@ var $;
                     this.Head(),
                     this.Terms(),
                     this.Join(),
+                    ...this.crew_member() && !this.working() ? [this.Work()] : [],
                     ...this.pass_uri() ? [this.Open()] : [],
                     this.Foot(),
                 ];
@@ -27358,6 +28142,9 @@ var $;
         __decorate([
             $mol_action
         ], $bog_sert_front.prototype, "pass_make", null);
+        __decorate([
+            $mol_action
+        ], $bog_sert_front.prototype, "work", null);
         $$.$bog_sert_front = $bog_sert_front;
     })($$ = $.$$ || ($.$$ = {}));
 })($ || ($ = {}));
@@ -27397,6 +28184,9 @@ var $;
         Join: {
             alignSelf: 'flex-start',
         },
+        Work: {
+            alignSelf: 'flex-start',
+        },
         Foot: {
             font: {
                 size: '.85rem',
@@ -27427,8 +28217,8 @@ var $;
 		shop_uri(){
 			return "";
 		}
-		pass_uri(){
-			return "";
+		ops(){
+			return [];
 		}
 		sub(){
 			return [(this.Name()), (this.Balance())];
@@ -27462,8 +28252,18 @@ var $;
             name() {
                 return this.shop()?.title() || this.shop_uri();
             }
+            /**
+             * Операции этого салона, у которых подпись сходится с его бригадой.
+             *
+             * Дописать в карту может кто угодно, включая её владельца, поэтому
+             * баланс считается не по всему, что тут лежит, а только по записям
+             * тех, кого салон назвал своими.
+             */
+            ledger() {
+                return $bog_sert_op.ledger(this.ops(), $bog_sert_hand.crew(this.shop()), this.shop_uri());
+            }
             balance() {
-                return $bog_sert_op.balance(this.shop()?.Ops()?.remote_list() ?? [], this.pass_uri());
+                return $bog_sert_op.balance(this.ledger());
             }
             balance_text() {
                 return `${this.balance()} баллов`;
@@ -27578,6 +28378,9 @@ var $;
 		row_uri(id){
 			return "";
 		}
+		ops(){
+			return [];
+		}
 		uri(){
 			return "";
 		}
@@ -27587,7 +28390,7 @@ var $;
 		Shop_row(id){
 			const obj = new this.$.$bog_sert_card_row();
 			(obj.shop_uri) = () => ((this.row_uri(id)));
-			(obj.pass_uri) = () => ((this.uri()));
+			(obj.ops) = () => ((this.ops()));
 			return obj;
 		}
 	};
@@ -27634,6 +28437,10 @@ var $;
             /** Салоны, где карту заводили. */
             shop_uris() {
                 return this.pass()?.Shops()?.items() ?? [];
+            }
+            /** Все записи карты, ещё не проверенные. Проверяет их строка салона. */
+            ops() {
+                return this.pass()?.Ops()?.remote_list() ?? [];
             }
             ident() {
                 return this.uri();
@@ -37290,14 +38097,13 @@ var $;
             $mol_assert_equal($bog_sert_op.accrual(1000, 0), 0);
             $mol_assert_equal($bog_sert_op.accrual(0, 5), 0);
         },
-        'баланс складывается только по своей карте'() {
-            const ops = [
-                { Pass: () => ({ val: () => 'aaaaaaaa' }), Delta: () => ({ val: () => 100 }) },
-                { Pass: () => ({ val: () => 'bbbbbbbb' }), Delta: () => ({ val: () => 500 }) },
-                { Pass: () => ({ val: () => 'aaaaaaaa' }), Delta: () => ({ val: () => -30 }) },
+        'баланс складывается из проверенных операций'() {
+            const ledger = [
+                { lord: 'a', at: 1, delta: 100, shop: 's', cost: 0, title: '' },
+                { lord: 'a', at: 2, delta: -30, shop: 's', cost: 0, title: '' },
             ];
-            $mol_assert_equal($bog_sert_op.balance(ops, 'aaaaaaaa'), 70);
-            $mol_assert_equal($bog_sert_op.balance(ops, 'cccccccc'), 0);
+            $mol_assert_equal($bog_sert_op.balance(ledger), 70);
+            $mol_assert_equal($bog_sert_op.balance([]), 0);
         },
         'списать нельзя больше баланса и дороже чека'() {
             // Баланс 500, чек 200 ₽, балл стоит рубль — дальше чека не спишем.
@@ -37308,6 +38114,54 @@ var $;
             $mol_assert_equal($bog_sert_op.writeoff_limit(500, 0, 1), 0);
             // Балл в полрубля — на 200 ₽ уходит 400 баллов.
             $mol_assert_equal($bog_sert_op.writeoff_limit(500, 200, 0.5), 400);
+        },
+        'в зачёт идут только записи бригады салона'() {
+            // Дописать в карту гостя может кто угодно, поэтому одно и то же поле
+            // несёт несколько версий: у каждой свой автор и своё время.
+            const land = { sand_decode: (unit) => unit.val };
+            const unit = (lord, time, val) => ({ lord: () => ({ str: lord }), time: () => time, val });
+            const atom = (units) => ({
+                land: () => land,
+                units_of: () => units,
+            });
+            const op = {
+                Delta: () => atom([unit('мошенник', 10, 999), unit('кассир', 20, 50)]),
+                Shop: () => atom([unit('мошенник', 10, 'чужой'), unit('кассир', 20, 'наш')]),
+                Cost: () => atom([unit('кассир', 20, 1000)]),
+                Title: () => atom([unit('кассир', 20, 'Покупка')]),
+            };
+            const read = $bog_sert_op.read(op, new Map([['кассир', 0]]));
+            $mol_assert_equal(read?.delta, 50);
+            $mol_assert_equal(read?.shop, 'наш');
+            $mol_assert_equal(read?.lord, 'кассир');
+        },
+        'запись постороннего не считается ничем'() {
+            const land = { sand_decode: (unit) => unit.val };
+            const unit = (lord, time, val) => ({ lord: () => ({ str: lord }), time: () => time, val });
+            const atom = (units) => ({ land: () => land, units_of: () => units });
+            const op = {
+                Delta: () => atom([unit('гость', 10, 1000000)]),
+                Shop: () => atom([]),
+                Cost: () => atom([]),
+                Title: () => atom([]),
+            };
+            $mol_assert_equal($bog_sert_op.read(op, new Map([['кассир', 0]])), null);
+        },
+        'уволенный сохраняет то, что записал, пока работал'() {
+            const land = { sand_decode: (unit) => unit.val };
+            const unit = (lord, time, val) => ({ lord: () => ({ str: lord }), time: () => time, val });
+            const atom = (units) => ({ land: () => land, units_of: () => units });
+            const before = {
+                Delta: () => atom([unit('марина', 100, 50)]),
+                Shop: () => atom([]), Cost: () => atom([]), Title: () => atom([]),
+            };
+            const after = {
+                Delta: () => atom([unit('марина', 300, 50)]),
+                Shop: () => atom([]), Cost: () => atom([]), Title: () => atom([]),
+            };
+            const crew = new Map([['марина', 200]]);
+            $mol_assert_equal($bog_sert_op.read(before, crew)?.delta, 50);
+            $mol_assert_equal($bog_sert_op.read(after, crew), null);
         },
         'номер карты вынимается из адреса, набранного как угодно'() {
             const link = 'r7u17HFT_mY9Rf1P0';

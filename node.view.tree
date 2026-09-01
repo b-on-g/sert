@@ -1234,6 +1234,8 @@ $bog_sert_desk_till $bog_sert_page
 		<= Scan $bog_call_qr_scan
 			on_decode? <=> decoded? null
 			scanning <= scanning true
+		<= No_camera $mol_status
+			message \Камера недоступна. Разрешите доступ в настройках браузера или введите номер карты руками.
 		<= Manual_field $mol_form_field
 			name \Или введите номер карты
 			control <= Manual $mol_string
@@ -1313,6 +1315,61 @@ $bog_sert_desk_guests $bog_sert_page
 		visits <= row_visits* 0
 		last <= row_last* \
 
+$bog_sert_desk_crew_row $mol_view
+	lord \
+	title \
+	fired \
+	fire? null
+	sub <= row_sub /
+		<= Title $mol_view
+			sub /
+				<= title
+		<= Lord $mol_view
+			sub /
+				<= lord
+		<= State $mol_view
+			sub /
+				<= fired
+		<= Fire $mol_button_minor
+			title \Уволить
+			click? <=> fire? null
+
+$bog_sert_desk_crew $bog_sert_page
+	title \Сотрудники
+	body /
+		<= Hint $mol_text
+			text \
+				\Сотрудник открывает приложение у себя, копирует свой публичный ключ в разделе «Ключ доступа» и присылает вам. Это не секрет: по нему нельзя ни войти, ни что-то подписать.
+				\
+				\Добавленный сотрудник получает доступ к закрытой части салона и право начислять баллы. Гость по этому же списку проверяет, что баллы в его карте записал салон, а не посторонний.
+				\
+				\Уволенный перестаёт начислять, но всё, что он записал до увольнения, остаётся в силе.
+		<= Add_block $mol_list
+			rows /
+				<= Name_field $mol_form_field
+					name \Как зовут
+					control <= Name $mol_string
+						hint \Марина
+						value? <=> name? \
+				<= Key_field $mol_form_field
+					name \Публичный ключ сотрудника
+					control <= Key $bog_sert_area
+						hint \Вставьте сюда ключ, который прислал сотрудник
+						value? <=> key? \
+				<= Add $mol_button_major
+					title \Добавить
+					enabled <= add_allowed true
+					click? <=> add? null
+				<= Result $mol_status
+					message <= result \
+		<= List $mol_list
+			rows <= crew_rows /
+	Row* $bog_sert_desk_crew_row
+		lord <= row_lord* \
+		title <= row_title* \
+		fired <= row_fired* \
+		fire? <=> row_fire*? null
+
 $bog_sert_key $mol_list
 	rows /
 		<= Intro $mol_text
@@ -1324,8 +1381,19 @@ $bog_sert_key $mol_list
 				\Чтобы зайти в тот же кабинет с телефона на ресепшене, скопируйте ключ отсюда и вставьте его там. Кто держит ключ, тот и салон, так что пересылать его через общий чат не стоит.
 				\
 				\Ключ живёт в хранилище браузера. Очистите данные сайта, и кабинет вместе со всеми сертификатами станет недоступен. Держите копию.
+		<= Public_field $mol_form_field
+			name \Публичный ключ
+			control <= Public $bog_sert_area
+				enabled false
+				value <= public \
+		<= Public_copy $mol_button_minor
+			title \Скопировать публичный ключ
+			click? <=> public_copy? null
+		<= Public_hint $mol_text
+			text \
+				\Этот ключ не секрет: войти по нему нельзя и подписать им ничего нельзя. Его отправляют владельцу салона, чтобы тот добавил вас в сотрудники.
 		<= Mine_field $mol_form_field
-			name \Ваш ключ
+			name \Личный ключ
 			control <= Mine $bog_sert_area
 				enabled false
 				value <= mine \
@@ -1373,6 +1441,9 @@ $bog_sert_desk $mol_book2_catalog
 		guests <= Guests_page $bog_sert_desk_guests
 			shop_uri <= shop_uri
 			tools / <= Spread_close
+		crew <= Crew_page $bog_sert_desk_crew
+			shop_uri <= shop_uri
+			tools / <= Spread_close
 		key <= Key_page $mol_page
 			title \Ключ доступа
 			tools / <= Spread_close
@@ -1394,6 +1465,11 @@ $bog_sert_desk $mol_book2_catalog
 					\## Салон готов
 					\
 					\Выберите раздел слева. В «Салоне» лежат реквизиты и адрес витрины, в «Кассе» начисляются бонусы по карте гостя.
+			<= Hired $mol_text
+				text \
+					\## Вы в бригаде
+					\
+					\Открыт чужой салон: начислять баллы и смотреть гостей можно, менять реквизиты и условия — нет.
 
 $bog_theme_auto $mol_plugin
 	themes <= themes_default /
@@ -1489,6 +1565,9 @@ $bog_sert_front $mol_list
 		<= Join $mol_button_major
 			title \Завести карту
 			click? <=> join? null
+		<= Work $mol_button_minor
+			title \Здесь я работаю
+			click? <=> work? null
 		<= Open $mol_link
 			title \Открыть мою карту
 			arg *
@@ -1501,7 +1580,7 @@ $bog_sert_front $mol_list
 
 $bog_sert_card_row $mol_view
 	shop_uri \
-	pass_uri \
+	ops /
 	sub /
 		<= Name $mol_view
 			sub /
@@ -1541,7 +1620,7 @@ $bog_sert_card $mol_list
 				\Сохраните эту страницу в закладки или добавьте на домашний экран. Карта живёт в этом браузере: очистите данные сайта, и баллы останутся у салона, но открыть их будет нечем.
 	Shop_row* $bog_sert_card_row
 		shop_uri <= row_uri* \
-		pass_uri <= uri
+		ops <= ops /
 
 $bog_sert_app $mol_view
 	sub <= app_body /
