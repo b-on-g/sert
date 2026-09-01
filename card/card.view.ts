@@ -23,6 +23,11 @@ namespace $.$$ {
 			return this.pass()?.Shops()?.items() ?? []
 		}
 
+		/** Все записи карты, ещё не проверенные. Проверяет их строка салона. */
+		ops(): readonly $bog_sert_op[] {
+			return this.pass()?.Ops()?.remote_list() ?? []
+		}
+
 		ident() {
 			return this.uri()
 		}

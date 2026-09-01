@@ -89,8 +89,11 @@ namespace $.$$ {
 		@ $mol_action
 		pass_make( home: $bog_sert_home ) {
 
+			// Писать может кто угодно: у кассира свой ключ, и иначе он не положил
+			// бы сюда начисление. Право записи тут поэтому ничего не решает —
+			// решает подпись, которую сверяют с бригадой салона.
 			const land = this.$.$giper_baza_glob.land_grab( [
-				[ null, this.$.$giper_baza_rank_read ],
+				[ null, this.$.$giper_baza_rank_post( 'fast' ) ],
 			] )
 
 			const pass = land.Data( $bog_sert_pass )
@@ -101,6 +104,41 @@ namespace $.$$ {
 			return pass
 		}
 
+		/**
+		 * Меня добавили в бригаду этого салона?
+		 *
+		 * Сотрудник приходит сюда по той же ссылке, что и гость, и по этому
+		 * признаку получает кнопку в кабинет. Отдельного приглашения не нужно:
+		 * владелец уже назвал его своим, когда добавлял ключ.
+		 */
+		crew_member() {
+			const shop = this.shop()
+			if( !shop ) return false
+			const me = this.$.$giper_baza_auth.current().pass().lord().str
+			return $bog_sert_hand.crew( shop ).has( me )
+		}
+
+		/** Кабинет сотрудника указывает на чужой салон, свой ему не нужен. */
+		@ $mol_action
+		work() {
+
+			const shop = this.shop()
+			if( !shop ) return
+
+			const home = this.home()
+			home.Shops()?.items()
+
+			home.Shop( 'auto' )!.remote( shop )
+			home.Shops( 'auto' )!.add( shop.link().str )
+
+			this.$.$mol_state_arg.go( { bz: null, bzname: null, page: 'till' } )
+		}
+
+		/** Уже открыт как рабочий? Тогда кнопка ни к чему. */
+		working() {
+			return this.home().Shop()?.val()?.str === this.uri()
+		}
+
 		override front_rows() {
 
 			if( !this.shop() ) return [ this.Empty() ]
@@ -109,6 +147,7 @@ namespace $.$$ {
 				this.Head(),
 				this.Terms(),
 				this.Join(),
+				... this.crew_member() && !this.working() ? [ this.Work() ] : [],
 				... this.pass_uri() ? [ this.Open() ] : [],
 				this.Foot(),
 			]

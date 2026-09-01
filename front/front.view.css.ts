@@ -37,6 +37,10 @@ namespace $ {
 			alignSelf: 'flex-start',
 		},
 
+		Work: {
+			alignSelf: 'flex-start',
+		},
+
 		Foot: {
 			font: {
 				size: '.85rem',

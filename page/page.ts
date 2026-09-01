@@ -25,9 +25,23 @@ namespace $ {
 			return this.$.$giper_baza_glob.Pawn( new this.$.$giper_baza_link( uri ), $bog_sert_shop )
 		}
 
-		/** Книга операций салона. Пустая, пока салона нет. */
-		ops(): readonly $bog_sert_op[] {
-			return this.shop()?.Ops()?.remote_list() ?? []
+		/**
+		 * Закрытая часть салона. Без `@ $mol_mem` — объект Базы.
+		 *
+		 * Ленд зашифрован, поэтому у постороннего он будет пустым, а не
+		 * недоступным: прав нет, значит и юниты не расшифруются.
+		 */
+		vault() {
+			const shop = this.shop()
+			if( !shop ) return null
+			const vault = shop.Vault()?.remote()
+			vault?.land().sync()
+			return vault ?? null
+		}
+
+		/** Бригада салона: кому верим на слово в картах гостей. */
+		crew() {
+			return $bog_sert_hand.crew( this.shop() )
 		}
 
 	}

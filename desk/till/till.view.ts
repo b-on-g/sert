@@ -3,9 +3,12 @@ namespace $.$$ {
 	/**
 	 * Касса. Кассир наводит камеру на карту гостя, вводит сумму чека и начисляет.
 	 *
-	 * Направление сканирования выбрано так намеренно: пишет всегда салон, поэтому
-	 * подделать начисление гостю нечем. Обратный порядок, когда гость сканирует
-	 * код на стойке, превратил бы этот код в ферму баллов.
+	 * Направление сканирования выбрано намеренно: код на стойке только знакомит,
+	 * а баллы пишет касса. Обратный порядок превратил бы код в ферму.
+	 *
+	 * Запись ложится в ленд карты гостя и подписывается ключом кассира. Право
+	 * писать туда есть у всех, поэтому оно ничего не значит: в зачёт идут только
+	 * записи из бригады салона.
 	 */
 	export class $bog_sert_desk_till extends $.$bog_sert_desk_till {
 
@@ -13,6 +16,15 @@ namespace $.$$ {
 		@ $mol_mem
 		pass_uri( next?: string ) {
 			return next ?? ''
+		}
+
+		/** Карта гостя. Без `@ $mol_mem` — объект Базы. */
+		pass() {
+			const uri = this.pass_uri()
+			if( !this.$.$giper_baza_link.check( uri ) ) return null
+			const pass = this.$.$giper_baza_glob.Pawn( new this.$.$giper_baza_link( uri ), $bog_sert_pass )
+			pass.land().sync()
+			return pass
 		}
 
 		/** Камера гасится, как только карта опознана: незачем сканировать дальше. */
@@ -67,27 +79,29 @@ namespace $.$$ {
 			return next ?? ''
 		}
 
-		/** Операции по этой карте, старые первыми. */
-		pass_ops(): readonly $bog_sert_op[] {
-			const pass = this.pass_uri()
+		/** Проверенные операции этой карты в этом салоне. */
+		ledger(): readonly $bog_sert_op_read[] {
+			const pass = this.pass()
 			if( !pass ) return []
-			return this.ops().filter( op => op.Pass()?.val() === pass )
+			return $bog_sert_op.ledger(
+				pass.Ops()?.remote_list() ?? [],
+				this.crew(),
+				this.shop_uri(),
+			)
 		}
 
 		balance() {
-			return $bog_sert_op.balance( this.ops(), this.pass_uri() )
+			return $bog_sert_op.balance( this.ledger() )
 		}
 
 		guest_title() {
-			const pass = this.pass_uri()
+			const pass = this.pass()
 			if( !pass ) return ''
-			const card = this.$.$giper_baza_glob.Pawn( new this.$.$giper_baza_link( pass ), $bog_sert_pass )
-			card.land().sync()
-			return card.title() || `Карта ${ pass }`
+			return pass.title() || `Карта ${ this.pass_uri() }`
 		}
 
 		balance_text() {
-			const visits = this.pass_ops().length
+			const visits = this.ledger().length
 			if( !visits ) return 'Первый визит, баланс 0'
 			return `Баланс ${ this.balance() } баллов, операций ${ visits }`
 		}
@@ -102,7 +116,7 @@ namespace $.$$ {
 
 		/** Приветственный даётся один раз и только если по карте ещё ничего не было. */
 		welcome_sum() {
-			if( this.pass_ops().length ) return 0
+			if( this.ledger().length ) return 0
 			if( !this.welcome() ) return 0
 			return Math.max( 0, Math.round( this.shop()?.Bonus()?.val() ?? 0 ) )
 		}
@@ -127,21 +141,27 @@ namespace $.$$ {
 		@ $mol_action
 		accrue() {
 
-			const shop = this.shop()
-			if( !shop ) return
+			const pass = this.pass()
+			if( !pass ) return
 
 			// Подвисающие чтения — до записи.
-			const pass = this.pass_uri()
+			const shop_uri = this.shop_uri()
 			const gain = this.gain()
 			const welcome = this.welcome_sum()
 			const cost = Math.max( 0, Math.round( this.cost() ) )
-			if( !pass || ( !gain && !welcome ) ) return
+			const vault = this.vault()
+			const known = vault?.Cards()?.items() ?? []
+			if( !shop_uri || ( !gain && !welcome ) ) return
 
 			const now = new this.$.$mol_time_moment()
-			const list = shop.Ops( 'auto' )!
+			const list = pass.Ops( 'auto' )!
 
-			if( welcome ) this.op_add( list, 'Приветственный', pass, 0, welcome, now )
-			if( gain ) this.op_add( list, 'Покупка', pass, cost, gain, now )
+			if( welcome ) this.op_add( list, 'Приветственный', shop_uri, 0, welcome, now )
+			if( gain ) this.op_add( list, 'Покупка', shop_uri, cost, gain, now )
+
+			// Список гостей лежит в закрытой части: наружу он не видён,
+			// а кабинету нужен, чтобы было по чему листать карты.
+			if( !known.includes( this.pass_uri() ) ) vault?.Cards( 'auto' )!.add( this.pass_uri() )
 
 			this.cost( 0 )
 			this.done( `Начислено ${ gain + welcome } баллов` )
@@ -164,18 +184,18 @@ namespace $.$$ {
 		@ $mol_action
 		spend() {
 
-			const shop = this.shop()
-			if( !shop ) return
+			const pass = this.pass()
+			if( !pass ) return
 
-			const pass = this.pass_uri()
+			const shop_uri = this.shop_uri()
 			const want = Math.max( 0, Math.round( this.writeoff() ) )
 			const limit = this.spend_limit()
-			if( !pass || !want || want > limit ) return
+			if( !shop_uri || !want || want > limit ) return
 
 			this.op_add(
-				shop.Ops( 'auto' )!,
+				pass.Ops( 'auto' )!,
 				'Списание',
-				pass,
+				shop_uri,
 				Math.max( 0, Math.round( this.cost() ) ),
 				-want,
 				new this.$.$mol_time_moment(),
@@ -186,21 +206,20 @@ namespace $.$$ {
 		}
 
 		/**
-		 * Операция кладётся прямо в ленд салона: `make( null )` заводит её здесь же,
-		 * без отдельного ленда и без доказательства работы, иначе касса ждала бы
-		 * секунды на каждом чеке.
+		 * Операция кладётся прямо в ленд карты через `make( null )`: отдельный
+		 * ленд стоит доказательства работы, и касса ждала бы секунды на чеке.
 		 */
 		op_add(
-			list: ReturnType< $bog_sert_shop[ 'Ops' ] > & object,
+			list: ReturnType< $bog_sert_pass[ 'Ops' ] > & object,
 			title: string,
-			pass: string,
+			shop: string,
 			cost: number,
 			delta: number,
 			now: $mol_time_moment,
 		) {
 			const op = list.make( null )
 			op.Title( 'auto' )!.val( title )
-			op.Pass( 'auto' )!.val( pass )
+			op.Shop( 'auto' )!.val( shop )
 			op.Cost( 'auto' )!.val( cost )
 			op.Delta( 'auto' )!.val( delta )
 			op.Made( 'auto' )!.val( now )
@@ -226,7 +245,7 @@ namespace $.$$ {
 				this.Accrual(),
 			]
 
-			if( !this.pass_ops().length && ( this.shop()?.Bonus()?.val() ?? 0 ) > 0 ) rows.push( this.Welcome() )
+			if( !this.ledger().length && ( this.shop()?.Bonus()?.val() ?? 0 ) > 0 ) rows.push( this.Welcome() )
 
 			rows.push( this.Accrue() )
 
@@ -237,9 +256,31 @@ namespace $.$$ {
 			return rows
 		}
 
+		/**
+		 * Камеры может не быть, она может быть занята, и в доступе могут отказать.
+		 * Показываем это словами: рядом ручной ввод, и касса продолжает работать.
+		 * Иначе на месте сканера повисает красная плашка с текстом исключения.
+		 */
+		camera_ready() {
+			try {
+				// `stream` объявлен в `$.$$`, куда сгенерированный тип не заглядывает.
+				( this.Scan() as $.$$.$bog_call_qr_scan ).stream()
+				return true
+			} catch( error ) {
+				if( error instanceof Promise ) $mol_fail( error )
+				return false
+			}
+		}
+
 		override till_body() {
+
 			if( this.pass_uri() ) return [ this.Guest(), this.Done() ]
-			return [ this.Scan(), this.Manual_field(), this.Manual_apply() ]
+
+			return [
+				... this.camera_ready() ? [ this.Scan() ] : [ this.No_camera() ],
+				this.Manual_field(),
+				this.Manual_apply(),
+			]
 		}
 
 	}

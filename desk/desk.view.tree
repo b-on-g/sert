@@ -27,6 +27,9 @@ $bog_sert_desk $mol_book2_catalog
 		guests <= Guests_page $bog_sert_desk_guests
 			shop_uri <= shop_uri
 			tools / <= Spread_close
+		crew <= Crew_page $bog_sert_desk_crew
+			shop_uri <= shop_uri
+			tools / <= Spread_close
 		key <= Key_page $mol_page
 			title \Ключ доступа
 			tools / <= Spread_close
@@ -48,3 +51,8 @@ $bog_sert_desk $mol_book2_catalog
 					\## Салон готов
 					\
 					\Выберите раздел слева. В «Салоне» лежат реквизиты и адрес витрины, в «Кассе» начисляются бонусы по карте гостя.
+			<= Hired $mol_text
+				text \
+					\## Вы в бригаде
+					\
+					\Открыт чужой салон: начислять баллы и смотреть гостей можно, менять реквизиты и условия — нет.

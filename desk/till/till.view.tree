@@ -4,6 +4,8 @@ $bog_sert_desk_till $bog_sert_page
 		<= Scan $bog_call_qr_scan
 			on_decode? <=> decoded? null
 			scanning <= scanning true
+		<= No_camera $mol_status
+			message \Камера недоступна. Разрешите доступ в настройках браузера или введите номер карты руками.
 		<= Manual_field $mol_form_field
 			name \Или введите номер карты
 			control <= Manual $mol_string

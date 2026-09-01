@@ -16,11 +16,23 @@ namespace $.$$ {
 			return this.shop()?.title() || this.shop_uri()
 		}
 
-		balance() {
-			return $bog_sert_op.balance(
-				this.shop()?.Ops()?.remote_list() ?? [],
-				this.pass_uri(),
+		/**
+		 * Операции этого салона, у которых подпись сходится с его бригадой.
+		 *
+		 * Дописать в карту может кто угодно, включая её владельца, поэтому
+		 * баланс считается не по всему, что тут лежит, а только по записям
+		 * тех, кого салон назвал своими.
+		 */
+		ledger(): readonly $bog_sert_op_read[] {
+			return $bog_sert_op.ledger(
+				this.ops(),
+				$bog_sert_hand.crew( this.shop() ),
+				this.shop_uri(),
 			)
+		}
+
+		balance() {
+			return $bog_sert_op.balance( this.ledger() )
 		}
 
 		balance_text() {

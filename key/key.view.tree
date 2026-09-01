@@ -9,8 +9,19 @@ $bog_sert_key $mol_list
 				\Чтобы зайти в тот же кабинет с телефона на ресепшене, скопируйте ключ отсюда и вставьте его там. Кто держит ключ, тот и салон, так что пересылать его через общий чат не стоит.
 				\
 				\Ключ живёт в хранилище браузера. Очистите данные сайта, и кабинет вместе со всеми сертификатами станет недоступен. Держите копию.
+		<= Public_field $mol_form_field
+			name \Публичный ключ
+			control <= Public $bog_sert_area
+				enabled false
+				value <= public \
+		<= Public_copy $mol_button_minor
+			title \Скопировать публичный ключ
+			click? <=> public_copy? null
+		<= Public_hint $mol_text
+			text \
+				\Этот ключ не секрет: войти по нему нельзя и подписать им ничего нельзя. Его отправляют владельцу салона, чтобы тот добавил вас в сотрудники.
 		<= Mine_field $mol_form_field
-			name \Ваш ключ
+			name \Личный ключ
 			control <= Mine $bog_sert_area
 				enabled false
 				value <= mine \

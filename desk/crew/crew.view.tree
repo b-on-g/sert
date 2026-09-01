@@ -1,0 +1,35 @@
+$bog_sert_desk_crew $bog_sert_page
+	title \Сотрудники
+	body /
+		<= Hint $mol_text
+			text \
+				\Сотрудник открывает приложение у себя, копирует свой публичный ключ в разделе «Ключ доступа» и присылает вам. Это не секрет: по нему нельзя ни войти, ни что-то подписать.
+				\
+				\Добавленный сотрудник получает доступ к закрытой части салона и право начислять баллы. Гость по этому же списку проверяет, что баллы в его карте записал салон, а не посторонний.
+				\
+				\Уволенный перестаёт начислять, но всё, что он записал до увольнения, остаётся в силе.
+		<= Add_block $mol_list
+			rows /
+				<= Name_field $mol_form_field
+					name \Как зовут
+					control <= Name $mol_string
+						hint \Марина
+						value? <=> name? \
+				<= Key_field $mol_form_field
+					name \Публичный ключ сотрудника
+					control <= Key $bog_sert_area
+						hint \Вставьте сюда ключ, который прислал сотрудник
+						value? <=> key? \
+				<= Add $mol_button_major
+					title \Добавить
+					enabled <= add_allowed true
+					click? <=> add? null
+				<= Result $mol_status
+					message <= result \
+		<= List $mol_list
+			rows <= crew_rows /
+	Row* $bog_sert_desk_crew_row
+		lord <= row_lord* \
+		title <= row_title* \
+		fired <= row_fired* \
+		fire? <=> row_fire*? null

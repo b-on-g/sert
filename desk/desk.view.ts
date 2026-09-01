@@ -63,6 +63,16 @@ namespace $.$$ {
 			shop.Bonus( 'auto' )!.val( 0 )
 			shop.Price( 'auto' )!.val( 1 )
 
+			// Пустой пресет означает, что прав для `null` нет, и База шифрует ленд.
+			// Стоит ей увидеть хоть какие-то права для всех, и шифрование выключается.
+			const vault = this.$.$giper_baza_glob.land_grab( [] ).Data( $bog_sert_vault )
+			shop.Vault( 'auto' )!.remote( vault )
+
+			// Владелец — первый в бригаде, иначе его же записи никто не зачтёт.
+			const owner = shop.Crew( 'auto' )!.make( null )
+			owner.Title( 'auto' )!.val( 'Владелец' )
+			owner.Lord( 'auto' )!.val( this.$.$giper_baza_auth.current().pass().lord().str )
+
 			home.Shop( 'auto' )!.remote( shop )
 			home.Shops( 'auto' )!.add( shop.link().str )
 
@@ -71,13 +81,39 @@ namespace $.$$ {
 
 		override start_body() {
 			if( !this.shop_uri() ) return [ this.Intro(), this.Make() ]
-			return [ this.Ready() ]
+			return [ this.owner() ? this.Ready() : this.Hired() ]
+		}
+
+		/**
+		 * Я владелец этого салона или наёмный работник?
+		 *
+		 * У сотрудника прав на ленд витрины нет: ему выдали доступ к закрытой
+		 * части и место в бригаде, а править реквизиты и условия он не должен.
+		 */
+		owner() {
+
+			const uri = this.shop_uri()
+			if( !uri ) return false
+
+			const shop = this.$.$giper_baza_glob.Pawn( new this.$.$giper_baza_link( uri ), $bog_sert_shop )
+
+			// Ранги живут в подарках ленда, а те приезжают только вместе с данными.
+			// Без чтения хоть одного поля `can_change` молча ответит «нет».
+			shop.Title()?.val()
+
+			return shop.can_change()
 		}
 
 		/** Пока салона нет, разделы кабинета показывать нечего. */
 		@ $mol_mem
 		override spread_ids() {
-			return this.shop_uri() ? super.spread_ids() : []
+
+			if( !this.shop_uri() ) return []
+
+			const all = super.spread_ids()
+			if( this.owner() ) return all
+
+			return all.filter( id => [ 'till', 'guests', 'key' ].includes( id ) )
 		}
 
 		override menu_tools() {
@@ -92,6 +128,7 @@ namespace $.$$ {
 				loyalty: 'Лояльность',
 				till: 'Касса',
 				guests: 'Гости',
+				crew: 'Сотрудники',
 				key: 'Ключ доступа',
 			}
 			return titles[ spread ] ?? super.spread_title( spread )

@@ -77,16 +77,13 @@ namespace $ {
 			$mol_assert_equal( $bog_sert_op.accrual( 0, 5 ), 0 )
 		},
 
-		'баланс складывается только по своей карте'() {
-
-			const ops = [
-				{ Pass: ()=> ({ val: ()=> 'aaaaaaaa' }), Delta: ()=> ({ val: ()=> 100 }) },
-				{ Pass: ()=> ({ val: ()=> 'bbbbbbbb' }), Delta: ()=> ({ val: ()=> 500 }) },
-				{ Pass: ()=> ({ val: ()=> 'aaaaaaaa' }), Delta: ()=> ({ val: ()=> -30 }) },
-			] as readonly unknown[] as readonly $bog_sert_op[]
-
-			$mol_assert_equal( $bog_sert_op.balance( ops, 'aaaaaaaa' ), 70 )
-			$mol_assert_equal( $bog_sert_op.balance( ops, 'cccccccc' ), 0 )
+		'баланс складывается из проверенных операций'() {
+			const ledger = [
+				{ lord: 'a', at: 1, delta: 100, shop: 's', cost: 0, title: '' },
+				{ lord: 'a', at: 2, delta: -30, shop: 's', cost: 0, title: '' },
+			]
+			$mol_assert_equal( $bog_sert_op.balance( ledger ), 70 )
+			$mol_assert_equal( $bog_sert_op.balance( [] ), 0 )
 		},
 
 		'списать нельзя больше баланса и дороже чека'() {
@@ -98,6 +95,73 @@ namespace $ {
 			$mol_assert_equal( $bog_sert_op.writeoff_limit( 500, 0, 1 ), 0 )
 			// Балл в полрубля — на 200 ₽ уходит 400 баллов.
 			$mol_assert_equal( $bog_sert_op.writeoff_limit( 500, 200, 0.5 ), 400 )
+		},
+
+		'в зачёт идут только записи бригады салона'() {
+
+			// Дописать в карту гостя может кто угодно, поэтому одно и то же поле
+			// несёт несколько версий: у каждой свой автор и своё время.
+			const land = { sand_decode: ( unit: { val: unknown } )=> unit.val }
+			const unit = ( lord: string, time: number, val: unknown )=>
+				( { lord: ()=> ({ str: lord }), time: ()=> time, val } )
+
+			const atom = ( units: unknown[] )=> ( {
+				land: ()=> land,
+				units_of: ()=> units,
+			} )
+
+			const op = {
+				Delta: ()=> atom([ unit( 'мошенник', 10, 999 ), unit( 'кассир', 20, 50 ) ]),
+				Shop: ()=> atom([ unit( 'мошенник', 10, 'чужой' ), unit( 'кассир', 20, 'наш' ) ]),
+				Cost: ()=> atom([ unit( 'кассир', 20, 1000 ) ]),
+				Title: ()=> atom([ unit( 'кассир', 20, 'Покупка' ) ]),
+			} as unknown as $bog_sert_op
+
+			const read = $bog_sert_op.read( op, new Map([[ 'кассир', 0 ]]) )
+
+			$mol_assert_equal( read?.delta, 50 )
+			$mol_assert_equal( read?.shop, 'наш' )
+			$mol_assert_equal( read?.lord, 'кассир' )
+		},
+
+		'запись постороннего не считается ничем'() {
+
+			const land = { sand_decode: ( unit: { val: unknown } )=> unit.val }
+			const unit = ( lord: string, time: number, val: unknown )=>
+				( { lord: ()=> ({ str: lord }), time: ()=> time, val } )
+			const atom = ( units: unknown[] )=> ( { land: ()=> land, units_of: ()=> units } )
+
+			const op = {
+				Delta: ()=> atom([ unit( 'гость', 10, 1000000 ) ]),
+				Shop: ()=> atom([]),
+				Cost: ()=> atom([]),
+				Title: ()=> atom([]),
+			} as unknown as $bog_sert_op
+
+			$mol_assert_equal( $bog_sert_op.read( op, new Map([[ 'кассир', 0 ]]) ), null )
+		},
+
+		'уволенный сохраняет то, что записал, пока работал'() {
+
+			const land = { sand_decode: ( unit: { val: unknown } )=> unit.val }
+			const unit = ( lord: string, time: number, val: unknown )=>
+				( { lord: ()=> ({ str: lord }), time: ()=> time, val } )
+			const atom = ( units: unknown[] )=> ( { land: ()=> land, units_of: ()=> units } )
+
+			const before = {
+				Delta: ()=> atom([ unit( 'марина', 100, 50 ) ]),
+				Shop: ()=> atom([]), Cost: ()=> atom([]), Title: ()=> atom([]),
+			} as unknown as $bog_sert_op
+
+			const after = {
+				Delta: ()=> atom([ unit( 'марина', 300, 50 ) ]),
+				Shop: ()=> atom([]), Cost: ()=> atom([]), Title: ()=> atom([]),
+			} as unknown as $bog_sert_op
+
+			const crew = new Map([[ 'марина', 200 ]])
+
+			$mol_assert_equal( $bog_sert_op.read( before, crew )?.delta, 50 )
+			$mol_assert_equal( $bog_sert_op.read( after, crew ), null )
 		},
 
 		'номер карты вынимается из адреса, набранного как угодно'() {

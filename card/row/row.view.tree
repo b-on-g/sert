@@ -1,6 +1,6 @@
 $bog_sert_card_row $mol_view
 	shop_uri \
-	pass_uri \
+	ops /
 	sub /
 		<= Name $mol_view
 			sub /

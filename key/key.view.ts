@@ -9,6 +9,20 @@ namespace $.$$ {
 			return auth.toString() + auth.toStringPrivate()
 		}
 
+		/**
+		 * Публичный ключ. Его отдают владельцу салона, чтобы попасть в бригаду.
+		 * Ничего секретного в нём нет, в отличие от строки выше.
+		 */
+		public() {
+			return this.$.$giper_baza_auth.current().pass().toString()
+		}
+
+		@ $mol_action
+		public_copy() {
+			this.$.$mol_dom_context.navigator.clipboard.writeText( this.public() )
+			this.result( 'Публичный ключ скопирован' )
+		}
+
 		@ $mol_mem
 		other( next?: string ) {
 			return next ?? ''

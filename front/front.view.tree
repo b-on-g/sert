@@ -16,6 +16,9 @@ $bog_sert_front $mol_list
 		<= Join $mol_button_major
 			title \Завести карту
 			click? <=> join? null
+		<= Work $mol_button_minor
+			title \Здесь я работаю
+			click? <=> work? null
 		<= Open $mol_link
 			title \Открыть мою карту
 			arg *

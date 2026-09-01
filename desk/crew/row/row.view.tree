@@ -1,0 +1,18 @@
+$bog_sert_desk_crew_row $mol_view
+	lord \
+	title \
+	fired \
+	fire? null
+	sub <= row_sub /
+		<= Title $mol_view
+			sub /
+				<= title
+		<= Lord $mol_view
+			sub /
+				<= lord
+		<= State $mol_view
+			sub /
+				<= fired
+		<= Fire $mol_button_minor
+			title \Уволить
+			click? <=> fire? null
