@@ -70,6 +70,51 @@ namespace $ {
 			$mol_assert_ok( !body.includes( '\n\n\n' ) )
 		},
 
+		'баллы с чека округляются вниз, лишнего не дарим'() {
+			$mol_assert_equal( $bog_sert_op.accrual( 1000, 5 ), 50 )
+			$mol_assert_equal( $bog_sert_op.accrual( 999, 5 ), 49 )
+			$mol_assert_equal( $bog_sert_op.accrual( 1000, 0 ), 0 )
+			$mol_assert_equal( $bog_sert_op.accrual( 0, 5 ), 0 )
+		},
+
+		'баланс складывается только по своей карте'() {
+
+			const ops = [
+				{ Pass: ()=> ({ val: ()=> 'aaaaaaaa' }), Delta: ()=> ({ val: ()=> 100 }) },
+				{ Pass: ()=> ({ val: ()=> 'bbbbbbbb' }), Delta: ()=> ({ val: ()=> 500 }) },
+				{ Pass: ()=> ({ val: ()=> 'aaaaaaaa' }), Delta: ()=> ({ val: ()=> -30 }) },
+			] as readonly unknown[] as readonly $bog_sert_op[]
+
+			$mol_assert_equal( $bog_sert_op.balance( ops, 'aaaaaaaa' ), 70 )
+			$mol_assert_equal( $bog_sert_op.balance( ops, 'cccccccc' ), 0 )
+		},
+
+		'списать нельзя больше баланса и дороже чека'() {
+			// Баланс 500, чек 200 ₽, балл стоит рубль — дальше чека не спишем.
+			$mol_assert_equal( $bog_sert_op.writeoff_limit( 500, 200, 1 ), 200 )
+			// Баланс 50 меньше чека — упираемся в баланс.
+			$mol_assert_equal( $bog_sert_op.writeoff_limit( 50, 200, 1 ), 50 )
+			// Без покупки списывать не из чего.
+			$mol_assert_equal( $bog_sert_op.writeoff_limit( 500, 0, 1 ), 0 )
+			// Балл в полрубля — на 200 ₽ уходит 400 баллов.
+			$mol_assert_equal( $bog_sert_op.writeoff_limit( 500, 200, 0.5 ), 400 )
+		},
+
+		'номер карты вынимается из адреса, набранного как угодно'() {
+			const link = 'r7u17HFT_mY9Rf1P0'
+			$mol_assert_equal( $bog_sert_pass.uri_of( 'https://example.com/sert/pass=' + link ), link )
+			$mol_assert_equal( $bog_sert_pass.uri_of( '#!pass=' + link ), link )
+			$mol_assert_equal( $bog_sert_pass.uri_of( '  ' + link + '  ' ), link )
+			$mol_assert_equal( $bog_sert_pass.uri_of( 'https://example.com/' ), '' )
+			$mol_assert_equal( $bog_sert_pass.uri_of( '' ), '' )
+		},
+
+		'имя витрины приводится к скучному виду'() {
+			$mol_assert_equal( $bog_sert_name.normal( 'Coffier Shopper' ), 'coffier_shopper' )
+			$mol_assert_equal( $bog_sert_name.normal( '  --Кофе--  ' ), '' )
+			$mol_assert_equal( $bog_sert_name.normal( 'shop-1' ), 'shop_1' )
+		},
+
 		'ссылка сертификата отличается от произвольной строки'() {
 			$mol_assert_equal( $giper_baza_link.check( 'это не ссылка' ), null )
 			$mol_assert_equal( $giper_baza_link.check( 'abcdefgh_ABCDEFGH' ), 'abcdefgh_ABCDEFGH' )

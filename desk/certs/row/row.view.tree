@@ -1,4 +1,4 @@
-$bog_sert_desk_row $mol_link
+$bog_sert_desk_certs_row $mol_link
 	cert_uri \
 	arg *
 		screen null

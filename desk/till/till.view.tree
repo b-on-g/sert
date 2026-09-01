@@ -1,0 +1,55 @@
+$bog_sert_desk_till $bog_sert_page
+	title \Касса
+	body <= till_body /
+		<= Scan $bog_call_qr_scan
+			on_decode? <=> decoded? null
+			scanning <= scanning true
+		<= Manual_field $mol_form_field
+			name \Или введите номер карты
+			control <= Manual $mol_string
+				hint \r7u17HFT_mY9Rf1P0
+				value? <=> manual? \
+				submit? <=> manual_apply? null
+		<= Manual_apply $mol_button_minor
+			title \Найти карту
+			enabled <= manual_allowed true
+			click? <=> manual_apply? null
+		<= Guest $mol_list
+			rows <= guest_rows /
+				<= Guest_head $mol_view
+					sub /
+						<= guest_title \
+				<= Balance $mol_view
+					sub /
+						<= balance_text \
+				<= Cost_field $mol_form_field
+					name \Сумма чека, ₽
+					control <= Cost $mol_number
+						value_min 0
+						precision_change 100
+						value? <=> cost? 0
+				<= Accrual $mol_view
+					sub /
+						<= accrual_text \
+				<= Welcome $mol_check
+					title <= welcome_title \Приветственный бонус
+					checked? <=> welcome? true
+				<= Accrue $mol_button_major
+					title \Начислить
+					enabled <= accrue_allowed true
+					click? <=> accrue? null
+				<= Writeoff_field $mol_form_field
+					name \Списать баллов
+					control <= Writeoff $mol_number
+						value_min 0
+						precision_change 10
+						value? <=> writeoff? 0
+				<= Spend $mol_button_minor
+					title \Списать
+					enabled <= spend_allowed true
+					click? <=> spend? null
+				<= Reset $mol_button_minor
+					title \Другая карта
+					click? <=> reset? null
+		<= Done $mol_status
+			message <= done \

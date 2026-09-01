@@ -1,0 +1,48 @@
+$bog_sert_desk_issue $bog_sert_page
+	title \Выпустить сертификат
+	body <= issue_body /
+		<= Form $mol_list
+			rows /
+				<= Gift_field $mol_form_field
+					name \Услуга или повод
+					control <= Gift $mol_string
+						hint \Стрижка и борода
+						value? <=> gift? \
+				<= Cost_field $mol_form_field
+					name \Номинал в рублях, 0 — сертификат на услугу
+					control <= Cost $mol_number
+						value_min 0
+						precision_change 100
+						value? <=> cost? 0
+				<= Whom_field $mol_form_field
+					name \Кому
+					control <= Whom $mol_string
+						hint \Анна
+						value? <=> whom? \
+				<= From_field $mol_form_field
+					name \От кого
+					control <= From $mol_string
+						hint \Мама и папа
+						value? <=> from? \
+				<= Mail_field $mol_form_field
+					name \Почта получателя
+					control <= Mail $mol_string
+						type \email
+						hint \anna@example.com
+						value? <=> mail? \
+				<= Wish_field $mol_form_field
+					name \Поздравление
+					control <= Wish $bog_sert_area
+						hint \С днём рождения!
+						value? <=> wish? \
+				<= Issue $mol_button_major
+					title \Выпустить
+					enabled <= issue_allowed true
+					click? <=> issue? null
+		<= Last_block $mol_list
+			rows /
+				<= Last_title $mol_view
+					sub /
+						\Только что выпущен
+				<= Last_sheet $bog_sert_sheet
+					uri <= last \

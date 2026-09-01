@@ -1,7 +1,7 @@
 namespace $.$$ {
 
 	/** Строка реестра: что за сертификат, кому и в каком он состоянии. */
-	export class $bog_sert_desk_row extends $.$bog_sert_desk_row {
+	export class $bog_sert_desk_certs_row extends $.$bog_sert_desk_certs_row {
 
 		/**
 		 * Сертификат этой строки. Без `@ $mol_mem`, потому что это объект Базы.

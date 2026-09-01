@@ -1,0 +1,9 @@
+$bog_sert_desk_certs $bog_sert_page
+	title <= list_title \Выданные
+	body <= certs_body /
+		<= Empty $mol_status
+			message \Пока ни одного сертификата
+		<= List $mol_list
+			rows <= cert_rows /
+	Row* $bog_sert_desk_certs_row
+		cert_uri <= row_uri* \

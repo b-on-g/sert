@@ -1,0 +1,60 @@
+$bog_sert_desk_shop $bog_sert_page
+	title \Салон
+	body /
+		<= Form $mol_list
+			rows /
+				<= Name_field $mol_form_field
+					name \Название
+					control <= Name $mol_string
+						hint \Барбершоп «Бритва»
+						value? <=> shop_name? \
+				<= Note_field $mol_form_field
+					name \Адрес, телефон, условия
+					control <= Note $bog_sert_area
+						hint \Ленина 1 · +7 900 000-00-00 · запись по телефону
+						value? <=> shop_note? \
+				<= Term_field $mol_form_field
+					name \Срок действия сертификата, месяцев
+					control <= Term $mol_number
+						value_min 0
+						value_max 60
+						precision 1
+						value? <=> shop_term? 6
+		<= Address_block $mol_list
+			rows <= address_rows /
+				<= Address_title $mol_view
+					sub /
+						\Витрина
+				<= Address_hint $mol_text
+					text \
+						\Распечатайте этот код и положите на стойку. Гость сканирует его телефоном, открывает витрину и заводит карту. Ничего заполнять и никуда регистрироваться ему не придётся.
+				<= Address_value $mol_view
+					sub /
+						<= address \
+				<= Address_copy $mol_button_minor
+					title \Скопировать адрес
+					click? <=> address_copy? null
+				<= Code $bog_qr
+					uri <= address \
+					error_correction \M
+		<= Claim_block $mol_list
+			rows /
+				<= Claim_title $mol_view
+					sub /
+						\Короткое имя
+				<= Claim_hint $mol_text
+					text \
+						\Имя делает адрес читаемым, но не защищает его: занять то же имя технически может кто угодно.
+						\
+						\Сертификаты и карты гостей всегда ссылаются на сам салон, поэтому имя можно потерять без последствий.
+				<= Claim_field $mol_form_field
+					name \Имя в адресе
+					control <= Claim $mol_string
+						hint \coffier_shopper
+						value? <=> claim_raw? \
+				<= Claim_take $mol_button_major
+					title \Занять имя
+					enabled <= claim_allowed true
+					click? <=> claim_take? null
+				<= Claim_status $mol_status
+					message <= claim_status \

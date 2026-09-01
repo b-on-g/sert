@@ -1,6 +1,6 @@
 namespace $ {
 
-	$mol_style_define( $bog_sert_desk_row, {
+	$mol_style_define( $bog_sert_desk_guests_row, {
 
 		flex: {
 			direction: 'row',
@@ -15,25 +15,25 @@ namespace $ {
 			color: $mol_theme.card,
 		},
 
-		Gift: {
+		Ident: {
 			flex: {
 				grow: 1,
 			},
 			minWidth: '10rem',
-			font: {
-				weight: 'bold',
-			},
+			fontFamily: 'monospace',
 		},
 
-		Whom: {
-			color: $mol_theme.shade,
-		},
-
-		State: {
+		Visits: {
 			font: {
 				size: '.85rem',
 			},
 			color: $mol_theme.shade,
+		},
+
+		Balance: {
+			font: {
+				weight: 'bold',
+			},
 			whiteSpace: 'nowrap',
 		},
 

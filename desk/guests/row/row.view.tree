@@ -1,0 +1,15 @@
+$bog_sert_desk_guests_row $mol_view
+	pass_uri \
+	balance 0
+	visits 0
+	last \
+	sub /
+		<= Ident $mol_view
+			sub /
+				<= ident \
+		<= Visits $mol_view
+			sub /
+				<= visits_text \
+		<= Balance $mol_view
+			sub /
+				<= balance_text \

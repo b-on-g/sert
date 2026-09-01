@@ -1,0 +1,32 @@
+$bog_sert_desk_loyalty $bog_sert_page
+	title \Лояльность
+	body /
+		<= Hint $mol_text
+			text \
+				\Гость сканирует код на стойке и заводит себе карту. Само по себе это не даёт ему ничего, поэтому плодить карты бессмысленно и защищаться тут не от чего.
+				\
+				\Баллы начисляет только касса, своим ключом, в книгу операций салона. Подделать запись гость не может: писать в эту книгу он не вправе.
+		<= Form $mol_list
+			rows /
+				<= Rate_field $mol_form_field
+					name \Возвращается баллами, % от чека
+					control <= Rate $mol_number
+						value_min 0
+						value_max 100
+						precision 1
+						value? <=> rate? 5
+				<= Bonus_field $mol_form_field
+					name \Приветственный бонус, баллов
+					control <= Bonus $mol_number
+						value_min 0
+						precision_change 10
+						value? <=> bonus? 0
+				<= Price_field $mol_form_field
+					name \Сколько рублей стоит один балл при списании
+					control <= Price $mol_number
+						value_min 0
+						precision_view .01
+						precision_change .1
+						value? <=> price? 1
+		<= Sample $mol_text
+			text <= sample \

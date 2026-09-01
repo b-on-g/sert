@@ -1,0 +1,12 @@
+$bog_sert_desk_guests $bog_sert_page
+	title <= guests_title \Гости
+	body <= guests_body /
+		<= Empty $mol_status
+			message \Ни одной карты пока не обслужили
+		<= List $mol_list
+			rows <= guest_rows /
+	Row* $bog_sert_desk_guests_row
+		pass_uri <= row_uri* \
+		balance <= row_balance* 0
+		visits <= row_visits* 0
+		last <= row_last* \

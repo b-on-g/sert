@@ -1,0 +1,27 @@
+$bog_sert_front $mol_list
+	uri \
+	rows <= front_rows /
+		<= Empty $mol_status
+			message \Салон по этой ссылке не найден
+		<= Head $mol_view
+			sub /
+				<= Name $mol_view
+					sub /
+						<= name \
+				<= Note $mol_view
+					sub /
+						<= note \
+		<= Terms $mol_text
+			text <= terms \
+		<= Join $mol_button_major
+			title \Завести карту
+			click? <=> join? null
+		<= Open $mol_link
+			title \Открыть мою карту
+			arg *
+				bz null
+				bzname null
+				pass <= pass_uri \
+		<= Foot $mol_text
+			text \
+				\Карта живёт в этом браузере и ничего о вас не спрашивает: ни имени, ни почты, ни телефона.

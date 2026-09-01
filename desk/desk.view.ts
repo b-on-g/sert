@@ -1,154 +1,100 @@
 namespace $.$$ {
 
 	/**
-	 * Кабинет салона: реквизиты, форма выпуска и реестр выпущенного.
-	 * Всё лежит в домашнем ленде владельца, наружу уходят только сертификаты.
+	 * Кабинет владельца: реквизиты, выпуск сертификатов, касса, гости, ключ.
+	 * Каждый раздел отдельной страницей, потому что кассир и бухгалтер открывают
+	 * разное и им нечего листать мимо друг друга.
 	 */
 	export class $bog_sert_desk extends $.$bog_sert_desk {
 
 		/**
-		 * Салон текущего пользователя.
-		 *
-		 * Без `@ $mol_mem`: метод отдаёт объект Базы, а $mol при сбросе ячейки
-		 * дёрнул бы у него `destructor()`.
+		 * Домашний ленд: указатели на свой салон и свою карту гостя.
+		 * Без `@ $mol_mem` — объект Базы.
 		 */
-		shop() {
-			return this.$.$giper_baza_glob.home().land().Data( $bog_sert_shop )
+		home() {
+			return this.$.$giper_baza_glob.home().land().Data( $bog_sert_home )
 		}
 
+		/**
+		 * Ссылка своего салона.
+		 *
+		 * Указатель читаем первым, но если он пуст, берём последний из списка
+		 * заведённых. Указатель перетирается записью, легшей позже, а список
+		 * сливается — на холодном старте второе устройство иначе решит, что
+		 * салона нет, и заведёт себе второй.
+		 */
 		@ $mol_mem
-		shop_name( next?: string ) {
-			return this.shop().title( next )
+		override shop_uri() {
+			const home = this.home()
+			const kept = home.Shops()?.items() ?? []
+			const pointed = home.Shop()?.val()?.str ?? ''
+			return pointed || kept.at( -1 ) || ''
 		}
 
+		/** Ссылка своей карты гостя, если владелец успел её завести. */
 		@ $mol_mem
-		shop_note( next?: string ) {
-			return this.shop().Note( next )?.val( next ) ?? ''
+		override pass_uri() {
+			const home = this.home()
+			const kept = home.Passes()?.items() ?? []
+			const pointed = home.Pass()?.val()?.str ?? ''
+			return pointed || kept.at( -1 ) || ''
 		}
 
-		@ $mol_mem
-		shop_term( next?: number ) {
-			const term = next === undefined ? undefined : Math.max( 0, Math.round( next ) )
-			return this.shop().Term( term )?.val( term ) ?? 6
-		}
-
-		@ $mol_mem
-		gift( next?: string ) {
-			return next ?? ''
-		}
-
-		@ $mol_mem
-		cost( next?: number ) {
-			return next ?? 0
-		}
-
-		@ $mol_mem
-		whom( next?: string ) {
-			return next ?? ''
-		}
-
-		@ $mol_mem
-		from( next?: string ) {
-			return next ?? ''
-		}
-
-		@ $mol_mem
-		mail( next?: string ) {
-			return next ?? ''
-		}
-
-		@ $mol_mem
-		wish( next?: string ) {
-			return next ?? ''
-		}
-
-		/** Ссылка последнего выпущенного сертификата, чтобы сразу показать карточку. */
-		@ $mol_mem
-		last( next?: string ) {
-			return next ?? ''
-		}
-
-		/** Пустой сертификат выпускать незачем: нужна либо услуга, либо сумма. */
-		override issue_allowed() {
-			return Boolean( this.gift().trim() ) || this.cost() > 0
-		}
-
+		/**
+		 * Салон заводится только по нажатию и только тут.
+		 *
+		 * В `auto()` этого делать нельзя: там оно случится на каждом холодном
+		 * старте, пока указатель не приехал, и салоны начнут размножаться.
+		 */
 		@ $mol_action
-		issue() {
+		shop_make() {
 
-			// Чтения из Базы могут подвиснуть промисом, и тогда фибра стартует заново.
-			// Поэтому сначала всё читаем, и только потом пишем.
-			const shop = this.shop()
-			const name = shop.title()
-			const note = shop.Note()?.val() ?? ''
-			const term = this.shop_term()
+			// Подвисающие чтения — до записи, иначе первое нажатие уйдёт впустую.
+			const home = this.home()
+			home.Shops()?.items()
 
-			const gift = this.gift().trim()
-			const cost = Math.max( 0, Math.round( this.cost() ) )
-			const whom = this.whom().trim()
-			const from = this.from().trim()
-			const mail = this.mail().trim()
-			const wish = this.wish().trim()
-
-			if( !gift && !cost ) return
-
-			const now = new this.$.$mol_time_moment()
-
-			// Сертификат получает свой ленд: ссылка на него и есть предъявитель,
-			// поэтому читать его может каждый, кому эту ссылку прислали.
-			const cert = shop.List( 'auto' )!.make( [
+			const land = this.$.$giper_baza_glob.land_grab( [
 				[ null, this.$.$giper_baza_rank_read ],
 			] )
 
-			cert.Title( 'auto' )!.val( gift )
-			cert.Shop( 'auto' )!.val( name )
-			cert.Note( 'auto' )!.val( note )
-			cert.Cost( 'auto' )!.val( cost )
-			cert.Whom( 'auto' )!.val( whom )
-			cert.From( 'auto' )!.val( from )
-			cert.Mail( 'auto' )!.val( mail )
-			cert.Wish( 'auto' )!.val( wish )
-			cert.Made( 'auto' )!.val( now )
-			if( term > 0 ) cert.Till( 'auto' )!.val( now.shift( { month: term } ) )
+			const shop = land.Data( $bog_sert_shop )
+			shop.Term( 'auto' )!.val( 6 )
+			shop.Rate( 'auto' )!.val( 5 )
+			shop.Bonus( 'auto' )!.val( 0 )
+			shop.Price( 'auto' )!.val( 1 )
 
-			// Номинал и услуга обычно повторяются от подарка к подарку, их оставляем.
-			this.whom( '' )
-			this.from( '' )
-			this.mail( '' )
-			this.wish( '' )
+			home.Shop( 'auto' )!.remote( shop )
+			home.Shops( 'auto' )!.add( shop.link().str )
 
-			this.last( cert.link().str )
+			this.spread( 'shop' )
 		}
 
-		/** Ссылки выпущенных сертификатов, новые сверху. */
-		cert_uris(): readonly string[] {
-			const items = this.shop().List()?.items() ?? []
-			return items.map( link => link.str ).reverse()
+		override start_body() {
+			if( !this.shop_uri() ) return [ this.Intro(), this.Make() ]
+			return [ this.Ready() ]
 		}
 
-		row_uri( uri: string ) {
-			return uri
-		}
-
+		/** Пока салона нет, разделы кабинета показывать нечего. */
 		@ $mol_mem
-		override cert_rows() {
-			return this.cert_uris().map( uri => this.Row( uri ) )
+		override spread_ids() {
+			return this.shop_uri() ? super.spread_ids() : []
 		}
 
-		override list_title() {
-			return `Выпущенные — ${ this.cert_uris().length }`
+		override menu_tools() {
+			return this.pass_uri() ? [ this.Pass_link() ] : []
 		}
 
-		override desk_rows() {
-
-			const rows: readonly $mol_view[] = [
-				this.Shop_block(),
-				... this.shop_name() ? [ this.Issue_block() ] : [],
-				... this.last() ? [ this.Last_block() ] : [],
-				... this.cert_uris().length ? [ this.List_block() ] : [],
-			]
-
-			return rows
+		override spread_title( spread: string ) {
+			const titles: Record< string, string > = {
+				shop: 'Салон',
+				issue: 'Выпустить сертификат',
+				certs: 'Выданные',
+				loyalty: 'Лояльность',
+				till: 'Касса',
+				guests: 'Гости',
+				key: 'Ключ доступа',
+			}
+			return titles[ spread ] ?? super.spread_title( spread )
 		}
 
 	}

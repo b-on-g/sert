@@ -1,0 +1,10 @@
+$bog_sert_card_row $mol_view
+	shop_uri \
+	pass_uri \
+	sub /
+		<= Name $mol_view
+			sub /
+				<= name \
+		<= Balance $mol_view
+			sub /
+				<= balance_text \

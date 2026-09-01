@@ -1,81 +1,50 @@
-$bog_sert_desk $mol_list
-	rows <= desk_rows /
-		<= Shop_block $mol_list
-			rows /
-				<= Shop_title $mol_view
-					sub /
-						\Салон
-				<= Name_field $mol_form_field
-					name \Название
-					control <= Name $mol_string
-						hint \Барбершоп «Бритва»
-						value? <=> shop_name? \
-				<= Note_field $mol_form_field
-					name \Адрес, телефон, условия
-					control <= Note $bog_sert_area
-						hint \Ленина 1 · +7 900 000-00-00 · запись по телефону
-						value? <=> shop_note? \
-				<= Term_field $mol_form_field
-					name \Срок действия, месяцев
-					control <= Term $mol_number
-						value_min 0
-						value_max 60
-						precision 1
-						value? <=> shop_term? 6
-		<= Issue_block $mol_list
-			rows /
-				<= Issue_title $mol_view
-					sub /
-						\Новый сертификат
-				<= Gift_field $mol_form_field
-					name \Услуга или повод
-					control <= Gift $mol_string
-						hint \Стрижка и борода
-						value? <=> gift? \
-				<= Cost_field $mol_form_field
-					name \Номинал в рублях, 0 — сертификат на услугу
-					control <= Cost $mol_number
-						value_min 0
-						precision 100
-						value? <=> cost? 0
-				<= Whom_field $mol_form_field
-					name \Кому
-					control <= Whom $mol_string
-						hint \Анна
-						value? <=> whom? \
-				<= From_field $mol_form_field
-					name \От кого
-					control <= From $mol_string
-						hint \Мама и папа
-						value? <=> from? \
-				<= Mail_field $mol_form_field
-					name \Почта получателя
-					control <= Mail $mol_string
-						type \email
-						hint \anna@example.com
-						value? <=> mail? \
-				<= Wish_field $mol_form_field
-					name \Поздравление
-					control <= Wish $bog_sert_area
-						hint \С днём рождения!
-						value? <=> wish? \
-				<= Issue $mol_button_major
-					title \Выпустить
-					enabled <= issue_allowed true
-					click? <=> issue? null
-		<= Last_block $mol_list
-			rows /
-				<= Last_title $mol_view
-					sub /
-						\Только что выпущен
-				<= Last_card $bog_sert_card
-					uri <= last \
-		<= List_block $mol_list
-			rows /
-				<= List_title $mol_view
-					sub /
-						<= list_title \Выпущенные
-				<= List $mol_list
-					rows <= cert_rows /
-	Row* $bog_sert_desk_row
-		cert_uri <= row_uri* \
+$bog_sert_desk $mol_book2_catalog
+	param \page
+	menu_title \Кабинет
+	shop_uri \
+	menu_tools /
+		<= Pass_link $mol_link
+			title \Моя карта
+			arg *
+				page null
+				pass <= pass_uri \
+	spreads *
+		shop <= Shop_page $bog_sert_desk_shop
+			shop_uri <= shop_uri
+			tools / <= Spread_close
+		issue <= Issue_page $bog_sert_desk_issue
+			shop_uri <= shop_uri
+			tools / <= Spread_close
+		certs <= Certs_page $bog_sert_desk_certs
+			shop_uri <= shop_uri
+			tools / <= Spread_close
+		loyalty <= Loyalty_page $bog_sert_desk_loyalty
+			shop_uri <= shop_uri
+			tools / <= Spread_close
+		till <= Till_page $bog_sert_desk_till
+			shop_uri <= shop_uri
+			tools / <= Spread_close
+		guests <= Guests_page $bog_sert_desk_guests
+			shop_uri <= shop_uri
+			tools / <= Spread_close
+		key <= Key_page $mol_page
+			title \Ключ доступа
+			tools / <= Spread_close
+			body /
+				<= Key $bog_sert_key
+	Spread_default <= Start_page $mol_page
+		title \Сертификаты и бонусы
+		body <= start_body /
+			<= Intro $mol_text
+				text \
+					\## Свой салон
+					\
+					\Заведите салон, чтобы выпускать подарочные сертификаты и начислять бонусы. Ни почты, ни пароля не спросим: доступ держится на ключе, который браузер завёл сам.
+			<= Make $mol_button_major
+				title \Завести салон
+				click? <=> shop_make? null
+			<= Ready $mol_text
+				text \
+					\## Салон готов
+					\
+					\Выберите раздел слева. В «Салоне» лежат реквизиты и адрес витрины, в «Кассе» начисляются бонусы по карте гостя.
