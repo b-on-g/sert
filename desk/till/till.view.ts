@@ -94,10 +94,12 @@ namespace $.$$ {
 			return $bog_sert_op.balance( this.ledger() )
 		}
 
+		/**
+		 * Только номер. Имя из карты не читаем: вписать его может кто угодно,
+		 * и кассир увидел бы подпись постороннего как имя гостя.
+		 */
 		guest_title() {
-			const pass = this.pass()
-			if( !pass ) return ''
-			return pass.title() || `Карта ${ this.pass_uri() }`
+			return this.pass_uri() ? `Карта ${ this.pass_uri() }` : ''
 		}
 
 		balance_text() {
@@ -153,11 +155,10 @@ namespace $.$$ {
 			const known = vault?.Cards()?.items() ?? []
 			if( !shop_uri || ( !gain && !welcome ) ) return
 
-			const now = new this.$.$mol_time_moment()
 			const list = pass.Ops( 'auto' )!
 
-			if( welcome ) this.op_add( list, 'Приветственный', shop_uri, 0, welcome, now )
-			if( gain ) this.op_add( list, 'Покупка', shop_uri, cost, gain, now )
+			if( welcome ) this.op_add( list, 'Приветственный', shop_uri, 0, welcome )
+			if( gain ) this.op_add( list, 'Покупка', shop_uri, cost, gain )
 
 			// Список гостей лежит в закрытой части: наружу он не видён,
 			// а кабинету нужен, чтобы было по чему листать карты.
@@ -198,7 +199,6 @@ namespace $.$$ {
 				shop_uri,
 				Math.max( 0, Math.round( this.cost() ) ),
 				-want,
-				new this.$.$mol_time_moment(),
 			)
 
 			this.writeoff( 0 )
@@ -215,14 +215,12 @@ namespace $.$$ {
 			shop: string,
 			cost: number,
 			delta: number,
-			now: $mol_time_moment,
 		) {
 			const op = list.make( null )
 			op.Title( 'auto' )!.val( title )
 			op.Shop( 'auto' )!.val( shop )
 			op.Cost( 'auto' )!.val( cost )
 			op.Delta( 'auto' )!.val( delta )
-			op.Made( 'auto' )!.val( now )
 			return op
 		}
 

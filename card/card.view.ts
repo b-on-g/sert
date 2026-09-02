@@ -18,9 +18,10 @@ namespace $.$$ {
 			return pass
 		}
 
-		/** Салоны, где карту заводили. */
+		/** Салоны, где карту заводил сам хозяин. Чужие приписки отброшены. */
 		shop_uris(): readonly string[] {
-			return this.pass()?.Shops()?.items() ?? []
+			const pass = this.pass()
+			return pass ? $bog_sert_pass.shops( pass ) : []
 		}
 
 		/** Все записи карты, ещё не проверенные. Проверяет их строка салона. */

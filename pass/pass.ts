@@ -41,6 +41,38 @@ namespace $ {
 			return $giper_baza_link.check( candidate ) ?? ''
 		}
 
+		/**
+		 * Салоны, которые вписал в карту её владелец.
+		 *
+		 * Дописать в этот список может кто угодно, как и всё остальное в карте.
+		 * Пустяком это не назвать: каждый салон из списка карта потом
+		 * синхронизирует, то есть посторонний заставил бы её тянуть любые
+		 * ленды, какие назовёт. Поэтому берём только записи того, у кого на
+		 * карту полные права, — а это ровно её хозяин.
+		 */
+		static shops( pass: $bog_sert_pass ): readonly string[] {
+
+			const list = pass.Shops()
+			if( !list ) return []
+
+			const land = pass.land()
+			const out: string[] = []
+
+			for( const unit of list.units() ) {
+
+				const tier = $giper_baza_rank_tier_of( land.lord_rank( unit.lord() ) )
+				if( tier < $giper_baza_rank_tier.rule ) continue
+
+				const uri = String( land.sand_decode( unit ) ?? '' )
+				if( !$giper_baza_link.check( uri ) ) continue
+				if( out.includes( uri ) ) continue
+
+				out.push( uri )
+			}
+
+			return out
+		}
+
 	}
 
 }
