@@ -35400,7 +35400,6 @@ declare namespace $ {
             readonly Shop: (auto?: any) => $giper_baza_atom_text | null;
             readonly Cost: (auto?: any) => $giper_baza_atom_real | null;
             readonly Delta: (auto?: any) => $giper_baza_atom_real | null;
-            readonly Made: (auto?: any) => $giper_baza_atom_time | null;
         }>;
         path: string;
     } & {
@@ -35413,8 +35412,6 @@ declare namespace $ {
             readonly Cost: typeof $giper_baza_atom_real;
             /** Изменение баланса в баллах: плюс начислили, минус списали */
             readonly Delta: typeof $giper_baza_atom_real;
-            /** Когда */
-            readonly Made: typeof $giper_baza_atom_time;
         };
     };
     /**
@@ -47381,6 +47378,16 @@ declare namespace $ {
          * пути или голой ссылки, набранной руками. Мусор отдаёт пустой строкой.
          */
         static uri_of(raw: string): string;
+        /**
+         * Салоны, которые вписал в карту её владелец.
+         *
+         * Дописать в этот список может кто угодно, как и всё остальное в карте.
+         * Пустяком это не назвать: каждый салон из списка карта потом
+         * синхронизирует, то есть посторонний заставил бы её тянуть любые
+         * ленды, какие назовёт. Поэтому берём только записи того, у кого на
+         * карту полные права, — а это ровно её хозяин.
+         */
+        static shops(pass: $bog_sert_pass): readonly string[];
     }
     export {};
 }
@@ -47648,6 +47655,10 @@ declare namespace $.$$ {
         /** Проверенные операции этой карты в этом салоне. */
         ledger(): readonly $bog_sert_op_read[];
         balance(): number;
+        /**
+         * Только номер. Имя из карты не читаем: вписать его может кто угодно,
+         * и кассир увидел бы подпись постороннего как имя гостя.
+         */
         guest_title(): string;
         balance_text(): string;
         /** Сколько начислим за введённый чек. */
@@ -47666,7 +47677,7 @@ declare namespace $.$$ {
          * Операция кладётся прямо в ленд карты через `make( null )`: отдельный
          * ленд стоит доказательства работы, и касса ждала бы секунды на чеке.
          */
-        op_add(list: ReturnType<$bog_sert_pass['Ops']> & object, title: string, shop: string, cost: number, delta: number, now: $mol_time_moment): $bog_sert_op;
+        op_add(list: ReturnType<$bog_sert_pass['Ops']> & object, title: string, shop: string, cost: number, delta: number): $bog_sert_op;
         reset(): void;
         guest_rows(): $mol_view[];
         /**
@@ -51752,7 +51763,7 @@ declare namespace $.$$ {
     class $bog_sert_card extends $.$bog_sert_card {
         /** Карта по ссылке. Без `@ $mol_mem` — объект Базы. */
         pass(): $bog_sert_pass | null;
-        /** Салоны, где карту заводили. */
+        /** Салоны, где карту заводил сам хозяин. Чужие приписки отброшены. */
         shop_uris(): readonly string[];
         /** Все записи карты, ещё не проверенные. Проверяет их строка салона. */
         ops(): readonly $bog_sert_op[];

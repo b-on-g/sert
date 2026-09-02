@@ -6303,13 +6303,14 @@ var $;
         }
         static direction() {
             const lang = this.lang();
+            let direction;
             try {
-                return new Intl.Locale(lang).getTextInfo().direction ?? 'ltr';
+                direction = new Intl.Locale(lang).getTextInfo().direction;
             }
             catch (e) {
                 $mol_fail_log(e);
-                return this.langs_rtl().includes(lang) ? 'rtl' : 'ltr';
             }
+            return direction ?? (this.langs_rtl().includes(lang) ? 'rtl' : 'ltr');
         }
         static source(lang) {
             return JSON.parse(this.$.$mol_file.relative(`web.locale=${lang}.json`).text().toString());
@@ -17433,8 +17434,10 @@ var $;
         Cost: $giper_baza_atom_real,
         /** Изменение баланса в баллах: плюс начислили, минус списали */
         Delta: $giper_baza_atom_real,
-        /** Когда */
-        Made: $giper_baza_atom_time,
+        // Поля «когда» тут намеренно нет. Время берётся из самого юнита
+        // (`unit.time()`): оно часть подписи, и посторонний его не подменит.
+        // Отдельное поле пришлось бы читать наравне со всеми, а значит и
+        // проверять, — лишняя сущность ради того, что уже есть.
     }, 'Op') {
         /**
          * Операция глазами того, кто ей верит.
@@ -25354,6 +25357,34 @@ var $;
             const candidate = found ? decodeURIComponent(found[1]) : text;
             return $giper_baza_link.check(candidate) ?? '';
         }
+        /**
+         * Салоны, которые вписал в карту её владелец.
+         *
+         * Дописать в этот список может кто угодно, как и всё остальное в карте.
+         * Пустяком это не назвать: каждый салон из списка карта потом
+         * синхронизирует, то есть посторонний заставил бы её тянуть любые
+         * ленды, какие назовёт. Поэтому берём только записи того, у кого на
+         * карту полные права, — а это ровно её хозяин.
+         */
+        static shops(pass) {
+            const list = pass.Shops();
+            if (!list)
+                return [];
+            const land = pass.land();
+            const out = [];
+            for (const unit of list.units()) {
+                const tier = $giper_baza_rank_tier_of(land.lord_rank(unit.lord()));
+                if (tier < $giper_baza_rank_tier.rule)
+                    continue;
+                const uri = String(land.sand_decode(unit) ?? '');
+                if (!$giper_baza_link.check(uri))
+                    continue;
+                if (out.includes(uri))
+                    continue;
+                out.push(uri);
+            }
+            return out;
+        }
     }
     $.$bog_sert_pass = $bog_sert_pass;
 })($ || ($ = {}));
@@ -25441,11 +25472,12 @@ var $;
             balance() {
                 return $bog_sert_op.balance(this.ledger());
             }
+            /**
+             * Только номер. Имя из карты не читаем: вписать его может кто угодно,
+             * и кассир увидел бы подпись постороннего как имя гостя.
+             */
             guest_title() {
-                const pass = this.pass();
-                if (!pass)
-                    return '';
-                return pass.title() || `Карта ${this.pass_uri()}`;
+                return this.pass_uri() ? `Карта ${this.pass_uri()}` : '';
             }
             balance_text() {
                 const visits = this.ledger().length;
@@ -25494,12 +25526,11 @@ var $;
                 const known = vault?.Cards()?.items() ?? [];
                 if (!shop_uri || (!gain && !welcome))
                     return;
-                const now = new this.$.$mol_time_moment();
                 const list = pass.Ops('auto');
                 if (welcome)
-                    this.op_add(list, 'Приветственный', shop_uri, 0, welcome, now);
+                    this.op_add(list, 'Приветственный', shop_uri, 0, welcome);
                 if (gain)
-                    this.op_add(list, 'Покупка', shop_uri, cost, gain, now);
+                    this.op_add(list, 'Покупка', shop_uri, cost, gain);
                 // Список гостей лежит в закрытой части: наружу он не видён,
                 // а кабинету нужен, чтобы было по чему листать карты.
                 if (!known.includes(this.pass_uri()))
@@ -25524,7 +25555,7 @@ var $;
                 const limit = this.spend_limit();
                 if (!shop_uri || !want || want > limit)
                     return;
-                this.op_add(pass.Ops('auto'), 'Списание', shop_uri, Math.max(0, Math.round(this.cost())), -want, new this.$.$mol_time_moment());
+                this.op_add(pass.Ops('auto'), 'Списание', shop_uri, Math.max(0, Math.round(this.cost())), -want);
                 this.writeoff(0);
                 this.done(`Списано ${want} баллов`);
             }
@@ -25532,13 +25563,12 @@ var $;
              * Операция кладётся прямо в ленд карты через `make( null )`: отдельный
              * ленд стоит доказательства работы, и касса ждала бы секунды на чеке.
              */
-            op_add(list, title, shop, cost, delta, now) {
+            op_add(list, title, shop, cost, delta) {
                 const op = list.make(null);
                 op.Title('auto').val(title);
                 op.Shop('auto').val(shop);
                 op.Cost('auto').val(cost);
                 op.Delta('auto').val(delta);
-                op.Made('auto').val(now);
                 return op;
             }
             reset() {
@@ -28434,9 +28464,10 @@ var $;
                 pass.land().sync();
                 return pass;
             }
-            /** Салоны, где карту заводили. */
+            /** Салоны, где карту заводил сам хозяин. Чужие приписки отброшены. */
             shop_uris() {
-                return this.pass()?.Shops()?.items() ?? [];
+                const pass = this.pass();
+                return pass ? $bog_sert_pass.shops(pass) : [];
             }
             /** Все записи карты, ещё не проверенные. Проверяет их строка салона. */
             ops() {
@@ -38162,6 +38193,29 @@ var $;
             const crew = new Map([['марина', 200]]);
             $mol_assert_equal($bog_sert_op.read(before, crew)?.delta, 50);
             $mol_assert_equal($bog_sert_op.read(after, crew), null);
+        },
+        'в списке салонов карты считаются только записи её хозяина'() {
+            // Список открыт на запись, как и вся карта. Записи чужака отбрасываем,
+            // иначе карта пошла бы синхронизировать любые ленды, какие он назовёт.
+            const unit = (lord, val) => ({ lord: () => lord, val });
+            const land = {
+                sand_decode: (one) => one.val,
+                lord_rank: (lord) => lord === 'хозяин'
+                    ? $giper_baza_rank_rule
+                    : $giper_baza_rank_post('fast'),
+            };
+            const pass = {
+                land: () => land,
+                Shops: () => ({
+                    units: () => [
+                        unit('хозяин', 'aaaaaaaa_bbbbbbbb'),
+                        unit('чужак', 'cccccccc_dddddddd'),
+                        unit('хозяин', 'aaaaaaaa_bbbbbbbb'),
+                        unit('хозяин', 'не ссылка'),
+                    ],
+                }),
+            };
+            $mol_assert_equal($bog_sert_pass.shops(pass), ['aaaaaaaa_bbbbbbbb']);
         },
         'номер карты вынимается из адреса, набранного как угодно'() {
             const link = 'r7u17HFT_mY9Rf1P0';

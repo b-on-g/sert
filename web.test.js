@@ -6941,6 +6941,29 @@ var $;
             $mol_assert_equal($bog_sert_op.read(before, crew)?.delta, 50);
             $mol_assert_equal($bog_sert_op.read(after, crew), null);
         },
+        'в списке салонов карты считаются только записи её хозяина'() {
+            // Список открыт на запись, как и вся карта. Записи чужака отбрасываем,
+            // иначе карта пошла бы синхронизировать любые ленды, какие он назовёт.
+            const unit = (lord, val) => ({ lord: () => lord, val });
+            const land = {
+                sand_decode: (one) => one.val,
+                lord_rank: (lord) => lord === 'хозяин'
+                    ? $giper_baza_rank_rule
+                    : $giper_baza_rank_post('fast'),
+            };
+            const pass = {
+                land: () => land,
+                Shops: () => ({
+                    units: () => [
+                        unit('хозяин', 'aaaaaaaa_bbbbbbbb'),
+                        unit('чужак', 'cccccccc_dddddddd'),
+                        unit('хозяин', 'aaaaaaaa_bbbbbbbb'),
+                        unit('хозяин', 'не ссылка'),
+                    ],
+                }),
+            };
+            $mol_assert_equal($bog_sert_pass.shops(pass), ['aaaaaaaa_bbbbbbbb']);
+        },
         'номер карты вынимается из адреса, набранного как угодно'() {
             const link = 'r7u17HFT_mY9Rf1P0';
             $mol_assert_equal($bog_sert_pass.uri_of('https://example.com/sert/pass=' + link), link);
